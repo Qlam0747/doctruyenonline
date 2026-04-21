@@ -1,0 +1,165 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace client_firebase
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            // Xác nhận đăng xuất
+            var dr = System.Windows.Forms.MessageBox.Show("Bạn có chắc muốn đăng xuất?", "Xác nhận", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Question);
+            if (dr != System.Windows.Forms.DialogResult.Yes) return;
+
+            bool googleRevokeFailed = false;
+            bool facebookRevokeFailed = false;
+            bool googleFilesDeleted = false;
+
+            // Đăng xuất hoàn toàn: thu hồi token của các provider nếu có, xóa session cục bộ, mở form đăng nhập
+            try
+            {
+                // Revoke Google token (nếu có). Prefer refresh token, fallback to access or id token.
+                var googleTokenToRevoke = !string.IsNullOrEmpty(AuthSession.GoogleRefreshToken) ? AuthSession.GoogleRefreshToken :
+                                        (!string.IsNullOrEmpty(AuthSession.GoogleAccessToken) ? AuthSession.GoogleAccessToken : AuthSession.GoogleIdToken);
+
+                if (!string.IsNullOrEmpty(googleTokenToRevoke))
+                {
+                    try
+                    {
+                        using (var client = new System.Net.Http.HttpClient())
+                        {
+                            var content = new System.Net.Http.FormUrlEncodedContent(new[] { new System.Collections.Generic.KeyValuePair<string, string>("token", googleTokenToRevoke) });
+                            var resp = await client.PostAsync("https://oauth2.googleapis.com/revoke", content);
+                            if (!resp.IsSuccessStatusCode)
+                            {
+                                googleRevokeFailed = true;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        googleRevokeFailed = true;
+                    }
+
+                    // Cố gắng xóa file token do GoogleWebAuthorizationBroker lưu
+                    try
+                    {
+                        googleFilesDeleted = DeleteGoogleStoredCredentials();
+                    }
+                    catch { googleFilesDeleted = false; }
+                }
+
+                // Gọi backend để thu hồi refresh tokens (nếu backend triển khai)
+                try
+                {
+                    if (!string.IsNullOrEmpty(AppConfig.BackendRevokeUrl) && !string.IsNullOrEmpty(AuthSession.FirebaseLocalId))
+                    {
+                        using (var client = new System.Net.Http.HttpClient())
+                        {
+                            var payload = new { uid = AuthSession.FirebaseLocalId };
+                            string json = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+                            var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                            // POST to backend endpoint which should call Firebase Admin SDK to revoke refresh tokens for the uid
+                            await client.PostAsync(AppConfig.BackendRevokeUrl, content);
+                        }
+                    }
+                }
+                catch { }
+
+                // Revoke Facebook token (nếu có)
+                if (!string.IsNullOrEmpty(AuthSession.FacebookAccessToken))
+                {
+                    try
+                    {
+                        using (var client = new System.Net.Http.HttpClient())
+                        {
+                            string fbRevokeUrl = $"https://graph.facebook.com/me/permissions?access_token={AuthSession.FacebookAccessToken}";
+                            var resp = await client.DeleteAsync(fbRevokeUrl);
+                            if (!resp.IsSuccessStatusCode)
+                            {
+                                facebookRevokeFailed = true;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        facebookRevokeFailed = true;
+                    }
+                }
+            }
+            catch { }
+            finally
+            {
+                // Xóa session cục bộ
+                AuthSession.Clear();
+
+                // Thông báo nếu thu hồi token thất bại
+                var messages = new System.Collections.Generic.List<string>();
+                if (googleRevokeFailed) messages.Add("Thu hồi token Google thất bại.");
+                if (!googleFilesDeleted) messages.Add("Không xóa được file token Google (nếu có).\nBạn có thể xóa thủ công các file lưu credentials.");
+                if (facebookRevokeFailed) messages.Add("Thu hồi token Facebook thất bại.");
+
+                if (messages.Count > 0)
+                {
+                    System.Windows.Forms.MessageBox.Show(string.Join("\n", messages), "Chú ý", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                }
+
+                try
+                {
+                    var loginForm = new dangnhap();
+                    loginForm.Show();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Lỗi khi mở form đăng nhập: " + ex.Message, "Lỗi", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                }
+
+                // Đóng form chính (sẽ không kết thúc ứng dụng nếu form đăng nhập đang mở)
+                this.Close();
+            }
+        }
+
+        // Cố gắng xóa các file/thư mục credentials mà GoogleWebAuthorizationBroker có thể đã tạo.
+        // Trả về true nếu tìm và xóa ít nhất một thư mục thành công.
+        private bool DeleteGoogleStoredCredentials()
+        {
+            bool deletedAny = false;
+            try
+            {
+                var candidates = new[]
+                {
+                    System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Google.Apis.Auth"),
+                    System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Google.Apis.Auth"),
+                    System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".credentials")
+                };
+
+                foreach (var path in candidates)
+                {
+                    try
+                    {
+                        if (System.IO.Directory.Exists(path))
+                        {
+                            System.IO.Directory.Delete(path, true);
+                            deletedAny = true;
+                        }
+                    }
+                    catch { }
+                }
+            }
+            catch { }
+
+            return deletedAny;
+        }
+    }
+}

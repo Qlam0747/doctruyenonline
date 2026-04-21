@@ -1,0 +1,5 @@
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+client_firebase/config.json

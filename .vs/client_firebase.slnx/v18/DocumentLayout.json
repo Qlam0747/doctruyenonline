@@ -1,0 +1,210 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|c:\\users\\quanglam0204\\source\\repos\\client_firebase\\client_firebase\\dangnhap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\dangnhap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\authsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\authsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangky.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\dangky.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangky.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\dangky.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangnhap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\dangnhap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\firebaseauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\firebaseauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\forget_verify.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1078E507-067A-45DE-987A-1CCF66CB2947}|client_firebase\\client_firebase.csproj|solutionrelative:client_firebase\\forget_verify.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthSession.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\AuthSession.cs",
+              "RelativeDocumentMoniker": "client_firebase\\AuthSession.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\AuthSession.cs",
+              "RelativeToolTip": "client_firebase\\AuthSession.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAYwAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T01:29:52.11Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\MainForm.cs",
+              "RelativeDocumentMoniker": "client_firebase\\MainForm.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\MainForm.cs",
+              "RelativeToolTip": "client_firebase\\MainForm.cs",
+              "ViewState": "AgIAAGIAAAAAAAAAAAAIwKMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T01:21:38.436Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FirebaseAuthService.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\FirebaseAuthService.cs",
+              "RelativeDocumentMoniker": "client_firebase\\FirebaseAuthService.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\FirebaseAuthService.cs",
+              "RelativeToolTip": "client_firebase\\FirebaseAuthService.cs",
+              "ViewState": "AgIAAKYAAACAZmZmZmYgwAYBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T08:15:48.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AppConfig.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\AppConfig.cs",
+              "RelativeDocumentMoniker": "client_firebase\\AppConfig.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\AppConfig.cs",
+              "RelativeToolTip": "client_firebase\\AppConfig.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAEBTwBwAAABSAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T02:57:34.059Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "dangnhap.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangnhap.cs",
+              "RelativeDocumentMoniker": "client_firebase\\dangnhap.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangnhap.cs",
+              "RelativeToolTip": "client_firebase\\dangnhap.cs",
+              "ViewState": "AgIAAMgAAAAAAAAAAAAIwFkBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T01:19:21.756Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "dangky.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangky.cs",
+              "RelativeDocumentMoniker": "client_firebase\\dangky.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangky.cs",
+              "RelativeToolTip": "client_firebase\\dangky.cs",
+              "ViewState": "AgIAAJAAAACAmZmZmZkhwKAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T08:22:29.442Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\MainForm.cs",
+              "RelativeDocumentMoniker": "client_firebase\\MainForm.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\MainForm.cs [Design]",
+              "RelativeToolTip": "client_firebase\\MainForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T01:23:09.642Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "dangnhap.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangnhap.cs",
+              "RelativeDocumentMoniker": "client_firebase\\dangnhap.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangnhap.cs [Design]",
+              "RelativeToolTip": "client_firebase\\dangnhap.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T13:36:31.939Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "dangky.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangky.cs",
+              "RelativeDocumentMoniker": "client_firebase\\dangky.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\dangky.cs [Design]",
+              "RelativeToolTip": "client_firebase\\dangky.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T01:17:19.405Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "config.json",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\config.json",
+              "RelativeDocumentMoniker": "client_firebase\\config.json",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\config.json",
+              "RelativeToolTip": "client_firebase\\config.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-13T03:04:45.444Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Forget_verify.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\Forget_verify.cs",
+              "RelativeDocumentMoniker": "client_firebase\\Forget_verify.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\Forget_verify.cs",
+              "RelativeToolTip": "client_firebase\\Forget_verify.cs",
+              "ViewState": "AgIAAC4AAABAMzMzMzMpwC8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T02:21:17.563Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\Program.cs",
+              "RelativeDocumentMoniker": "client_firebase\\Program.cs",
+              "ToolTip": "C:\\Users\\QuangLam0204\\source\\repos\\client_firebase\\client_firebase\\Program.cs",
+              "RelativeToolTip": "client_firebase\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T13:53:02.608Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

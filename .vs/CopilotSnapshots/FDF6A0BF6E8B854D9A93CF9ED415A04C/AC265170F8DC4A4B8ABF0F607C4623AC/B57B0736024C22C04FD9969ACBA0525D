@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace client_firebase
+{
+    public partial class dangky : Form
+    {
+        public dangky()
+        {
+            InitializeComponent();
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            button1.Enabled = false;
+
+            string result = await FirebaseAuthService.Auth(textBox1.Text, textBox2.Text, isSignUp: true);
+
+            if (result.StartsWith("Success|"))
+            {
+                MessageBox.Show("Đăng ký thành công! Vui lòng đăng nhập.", "Thông báo");
+                dangnhap frmDangNhap = new dangnhap();
+                frmDangNhap.Show();
+                this.Close(); 
+            }
+            else
+            {
+                string errorMessage = result.Split('|')[1];
+                MessageBox.Show("Đăng ký thất bại: " + errorMessage, "Lỗi");
+            }
+
+            button1.Enabled = true;
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+            dangnhap form1 = new dangnhap();
+            form1.Show();
+            this.Hide();
+        }
+    }
+}

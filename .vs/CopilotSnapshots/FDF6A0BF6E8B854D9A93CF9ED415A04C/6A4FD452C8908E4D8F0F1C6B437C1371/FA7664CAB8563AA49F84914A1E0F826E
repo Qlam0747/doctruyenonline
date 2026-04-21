@@ -1,0 +1,164 @@
+﻿using Firebase.Auth;
+using Google.Apis.Auth.OAuth2; 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace client_firebase
+{
+    public partial class dangnhap : Form
+    {
+        public dangnhap()
+        {
+            InitializeComponent();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+            dangky dangky = new dangky();
+            dangky.Show();
+            this.Hide();
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            button1.Enabled = false;
+
+            try
+            {
+                string result = await FirebaseAuthService.Auth(textBox1.Text, textBox2.Text, isSignUp: false);
+                if (result.StartsWith("Success|"))
+                {
+                    MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    MainForm mainForm = new MainForm();
+                    mainForm.Show();
+
+                    this.Hide();
+                }
+                else
+                {
+                    string errorMessage = result.Split('|')[1];
+                    MessageBox.Show("Đăng nhập thất bại: " + errorMessage, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                button1.Enabled = true;
+            }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+            Forget_verify forget = new Forget_verify();
+            forget.Show();
+            this.Hide();
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            button2.Enabled = false;
+            button2.Text = "Đang mở trình duyệt...";
+
+            try
+            {
+                // 1. Mở trình duyệt xin quyền (BẮT BUỘC có "openid" để lấy IdToken)
+                var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    new ClientSecrets
+                    {
+                        ClientId = AppConfig.GoogleClientId,
+                        ClientSecret = AppConfig.GoogleClientSecret
+                    },
+                    new[] { "openid", "email", "profile" },
+                    "user",
+                    CancellationToken.None);
+
+                // 2. Lấy IdToken (Chuỗi bắt đầu bằng eyJ...)
+                string googleIdToken = credential.Token.IdToken;
+
+                if (string.IsNullOrEmpty(googleIdToken))
+                {
+                    MessageBox.Show("Không lấy được mã định danh từ Google. Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                button2.Text = "Đang đăng nhập Firebase...";
+
+                // 3. GỌI HÀM CỦA CHÚNG TA VỪA VIẾT! (Không thèm xài thư viện bị lỗi nữa)
+                string result = await FirebaseAuthService.LoginWithGoogleAsync(googleIdToken);
+
+                if (result.StartsWith("Success|"))
+                {
+                    // Bóc tách kết quả
+                    var parts = result.Split('|');
+                    string userEmail = parts.Length > 2 ? parts[2] : "";
+                    string userName = parts.Length > 3 ? parts[3] : "";
+
+                    MessageBox.Show($"Đăng nhập Google thành công!\nXin chào: {userName} ({userEmail})",
+                                    "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    MainForm mainForm = new MainForm();
+                    mainForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    string errorMessage = result.Split('|')[1];
+                    MessageBox.Show("Đăng nhập Firebase thất bại: " + errorMessage,
+                                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Đăng nhập Google thất bại hoặc bị hủy: " + ex.Message,
+                                "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                button2.Enabled = true;
+                button2.Text = "Đăng nhập với Google";
+            }
+        }
+
+        private void dangnhap_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

@@ -1,0 +1,84 @@
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace client_firebase
+{
+    internal class FirebaseAuthService
+    {
+        private static readonly string firebaseApiKey = "AIzaSyBPwS9mSfijtsAuaN3EinWxvtP5OKt437k";
+
+        public static async Task<string> Auth(string email, string password, bool isSignUp)
+        {
+            string url = isSignUp
+                ? $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={firebaseApiKey}"
+                : $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={firebaseApiKey}";
+
+            var payload = new
+            {
+                email = email,
+                password = password,
+                returnSecureToken = true
+            };
+
+            string jsonPayload = JsonConvert.SerializeObject(payload);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                string responseString = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    JObject json = JObject.Parse(responseString);
+                    // Trả về chữ "Success|" kèm theo token để các Form nhận biết là thành công
+                    return "Success|" + json["idToken"].ToString();
+                }
+                else
+                {
+                    JObject errorJson = JObject.Parse(responseString);
+                    string errorMessage = errorJson["error"]["message"].ToString();
+                    return "Error|" + errorMessage;
+                }
+            }
+        }
+
+        public static async Task<string> ResetPassword(string email)
+        {
+            string url = $"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={firebaseApiKey}";
+
+            var payload = new
+            {
+                requestType = "PASSWORD_RESET",
+                email = email
+            };
+
+            string jsonPayload = JsonConvert.SerializeObject(payload);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                string responseString = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return "Success";
+                }
+                else
+                {
+                    JObject errorJson = JObject.Parse(responseString);
+                    string errorMessage = errorJson["error"]["message"].ToString();
+                    return "Error|" + errorMessage;
+                }
+            }
+        }
+    }
+}
