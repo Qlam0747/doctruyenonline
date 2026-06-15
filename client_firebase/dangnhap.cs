@@ -16,33 +16,30 @@ namespace client_firebase
         public dangnhap()
         {
             InitializeComponent();
-            SetupPlaceholders(); // Gọi hàm cài đặt UI ngay khi mở form
+            SetupPlaceholders(); 
         }
 
-        // ================= CÀI ĐẶT PLACEHOLDER =================
         private void SetupPlaceholders()
         {
-            // Đảm bảo nút con mắt luôn nổi lên trên cùng
             if (buttonShowPassword != null) buttonShowPassword.BringToFront();
 
-            // Cài đặt cho ô Email
+            // Set initial text WITHOUT event handlers attached yet
             textBox1.Text = emailPlaceholder;
             textBox1.ForeColor = Color.Gray;
-            textBox1.Enter += TextBoxEmail_Enter;
-            textBox1.Leave += TextBoxEmail_Leave;
 
-            // Cài đặt cho ô Password
             textBox2.Text = passwordPlaceholder;
             textBox2.ForeColor = Color.Gray;
-            textBox2.UseSystemPasswordChar = false; // Ban đầu hiện chữ để người dùng đọc được placeholder
+            textBox2.UseSystemPasswordChar = false;
+
+            // NOW attach event handlers to avoid circular triggering
+            textBox1.Enter += TextBoxEmail_Enter;
+            textBox1.Leave += TextBoxEmail_Leave;
             textBox2.Enter += TextBoxPassword_Enter;
             textBox2.Leave += TextBoxPassword_Leave;
         }
 
-        // ================= XỬ LÝ SỰ KIỆN CLICK VÀO/RA Ô EMAIL =================
         private void TextBoxEmail_Enter(object sender, EventArgs e)
         {
-            // Xóa chữ nếu đang là placeholder HOẶC đang báo lỗi đỏ
             if (textBox1.Text == emailPlaceholder || textBox1.ForeColor == Color.Red)
             {
                 textBox1.Text = "";
@@ -52,7 +49,6 @@ namespace client_firebase
 
         private void TextBoxEmail_Leave(object sender, EventArgs e)
         {
-            // Nếu người dùng không nhập gì, trả lại placeholder
             if (string.IsNullOrWhiteSpace(textBox1.Text))
             {
                 textBox1.Text = emailPlaceholder;
@@ -60,31 +56,26 @@ namespace client_firebase
             }
         }
 
-        // ================= XỬ LÝ SỰ KIỆN CLICK VÀO/RA Ô PASSWORD =================
         private void TextBoxPassword_Enter(object sender, EventArgs e)
         {
-            // Xóa chữ nếu đang là placeholder HOẶC đang báo lỗi đỏ
             if (textBox2.Text == passwordPlaceholder || textBox2.ForeColor == Color.Red)
             {
                 textBox2.Text = "";
                 textBox2.ForeColor = Color.Black;
-                // Bật che mật khẩu dựa theo trạng thái của nút con mắt
                 textBox2.UseSystemPasswordChar = !_passwordVisible;
             }
         }
 
         private void TextBoxPassword_Leave(object sender, EventArgs e)
         {
-            // Nếu người dùng không nhập gì, trả lại placeholder
             if (string.IsNullOrWhiteSpace(textBox2.Text))
             {
-                textBox2.UseSystemPasswordChar = false; // Tắt dấu chấm để hiện chữ placeholder
+                textBox2.UseSystemPasswordChar = false; 
                 textBox2.Text = passwordPlaceholder;
                 textBox2.ForeColor = Color.Gray;
             }
         }
 
-        // ================= CÁC HÀM BÁO LỖI VÀO PLACEHOLDER =================
         private void ShowEmailError(string message)
         {
             textBox1.Text = message;
@@ -98,7 +89,6 @@ namespace client_firebase
             textBox2.ForeColor = Color.Red;
         }
 
-        // ================= XỬ LÝ NÚT ĐĂNG NHẬP (EMAIL/PASS) =================
         private async void button1_Click(object sender, EventArgs e)
         {
             button1.Enabled = false;
@@ -107,7 +97,6 @@ namespace client_firebase
             string password = textBox2.Text;
             bool hasError = false;
 
-            // Kiểm tra xem người dùng có bỏ trống (hoặc để nguyên placeholder) không
             if (string.IsNullOrWhiteSpace(email) || email == emailPlaceholder || textBox1.ForeColor == Color.Red)
             {
                 ShowEmailError("Vui lòng nhập email.");
@@ -125,7 +114,6 @@ namespace client_firebase
                 hasError = true;
             }
 
-            // Nếu có lỗi thì dừng lại, chờ người dùng nhập đúng
             if (hasError)
             {
                 button1.Enabled = true;
@@ -141,7 +129,6 @@ namespace client_firebase
                     string idToken = parts.Length > 1 ? parts[1] : null;
                     string localId = parts.Length > 2 ? parts[2] : null;
 
-                    // Lưu phiên hiện tại vào AuthSession
                     AuthSession.FirebaseIdToken = idToken;
                     AuthSession.FirebaseLocalId = localId;
 
@@ -166,27 +153,24 @@ namespace client_firebase
             }
         }
 
-        // ================= XỬ LÝ NÚT ẨN/HIỆN MẬT KHẨU =================
         private void buttonShowPassword_Click(object sender, EventArgs e)
         {
-            // Nếu TextBox đang hiện chữ Placeholder hoặc Báo lỗi đỏ thì không làm gì cả
             if (textBox2.ForeColor == Color.Gray || textBox2.ForeColor == Color.Red) return;
 
             _passwordVisible = !_passwordVisible;
 
             if (_passwordVisible)
             {
-                textBox2.UseSystemPasswordChar = false; // Hiện chữ
-                if (buttonShowPassword != null) buttonShowPassword.Text = "🙈"; // Đổi icon thành khỉ che mắt
+                textBox2.UseSystemPasswordChar = false; 
+                if (buttonShowPassword != null) buttonShowPassword.Text = "🙈"; 
             }
             else
             {
-                textBox2.UseSystemPasswordChar = true; // Che dấu chấm
-                if (buttonShowPassword != null) buttonShowPassword.Text = "👁"; // Đổi icon thành con mắt
+                textBox2.UseSystemPasswordChar = true; 
+                if (buttonShowPassword != null) buttonShowPassword.Text = "👁"; 
             }
         }
 
-        // ================= XỬ LÝ NÚT ĐĂNG NHẬP GOOGLE =================
         private async void button2_Click(object sender, EventArgs e)
         {
             button2.Enabled = false;
@@ -224,11 +208,9 @@ namespace client_firebase
                     string userEmail = parts.Length > 2 ? parts[2] : "";
                     string userName = parts.Length > 3 ? parts[3] : "";
 
-                    // Lưu session (bao gồm refresh/access token nếu có)
                     AuthSession.FirebaseIdToken = firebaseToken;
                     AuthSession.GoogleIdToken = googleIdToken;
                     AuthSession.GoogleAccessToken = googleAccessToken;
-                    // refresh token có thể null nếu Google không trả lại (lần đầu cần offline access)
                     if (!string.IsNullOrEmpty(googleRefreshToken)) AuthSession.GoogleRefreshToken = googleRefreshToken;
 
                     MessageBox.Show($"Đăng nhập Google thành công!\nXin chào: {userName} ({userEmail})", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -254,7 +236,6 @@ namespace client_firebase
             }
         }
 
-        // ================= CÁC CHUYỂN HƯỚNG FORM KHÁC =================
         private void label4_Click(object sender, EventArgs e)
         {
             dangky dangky = new dangky();
@@ -269,7 +250,6 @@ namespace client_firebase
             this.Hide();
         }
 
-        // Xóa logic cũ trong TextChanged vì nó làm nhiễu UX của Placeholder
         private void textBox2_TextChanged(object sender, EventArgs e) { }
         private void textBox1_TextChanged(object sender, EventArgs e) { }
         private void label1_Click(object sender, EventArgs e) { }
@@ -284,7 +264,6 @@ namespace client_firebase
 
             try
             {
-                // 1. Lấy Token từ Facebook
                 string fbTokenResult = await FirebaseAuthService.GetFacebookAccessTokenAsync();
 
                 if (!fbTokenResult.StartsWith("Success|"))
@@ -296,7 +275,6 @@ namespace client_firebase
                 string fbAccessToken = fbTokenResult.Split('|')[1];
                 button3.Text = "Đang kết nối Firebase...";
 
-                // 2. Gửi Token lên Firebase
                 string loginResult = await FirebaseAuthService.LoginWithFacebookAsync(fbAccessToken);
 
                 if (loginResult.StartsWith("Success|"))
@@ -306,12 +284,10 @@ namespace client_firebase
                     string localId = parts[2];
                     string email = parts[3];
                     string userName = parts[4];
-                    bool isNewUser = bool.Parse(parts[5]); // Lấy trạng thái Người dùng mới
+                    bool isNewUser = bool.Parse(parts[5]); 
 
-                    // 3. KIỂM TRA LẦN ĐẦU ĐĂNG NHẬP ĐỂ LƯU DATABASE
                     if (isNewUser)
                     {
-                        // Ghi dữ liệu lên Realtime Database (Để trống ngày sinh vì FB không trả về mặc định)
                         await FirebaseAuthService.SaveUserProfileAsync(idToken, localId, email, userName, "");
                         MessageBox.Show($"Chào mừng {userName} lần đầu đến với ứng dụng!\nDữ liệu của bạn đã được khởi tạo thành công.", "Đăng ký thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -320,12 +296,10 @@ namespace client_firebase
                         MessageBox.Show($"Mừng {userName} quay trở lại!", "Đăng nhập thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
-                    // Lưu session (Firebase + Facebook token)
                     AuthSession.FirebaseIdToken = idToken;
                     AuthSession.FirebaseLocalId = localId;
                     AuthSession.FacebookAccessToken = fbAccessToken;
 
-                    // Chuyển sang Form chính
                     MainForm mainForm = new MainForm();
                     mainForm.Show();
                     this.Hide();

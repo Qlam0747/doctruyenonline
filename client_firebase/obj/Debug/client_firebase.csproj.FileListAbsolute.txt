@@ -27,3 +27,5 @@ C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\Goo
 C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\config.json
 C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\obj\Debug\client_firebase.MainForm.resources
+C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\ReaLTaiizor.dll
+C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\ReaLTaiizor.xml

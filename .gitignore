@@ -1,0 +1,4 @@
+# Bỏ qua toàn bộ thư mục cấu hình của Visual Studio
+.vs/
+*.user
+*.suo

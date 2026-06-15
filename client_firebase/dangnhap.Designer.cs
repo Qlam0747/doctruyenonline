@@ -34,6 +34,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.buttonShowPassword = new System.Windows.Forms.Button();
             this.labelPasswordError = new System.Windows.Forms.Label();
+            this.labelEmailError = new System.Windows.Forms.Label();
             this.panelLeft.SuspendLayout();
             this.panelRight.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +75,9 @@
             this.panelRight.Controls.Add(this.label7);
             this.panelRight.Controls.Add(this.button2);
             this.panelRight.Controls.Add(this.button3);
+            this.panelRight.Controls.Add(this.buttonShowPassword);
+            this.panelRight.Controls.Add(this.labelPasswordError);
+            this.panelRight.Controls.Add(this.labelEmailError);
             this.panelRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelRight.Location = new System.Drawing.Point(260, 0);
             this.panelRight.Name = "panelRight";

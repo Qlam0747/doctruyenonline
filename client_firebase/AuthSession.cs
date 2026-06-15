@@ -2,15 +2,11 @@ using System;
 
 namespace client_firebase
 {
-    // Simple in-memory session storage for authentication tokens
     public static class AuthSession
     {
-        // Firebase
         public static string FirebaseIdToken { get; set; }
         public static string FirebaseLocalId { get; set; }
 
-        // OAuth providers
-        // Id token (OpenID), Access token and Refresh token for Google
         public static string GoogleIdToken { get; set; }
         public static string GoogleAccessToken { get; set; }
         public static string GoogleRefreshToken { get; set; }
