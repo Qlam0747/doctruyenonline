@@ -28,269 +28,231 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new ReaLTaiizor.Controls.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.hopePictureBox6 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.hopePictureBox5 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.hopePictureBox4 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.hopePictureBox3 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.hopePictureBox2 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.hopePictureBox1 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.hopePictureBox7 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.hopePictureBox8 = new ReaLTaiizor.Controls.HopePictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox8)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.panelTop = new System.Windows.Forms.Panel();
+            this.btnProfile = new ReaLTaiizor.Controls.HopePictureBox();
+            this.btnNotification = new ReaLTaiizor.Controls.HopePictureBox();
+            this.btnChat = new ReaLTaiizor.Controls.HopePictureBox();
+            this.btnUpload = new ReaLTaiizor.Controls.HopePictureBox();
+            this.btnLibrary = new ReaLTaiizor.Controls.HopePictureBox();
+            this.btnSearch = new ReaLTaiizor.Controls.HopePictureBox();
+            this.btnHome = new ReaLTaiizor.Controls.HopePictureBox();
+            this.lblLogo = new System.Windows.Forms.Label();
+            this.picLogo = new ReaLTaiizor.Controls.HopePictureBox();
+            this.panelContent = new System.Windows.Forms.Panel();
+            this.panelTop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnProfile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnNotification)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnChat)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnUpload)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnLibrary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnSearch)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnHome)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel1
+            // panelTop
             // 
-            this.panel1.BackColor = System.Drawing.Color.Violet;
-            this.panel1.Controls.Add(this.hopePictureBox8);
-            this.panel1.Controls.Add(this.hopePictureBox7);
-            this.panel1.Controls.Add(this.hopePictureBox6);
-            this.panel1.Controls.Add(this.hopePictureBox5);
-            this.panel1.Controls.Add(this.hopePictureBox4);
-            this.panel1.Controls.Add(this.hopePictureBox3);
-            this.panel1.Controls.Add(this.hopePictureBox2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.hopePictureBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.EdgeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(41)))), ((int)(((byte)(50)))));
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(5);
-            this.panel1.Size = new System.Drawing.Size(737, 46);
-            this.panel1.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.panel1.TabIndex = 1;
-            this.panel1.Text = "panel1";
+            this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
+            this.panelTop.Controls.Add(this.btnProfile);
+            this.panelTop.Controls.Add(this.btnNotification);
+            this.panelTop.Controls.Add(this.btnChat);
+            this.panelTop.Controls.Add(this.btnUpload);
+            this.panelTop.Controls.Add(this.btnLibrary);
+            this.panelTop.Controls.Add(this.btnSearch);
+            this.panelTop.Controls.Add(this.btnHome);
+            this.panelTop.Controls.Add(this.lblLogo);
+            this.panelTop.Controls.Add(this.picLogo);
+            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTop.Location = new System.Drawing.Point(0, 0);
+            this.panelTop.Name = "panelTop";
+            this.panelTop.Size = new System.Drawing.Size(900, 60);
+            this.panelTop.TabIndex = 1;
             // 
-            // label1
+            // btnProfile
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Impact", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label1.Location = new System.Drawing.Point(58, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(91, 23);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "StoryHub";
+            this.btnProfile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnProfile.BackColor = System.Drawing.Color.Transparent;
+            this.btnProfile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnProfile.Image = global::client_firebase.Properties.Resources.user;
+            this.btnProfile.Location = new System.Drawing.Point(845, 15);
+            this.btnProfile.Name = "btnProfile";
+            this.btnProfile.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.btnProfile.Size = new System.Drawing.Size(32, 32);
+            this.btnProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnProfile.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.btnProfile.TabIndex = 9;
+            this.btnProfile.TabStop = false;
+            this.btnProfile.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             // 
-            // hopePictureBox6
+            // btnNotification
             // 
-            this.hopePictureBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox6.Image = global::client_firebase.Properties.Resources.chat;
-            this.hopePictureBox6.Location = new System.Drawing.Point(494, 8);
-            this.hopePictureBox6.Name = "hopePictureBox6";
-            this.hopePictureBox6.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox6.Size = new System.Drawing.Size(40, 30);
-            this.hopePictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.hopePictureBox6.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox6.TabIndex = 7;
-            this.hopePictureBox6.TabStop = false;
-            this.hopePictureBox6.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNotification.BackColor = System.Drawing.Color.Transparent;
+            this.btnNotification.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnNotification.Image = global::client_firebase.Properties.Resources.bell;
+            this.btnNotification.Location = new System.Drawing.Point(795, 15);
+            this.btnNotification.Name = "btnNotification";
+            this.btnNotification.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.btnNotification.Size = new System.Drawing.Size(32, 32);
+            this.btnNotification.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnNotification.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.btnNotification.TabIndex = 8;
+            this.btnNotification.TabStop = false;
+            this.btnNotification.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             // 
-            // hopePictureBox5
+            // btnChat
             // 
-            this.hopePictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox5.Image = global::client_firebase.Properties.Resources.up_loading;
-            this.hopePictureBox5.Location = new System.Drawing.Point(430, 8);
-            this.hopePictureBox5.Name = "hopePictureBox5";
-            this.hopePictureBox5.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox5.Size = new System.Drawing.Size(33, 30);
-            this.hopePictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.hopePictureBox5.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox5.TabIndex = 6;
-            this.hopePictureBox5.TabStop = false;
-            this.hopePictureBox5.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnChat.BackColor = System.Drawing.Color.Transparent;
+            this.btnChat.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnChat.Image = global::client_firebase.Properties.Resources.chat;
+            this.btnChat.Location = new System.Drawing.Point(450, 15);
+            this.btnChat.Name = "btnChat";
+            this.btnChat.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.btnChat.Size = new System.Drawing.Size(32, 32);
+            this.btnChat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnChat.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.btnChat.TabIndex = 7;
+            this.btnChat.TabStop = false;
+            this.btnChat.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnChat.Click += new System.EventHandler(this.btnChat_Click);
             // 
-            // hopePictureBox4
+            // btnUpload
             // 
-            this.hopePictureBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox4.Image = global::client_firebase.Properties.Resources.book__1_;
-            this.hopePictureBox4.Location = new System.Drawing.Point(357, 8);
-            this.hopePictureBox4.Name = "hopePictureBox4";
-            this.hopePictureBox4.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox4.Size = new System.Drawing.Size(40, 30);
-            this.hopePictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.hopePictureBox4.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox4.TabIndex = 5;
-            this.hopePictureBox4.TabStop = false;
-            this.hopePictureBox4.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            this.hopePictureBox4.Click += new System.EventHandler(this.hopePictureBox4_Click);
+            this.btnUpload.BackColor = System.Drawing.Color.Transparent;
+            this.btnUpload.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUpload.Image = global::client_firebase.Properties.Resources.up_loading;
+            this.btnUpload.Location = new System.Drawing.Point(400, 15);
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.btnUpload.Size = new System.Drawing.Size(32, 32);
+            this.btnUpload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnUpload.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.btnUpload.TabIndex = 6;
+            this.btnUpload.TabStop = false;
+            this.btnUpload.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
-            // hopePictureBox3
+            // btnLibrary
             // 
-            this.hopePictureBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox3.Image = global::client_firebase.Properties.Resources.search;
-            this.hopePictureBox3.Location = new System.Drawing.Point(291, 8);
-            this.hopePictureBox3.Name = "hopePictureBox3";
-            this.hopePictureBox3.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox3.Size = new System.Drawing.Size(34, 30);
-            this.hopePictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.hopePictureBox3.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox3.TabIndex = 4;
-            this.hopePictureBox3.TabStop = false;
-            this.hopePictureBox3.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnLibrary.BackColor = System.Drawing.Color.Transparent;
+            this.btnLibrary.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLibrary.Image = global::client_firebase.Properties.Resources.book__1_;
+            this.btnLibrary.Location = new System.Drawing.Point(350, 15);
+            this.btnLibrary.Name = "btnLibrary";
+            this.btnLibrary.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.btnLibrary.Size = new System.Drawing.Size(32, 32);
+            this.btnLibrary.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnLibrary.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.btnLibrary.TabIndex = 5;
+            this.btnLibrary.TabStop = false;
+            this.btnLibrary.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnLibrary.Click += new System.EventHandler(this.btnLibrary_Click);
             // 
-            // hopePictureBox2
+            // btnSearch
             // 
-            this.hopePictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox2.Image = global::client_firebase.Properties.Resources.home;
-            this.hopePictureBox2.Location = new System.Drawing.Point(217, 8);
-            this.hopePictureBox2.Name = "hopePictureBox2";
-            this.hopePictureBox2.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox2.Size = new System.Drawing.Size(40, 30);
-            this.hopePictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.hopePictureBox2.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox2.TabIndex = 3;
-            this.hopePictureBox2.TabStop = false;
-            this.hopePictureBox2.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnSearch.BackColor = System.Drawing.Color.Transparent;
+            this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearch.Image = global::client_firebase.Properties.Resources.search;
+            this.btnSearch.Location = new System.Drawing.Point(300, 15);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.btnSearch.Size = new System.Drawing.Size(32, 32);
+            this.btnSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnSearch.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.btnSearch.TabIndex = 4;
+            this.btnSearch.TabStop = false;
+            this.btnSearch.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // hopePictureBox1
+            // btnHome
             // 
-            this.hopePictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox1.Image = global::client_firebase.Properties.Resources.book;
-            this.hopePictureBox1.Location = new System.Drawing.Point(12, 8);
-            this.hopePictureBox1.Name = "hopePictureBox1";
-            this.hopePictureBox1.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox1.Size = new System.Drawing.Size(40, 30);
-            this.hopePictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.hopePictureBox1.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox1.TabIndex = 2;
-            this.hopePictureBox1.TabStop = false;
-            this.hopePictureBox1.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnHome.BackColor = System.Drawing.Color.Transparent;
+            this.btnHome.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHome.Image = global::client_firebase.Properties.Resources.home;
+            this.btnHome.Location = new System.Drawing.Point(250, 15);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.btnHome.Size = new System.Drawing.Size(32, 32);
+            this.btnHome.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnHome.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.btnHome.TabIndex = 3;
+            this.btnHome.TabStop = false;
+            this.btnHome.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
             // 
-            // hopePictureBox7
+            // lblLogo
             // 
-            this.hopePictureBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox7.Image = global::client_firebase.Properties.Resources.bell;
-            this.hopePictureBox7.Location = new System.Drawing.Point(629, 8);
-            this.hopePictureBox7.Name = "hopePictureBox7";
-            this.hopePictureBox7.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox7.Size = new System.Drawing.Size(40, 30);
-            this.hopePictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.hopePictureBox7.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox7.TabIndex = 8;
-            this.hopePictureBox7.TabStop = false;
-            this.hopePictureBox7.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.lblLogo.AutoSize = true;
+            this.lblLogo.BackColor = System.Drawing.Color.Transparent;
+            this.lblLogo.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLogo.ForeColor = System.Drawing.Color.White;
+            this.lblLogo.Location = new System.Drawing.Point(55, 15);
+            this.lblLogo.Name = "lblLogo";
+            this.lblLogo.Size = new System.Drawing.Size(107, 30);
+            this.lblLogo.TabIndex = 2;
+            this.lblLogo.Text = "StoryHub";
             // 
-            // hopePictureBox8
+            // picLogo
             // 
-            this.hopePictureBox8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(196)))), ((int)(((byte)(204)))));
-            this.hopePictureBox8.Image = global::client_firebase.Properties.Resources.user;
-            this.hopePictureBox8.Location = new System.Drawing.Point(685, 8);
-            this.hopePictureBox8.Name = "hopePictureBox8";
-            this.hopePictureBox8.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            this.hopePictureBox8.Size = new System.Drawing.Size(40, 30);
-            this.hopePictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.hopePictureBox8.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.hopePictureBox8.TabIndex = 9;
-            this.hopePictureBox8.TabStop = false;
-            this.hopePictureBox8.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.picLogo.BackColor = System.Drawing.Color.Transparent;
+            this.picLogo.Image = global::client_firebase.Properties.Resources.book;
+            this.picLogo.Location = new System.Drawing.Point(14, 15);
+            this.picLogo.Name = "picLogo";
+            this.picLogo.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            this.picLogo.Size = new System.Drawing.Size(35, 32);
+            this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picLogo.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.picLogo.TabIndex = 2;
+            this.picLogo.TabStop = false;
+            this.picLogo.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             // 
-            // panel2
+            // panelContent
             // 
-            this.panel2.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.panel2.Controls.Add(this.flowLayoutPanel2);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.flowLayoutPanel1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 46);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(737, 442);
-            this.panel2.TabIndex = 2;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(24, 39);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(678, 142);
-            this.flowLayoutPanel1.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(21, 13);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Mới cập nhật";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(21, 198);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 15);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Xu hướng";
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.AutoScroll = true;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(24, 230);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(678, 155);
-            this.flowLayoutPanel2.TabIndex = 1;
+            this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelContent.Location = new System.Drawing.Point(0, 60);
+            this.panelContent.Name = "panelContent";
+            this.panelContent.Size = new System.Drawing.Size(900, 540);
+            this.panelContent.TabIndex = 2;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(737, 488);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(900, 600);
+            this.Controls.Add(this.panelContent);
+            this.Controls.Add(this.panelTop);
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "MainForm";
-            this.Text = "MainForm";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hopePictureBox8)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "StoryHub - Ứng Dụng Đọc Truyện Online";
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.panelTop.ResumeLayout(false);
+            this.panelTop.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnProfile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnNotification)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnChat)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnUpload)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnLibrary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnSearch)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnHome)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private ReaLTaiizor.Controls.Panel panel1;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox1;
-        private System.Windows.Forms.Label label1;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox6;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox5;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox4;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox3;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox2;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox7;
-        private ReaLTaiizor.Controls.HopePictureBox hopePictureBox8;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.Panel panelTop;
+        private ReaLTaiizor.Controls.HopePictureBox picLogo;
+        private System.Windows.Forms.Label lblLogo;
+        private ReaLTaiizor.Controls.HopePictureBox btnChat;
+        private ReaLTaiizor.Controls.HopePictureBox btnUpload;
+        private ReaLTaiizor.Controls.HopePictureBox btnLibrary;
+        private ReaLTaiizor.Controls.HopePictureBox btnSearch;
+        private ReaLTaiizor.Controls.HopePictureBox btnHome;
+        private ReaLTaiizor.Controls.HopePictureBox btnNotification;
+        private ReaLTaiizor.Controls.HopePictureBox btnProfile;
+        private System.Windows.Forms.Panel panelContent;
     }
 }
