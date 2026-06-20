@@ -105,7 +105,7 @@
             this.btnChat.BackColor = System.Drawing.Color.Transparent;
             this.btnChat.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnChat.Image = global::client_firebase.Properties.Resources.chat;
-            this.btnChat.Location = new System.Drawing.Point(450, 15);
+            this.btnChat.Location = new System.Drawing.Point(659, 15);
             this.btnChat.Name = "btnChat";
             this.btnChat.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnChat.Size = new System.Drawing.Size(32, 32);
@@ -121,7 +121,7 @@
             this.btnUpload.BackColor = System.Drawing.Color.Transparent;
             this.btnUpload.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnUpload.Image = global::client_firebase.Properties.Resources.up_loading;
-            this.btnUpload.Location = new System.Drawing.Point(400, 15);
+            this.btnUpload.Location = new System.Drawing.Point(558, 15);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnUpload.Size = new System.Drawing.Size(32, 32);
@@ -137,7 +137,7 @@
             this.btnLibrary.BackColor = System.Drawing.Color.Transparent;
             this.btnLibrary.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLibrary.Image = global::client_firebase.Properties.Resources.book__1_;
-            this.btnLibrary.Location = new System.Drawing.Point(350, 15);
+            this.btnLibrary.Location = new System.Drawing.Point(448, 15);
             this.btnLibrary.Name = "btnLibrary";
             this.btnLibrary.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnLibrary.Size = new System.Drawing.Size(32, 32);
@@ -153,7 +153,7 @@
             this.btnSearch.BackColor = System.Drawing.Color.Transparent;
             this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.Image = global::client_firebase.Properties.Resources.search;
-            this.btnSearch.Location = new System.Drawing.Point(300, 15);
+            this.btnSearch.Location = new System.Drawing.Point(346, 15);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnSearch.Size = new System.Drawing.Size(32, 32);

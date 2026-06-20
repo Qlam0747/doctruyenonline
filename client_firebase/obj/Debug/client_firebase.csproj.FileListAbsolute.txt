@@ -30,3 +30,4 @@ C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\obj\Debug\cli
 C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\client_firebase.exe.config
 C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\client_firebase.exe
 C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\bin\Debug\client_firebase.pdb
+C:\Users\QuangLam0204\source\repos\client_firebase\client_firebase\obj\Debug\client_firebase.UC_Home.resources

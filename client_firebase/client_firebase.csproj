@@ -232,6 +232,37 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FirebaseDatabaseService.cs" />
+    <Compile Include="UC_Chat.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Chat.Designer.cs">
+      <DependentUpon>UC_Chat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Upload.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Upload.Designer.cs">
+      <DependentUpon>UC_Upload.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_BookDetail.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_BookDetail.Designer.cs">
+      <DependentUpon>UC_BookDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Reading.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Reading.Designer.cs">
+      <DependentUpon>UC_Reading.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Notification.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Notification.Designer.cs">
+      <DependentUpon>UC_Notification.cs</DependentUpon>
+    </Compile>
     <Compile Include="UC_Home.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -275,6 +306,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UC_Home.resx">
+      <DependentUpon>UC_Home.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

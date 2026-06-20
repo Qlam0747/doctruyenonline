@@ -30,7 +30,7 @@ namespace client_firebase
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.label2.Location = new System.Drawing.Point(20, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(130, 25);
+            this.label2.Size = new System.Drawing.Size(128, 25);
             this.label2.TabIndex = 2;
             this.label2.Text = "Mới cập nhật";
             // 
@@ -41,7 +41,7 @@ namespace client_firebase
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(20, 55);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(760, 210);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(767, 237);
             this.flowLayoutPanel1.TabIndex = 3;
             // 
             // label3
@@ -49,9 +49,9 @@ namespace client_firebase
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.label3.Location = new System.Drawing.Point(20, 280);
+            this.label3.Location = new System.Drawing.Point(20, 303);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(100, 25);
+            this.label3.Size = new System.Drawing.Size(101, 25);
             this.label3.TabIndex = 4;
             this.label3.Text = "Xu hướng";
             // 
@@ -61,9 +61,9 @@ namespace client_firebase
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel2.AutoScroll = true;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(20, 315);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(20, 340);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(760, 265);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(767, 278);
             this.flowLayoutPanel2.TabIndex = 5;
             // 
             // UC_Home
@@ -76,7 +76,7 @@ namespace client_firebase
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.label2);
             this.Name = "UC_Home";
-            this.Size = new System.Drawing.Size(800, 600);
+            this.Size = new System.Drawing.Size(807, 638);
             this.ResumeLayout(false);
             this.PerformLayout();
 
