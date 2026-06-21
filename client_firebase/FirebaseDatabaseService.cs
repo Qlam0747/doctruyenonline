@@ -289,6 +289,64 @@ namespace client_firebase
             }
         }
 
+        public static async Task<string> UploadChapterAsync(string bookId, string chapterNum, string chapterTitle, string chapterContent)
+        {
+            try
+            {
+                var chapter = new ChapterModel
+                {
+                    ChapterNumber = chapterNum,
+                    Title = chapterTitle,
+                    Content = chapterContent,
+                    CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                };
+
+                // 1. Post the new chapter
+                await PostAsync($"books/{bookId}/chapters.json", chapter);
+
+                // 2. Query the book title to construct a notification
+                string bookJson = await GetAsync($"books/{bookId}.json");
+                if (!string.IsNullOrEmpty(bookJson) && bookJson != "null")
+                {
+                    var book = JsonConvert.DeserializeObject<BookModel>(bookJson);
+                    if (book != null)
+                    {
+                        // 3. Send notifications to all readers who bookmarked this book
+                        string subsJson = await GetAsync($"book_subscribers/{bookId}.json");
+                        if (!string.IsNullOrEmpty(subsJson) && subsJson != "null")
+                        {
+                            var subscribers = JsonConvert.DeserializeObject<Dictionary<string, bool>>(subsJson);
+                            if (subscribers != null)
+                            {
+                                foreach (var subscriberId in subscribers.Keys)
+                                {
+                                    // Avoid self-notification if author is subscribed
+                                    if (subscriberId == AuthSession.FirebaseLocalId) continue;
+
+                                    var noti = new NotificationModel
+                                    {
+                                        Title = $"Truyện \"{book.Title}\" vừa ra chương mới!",
+                                        BookId = bookId,
+                                        ChapterName = $"Chương {chapterNum}: {chapterTitle}",
+                                        TimeAgo = "Vừa xong",
+                                        IsRead = false
+                                    };
+                                    await PostAsync($"notifications/{subscriberId}.json", noti);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                return "Error|" + ex.Message;
+            }
+        }
+
+
         public static async Task<List<BookModel>> GetAllBooksAsync()
         {
             var books = new List<BookModel>();
@@ -523,6 +581,7 @@ namespace client_firebase
             try
             {
                 await PutAsync($"bookmarks/{AuthSession.FirebaseLocalId}/{bookId}.json", true);
+                await PutAsync($"book_subscribers/{bookId}/{AuthSession.FirebaseLocalId}.json", true);
                 return true;
             }
             catch { return false; }
@@ -534,6 +593,7 @@ namespace client_firebase
             try
             {
                 await DeleteAsync($"bookmarks/{AuthSession.FirebaseLocalId}/{bookId}.json");
+                await DeleteAsync($"book_subscribers/{bookId}/{AuthSession.FirebaseLocalId}.json");
                 return true;
             }
             catch { return false; }
@@ -670,6 +730,22 @@ namespace client_firebase
             }
             catch {}
             return count;
+        }
+
+        public static async Task<bool> UpdateUserProfileAsync(string username, string birthdate)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return false;
+            try
+            {
+                var payload = new
+                {
+                    username = username,
+                    birthdate = birthdate
+                };
+                await PatchAsync($"users/{AuthSession.FirebaseLocalId}.json", payload);
+                return true;
+            }
+            catch { return false; }
         }
     }
 

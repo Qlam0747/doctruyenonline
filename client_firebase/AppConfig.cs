@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
@@ -13,6 +13,7 @@ namespace client_firebase
         public static string FacebookAppId { get; private set; }
         public static string FacebookClientSecret { get; private set; }
         public static string BackendRevokeUrl { get; private set; }
+        public static string GeminiApiKey { get; private set; }
 
         public static void LoadConfig()
         {
@@ -28,6 +29,7 @@ namespace client_firebase
                 FacebookAppId = config["FacebookAppId"]?.ToString();
                 FacebookClientSecret = config["FacebookClientSecret"]?.ToString();
                 BackendRevokeUrl = config["BackendRevokeUrl"]?.ToString();
+                GeminiApiKey = config["GeminiApiKey"]?.ToString() ?? FirebaseApiKey;
             }
             catch (Exception ex)
             {

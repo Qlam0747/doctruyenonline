@@ -233,6 +233,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FirebaseDatabaseService.cs" />
+    <Compile Include="GeminiService.cs" />
     <Compile Include="UC_Chat.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -276,6 +277,15 @@
       <DependentUpon>UC_Library.cs</DependentUpon>
     </Compile>
     <Compile Include="UC_Search.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FormEditProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAddChapter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchBookCard.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UC_Search.Designer.cs">

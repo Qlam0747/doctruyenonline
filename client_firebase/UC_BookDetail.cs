@@ -12,6 +12,7 @@ namespace client_firebase
         private BookModel currentBook;
         private List<ChapterModel> chaptersList = new List<ChapterModel>();
         private bool isBookmarked = false;
+        private Button btnAddChapter = null;
 
         public UC_BookDetail()
         {
@@ -40,6 +41,35 @@ namespace client_firebase
             {
                 btnBookmark.BackColor = Color.White;
                 btnBookmark.ForeColor = Color.Black;
+            }
+
+            // Show or hide Add Chapter button based on ownership
+            if (book.AuthorId == AuthSession.FirebaseLocalId)
+            {
+                if (btnAddChapter == null)
+                {
+                    btnAddChapter = new Button
+                    {
+                        Text = "➕ Thêm chương",
+                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                        Size = new Size(115, 30),
+                        Location = new Point(505, 175), // Replaces btnChat for the author
+                        FlatStyle = FlatStyle.Flat,
+                        Cursor = Cursors.Hand,
+                        BackColor = Color.FromArgb(46, 204, 113), // Emerald Green
+                        ForeColor = Color.White
+                    };
+                    btnAddChapter.FlatAppearance.BorderSize = 0;
+                    btnAddChapter.Click += btnAddChapter_Click;
+                    panelInfoCard.Controls.Add(btnAddChapter);
+                }
+                btnAddChapter.Visible = true;
+                btnChat.Visible = false;
+            }
+            else
+            {
+                if (btnAddChapter != null) btnAddChapter.Visible = false;
+                btnChat.Visible = true;
             }
 
             // Bind values
@@ -372,6 +402,20 @@ namespace client_firebase
             catch
             {
                 return "";
+            }
+        }
+
+        private async void btnAddChapter_Click(object sender, EventArgs e)
+        {
+            if (currentBook == null) return;
+
+            int nextChapterNum = chaptersList.Count + 1;
+            using (var form = new FormAddChapter(currentBook.Id, currentBook.Title, currentBook.Description, nextChapterNum))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    await LoadChaptersAsync();
+                }
             }
         }
     }

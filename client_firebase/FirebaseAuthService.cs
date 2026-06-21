@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
@@ -158,10 +158,12 @@ namespace client_firebase
                     // Nếu thành công, bóc tách JSON lấy Token, Email và Tên hiển thị
                     JObject json = JObject.Parse(responseString);
                     string firebaseToken = json["idToken"]?.ToString();
-                    string userEmail = json["email"]?.ToString();
-                    string userName = json["displayName"]?.ToString();
+                    string localId = json["localId"]?.ToString();
+                    string userEmail = json["email"]?.ToString() ?? "Chưa cung cấp email";
+                    string userName = json["displayName"]?.ToString() ?? "Người dùng Google";
+                    bool isNewUser = json["isNewUser"] != null && (bool)json["isNewUser"];
 
-                    return $"Success|{firebaseToken}|{userEmail}|{userName}";
+                    return $"Success|{firebaseToken}|{localId}|{userEmail}|{userName}|{isNewUser}";
                 }
                 else
                 {

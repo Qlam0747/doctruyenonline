@@ -1,4 +1,4 @@
-﻿using Firebase.Auth;
+using Firebase.Auth;
 using Google.Apis.Auth.OAuth2;
 using System;
 using System.Drawing;
@@ -131,6 +131,15 @@ namespace client_firebase
                 {
                     var parts = result.Split('|');
                     AuthSession.FirebaseIdToken = parts[1];
+                    AuthSession.FirebaseLocalId = parts[2];
+                    string email = parts.Length > 3 ? parts[3] : "Chưa cung cấp email";
+                    string displayName = parts.Length > 4 ? parts[4] : "Người dùng Google";
+                    bool isNewUser = parts.Length > 5 && bool.Parse(parts[5]);
+
+                    if (isNewUser)
+                    {
+                        await FirebaseAuthService.SaveUserProfileAsync(AuthSession.FirebaseIdToken, AuthSession.FirebaseLocalId, email, displayName, "2000-01-01");
+                    }
                     
                     MainForm mainForm = new MainForm();
                     mainForm.Show();
@@ -168,6 +177,14 @@ namespace client_firebase
                     var parts = loginResult.Split('|');
                     AuthSession.FirebaseIdToken = parts[1];
                     AuthSession.FirebaseLocalId = parts[2];
+                    string email = parts.Length > 3 ? parts[3] : "Chưa cung cấp email";
+                    string displayName = parts.Length > 4 ? parts[4] : "Người dùng Facebook";
+                    bool isNewUser = parts.Length > 5 && bool.Parse(parts[5]);
+
+                    if (isNewUser)
+                    {
+                        await FirebaseAuthService.SaveUserProfileAsync(AuthSession.FirebaseIdToken, AuthSession.FirebaseLocalId, email, displayName, "2000-01-01");
+                    }
 
                     MainForm mainForm = new MainForm();
                     mainForm.Show();
