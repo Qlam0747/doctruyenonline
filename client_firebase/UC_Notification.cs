@@ -25,11 +25,13 @@ namespace client_firebase
         private async void UC_Notification_Load(object sender, EventArgs e)
         {
             await LoadNotificationsAsync();
+            await FirebaseDatabaseService.MarkAllNotificationsAsReadAsync();
         }
 
         public async Task RefreshNotifications()
         {
             await LoadNotificationsAsync();
+            await FirebaseDatabaseService.MarkAllNotificationsAsReadAsync();
         }
 
         private void SwitchTab(bool unread)

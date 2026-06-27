@@ -33,13 +33,17 @@ namespace client_firebase
 
                 if (books == null || books.Count == 0) return;
 
-                // Sort books (e.g. reverse upload order for "New Updates")
+                // Sort books by UpdatedAt timestamp for "New Updates"
                 var newUpdates = new List<BookModel>(books);
-                newUpdates.Reverse();
+                newUpdates.Sort((x, y) => y.UpdatedAt.CompareTo(x.UpdatedAt));
 
-                // Sort by views for "Trends"
+                // Sort by composite trend score (views * rating)
                 var trends = new List<BookModel>(books);
-                trends.Sort((x, y) => y.Views.CompareTo(x.Views));
+                trends.Sort((x, y) => {
+                    double scoreX = x.Views * x.Rating;
+                    double scoreY = y.Views * y.Rating;
+                    return scoreY.CompareTo(scoreX);
+                });
 
                 foreach (var b in newUpdates)
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace client_firebase
@@ -15,6 +16,10 @@ namespace client_firebase
         private UC_BookDetail ucBookDetail;
         private UC_Reading ucReading;
         private UC_Notification ucNotification;
+
+        private Timer badgeTimer;
+        private bool hasUnreadChats = false;
+        private bool hasUnreadNotifications = false;
 
         public MainForm()
         {
@@ -43,6 +48,16 @@ namespace client_firebase
 
             // Wire up notification click programmatically
             btnNotification.Click += btnNotification_Click;
+
+            // Initialize badge polling timer
+            badgeTimer = new Timer();
+            badgeTimer.Interval = 3000;
+            badgeTimer.Tick += BadgeTimer_Tick;
+            badgeTimer.Start();
+
+            // Wire badge painters
+            btnChat.Paint += BtnChat_Paint;
+            btnNotification.Paint += BtnNotification_Paint;
 
             // Khởi tạo menu cho avatar user
             InitializeUserMenu();
@@ -163,9 +178,85 @@ namespace client_firebase
             Application.Exit();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             ShowControl(ucHome);
+            await UpdateProfileAvatar();
+        }
+
+        public async Task UpdateProfileAvatar()
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return;
+            try
+            {
+                var profile = await FirebaseDatabaseService.GetCurrentUserProfileAsync();
+                if (profile != null && !string.IsNullOrEmpty(profile.Avatar))
+                {
+                    byte[] bytes = Convert.FromBase64String(profile.Avatar);
+                    using (var ms = new System.IO.MemoryStream(bytes))
+                    {
+                        btnProfile.Image = Image.FromStream(ms);
+                        btnProfile.Image = (Image)btnProfile.Image.Clone();
+                    }
+                }
+                else
+                {
+                    btnProfile.Image = global::client_firebase.Properties.Resources.user;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error updating profile avatar: " + ex.Message);
+            }
+        }
+
+        private async void BadgeTimer_Tick(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return;
+            try
+            {
+                bool prevChats = hasUnreadChats;
+                bool prevNotis = hasUnreadNotifications;
+
+                hasUnreadChats = await FirebaseDatabaseService.HasAnyUnreadChatsAsync();
+                hasUnreadNotifications = await FirebaseDatabaseService.HasAnyUnreadNotificationsAsync();
+
+                if (hasUnreadChats != prevChats)
+                {
+                    btnChat.Invalidate();
+                }
+                if (hasUnreadNotifications != prevNotis)
+                {
+                    btnNotification.Invalidate();
+                }
+            }
+            catch {}
+        }
+
+        private void BtnChat_Paint(object sender, PaintEventArgs e)
+        {
+            if (hasUnreadChats)
+            {
+                int dotRadius = 4;
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                using (Brush brush = new SolidBrush(Color.Red))
+                {
+                    e.Graphics.FillEllipse(brush, btnChat.Width - (dotRadius * 2) - 4, 4, dotRadius * 2, dotRadius * 2);
+                }
+            }
+        }
+
+        private void BtnNotification_Paint(object sender, PaintEventArgs e)
+        {
+            if (hasUnreadNotifications)
+            {
+                int dotRadius = 4;
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                using (Brush brush = new SolidBrush(Color.Red))
+                {
+                    e.Graphics.FillEllipse(brush, btnNotification.Width - (dotRadius * 2) - 4, 4, dotRadius * 2, dotRadius * 2);
+                }
+            }
         }
 
         public void ShowControl(UserControl uc)

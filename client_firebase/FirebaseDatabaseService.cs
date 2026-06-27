@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,9 @@ namespace client_firebase
         public string AuthorName { get; set; }
         public int Views { get; set; } = 0;
         public double Rating { get; set; } = 5.0;
+        public int Likes { get; set; } = 0;
+        public long UpdatedAt { get; set; } = 0;
+        public string Status { get; set; } = "Đang tiến hành";
         public Dictionary<string, ChapterModel> Chapters { get; set; } = new Dictionary<string, ChapterModel>();
     }
 
@@ -35,6 +39,7 @@ namespace client_firebase
         public string Email { get; set; }
         public string Username { get; set; }
         public string Birthdate { get; set; }
+        public string Avatar { get; set; }
     }
 
     public class MessageModel
@@ -43,6 +48,9 @@ namespace client_firebase
         public string ReceiverId { get; set; }
         public string Text { get; set; }
         public long Timestamp { get; set; }
+        public string FileType { get; set; } = "text"; // "text", "image", "file"
+        public string FileBase64 { get; set; }
+        public string FileName { get; set; }
     }
 
     public static class FirebaseDatabaseService
@@ -203,18 +211,25 @@ namespace client_firebase
         {
             if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(partnerId)) return false;
 
+            if (await IsBlockedByEitherAsync(partnerId))
+            {
+                return false;
+            }
+
             string chatId = GetChatId(AuthSession.FirebaseLocalId, partnerId);
             var message = new MessageModel
             {
                 SenderId = AuthSession.FirebaseLocalId,
                 ReceiverId = partnerId,
                 Text = text,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                FileType = "text"
             };
 
             try
             {
                 await PostAsync($"messages/{chatId}.json", message);
+                await SetChatUnreadAsync(partnerId, true);
                 return true;
             }
             catch (Exception ex)
@@ -232,7 +247,7 @@ namespace client_firebase
             return null;
         }
 
-        public static async Task<string> UploadBookAsync(string title, string description, string coverBase64, List<string> genres, string chapterNum, string chapterTitle, string chapterContent)
+        public static async Task<string> UploadBookAsync(string title, string description, string coverBase64, List<string> genres, string chapterNum, string chapterTitle, string chapterContent, string status = "Đang tiến hành")
         {
             try
             {
@@ -243,6 +258,8 @@ namespace client_firebase
                     authorName = profile.Username;
                 }
 
+                long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
                 var book = new BookModel
                 {
                     Title = title,
@@ -251,8 +268,11 @@ namespace client_firebase
                     Genres = genres,
                     AuthorId = AuthSession.FirebaseLocalId,
                     AuthorName = authorName,
-                    Views = new Random().Next(100, 1500),
-                    Rating = Math.Round(4.0 + new Random().NextDouble(), 1)
+                    Views = 0,
+                    Rating = 5.0,
+                    Likes = 0,
+                    Status = status,
+                    UpdatedAt = now
                 };
 
                 // Add first chapter
@@ -261,7 +281,7 @@ namespace client_firebase
                     ChapterNumber = chapterNum,
                     Title = chapterTitle,
                     Content = chapterContent,
-                    CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                    CreatedAt = now
                 };
 
                 string response = await PostAsync("books.json", book);
@@ -281,6 +301,29 @@ namespace client_firebase
                 await PutAsync($"books/{generatedId}/id.json", generatedId);
                 await PostAsync($"books/{generatedId}/chapters.json", chapter);
 
+                // Send notification to author's followers about the new book!
+                string followersJson = await GetAsync($"author_followers/{AuthSession.FirebaseLocalId}.json");
+                if (!string.IsNullOrEmpty(followersJson) && followersJson != "null")
+                {
+                    var followers = JsonConvert.DeserializeObject<Dictionary<string, bool>>(followersJson);
+                    if (followers != null)
+                    {
+                        foreach (var followerId in followers.Keys)
+                        {
+                            if (followerId == AuthSession.FirebaseLocalId) continue;
+                            var noti = new NotificationModel
+                            {
+                                Title = $"Tác giả \"{authorName}\" vừa đăng truyện mới!",
+                                BookId = generatedId,
+                                ChapterName = $"Tác phẩm mới: {title}",
+                                TimeAgo = "Vừa xong",
+                                IsRead = false
+                            };
+                            await PostAsync($"notifications/{followerId}.json", noti);
+                        }
+                    }
+                }
+
                 return "Success|" + generatedId;
             }
             catch (Exception ex)
@@ -293,16 +336,21 @@ namespace client_firebase
         {
             try
             {
+                long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
                 var chapter = new ChapterModel
                 {
                     ChapterNumber = chapterNum,
                     Title = chapterTitle,
                     Content = chapterContent,
-                    CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                    CreatedAt = now
                 };
 
                 // 1. Post the new chapter
                 await PostAsync($"books/{bookId}/chapters.json", chapter);
+
+                // Update book's UpdatedAt timestamp
+                await PutAsync($"books/{bookId}/updatedAt.json", now);
 
                 // 2. Query the book title to construct a notification
                 string bookJson = await GetAsync($"books/{bookId}.json");
@@ -311,6 +359,8 @@ namespace client_firebase
                     var book = JsonConvert.DeserializeObject<BookModel>(bookJson);
                     if (book != null)
                     {
+                        var recipients = new HashSet<string>();
+
                         // 3. Send notifications to all readers who bookmarked this book
                         string subsJson = await GetAsync($"book_subscribers/{bookId}.json");
                         if (!string.IsNullOrEmpty(subsJson) && subsJson != "null")
@@ -318,22 +368,39 @@ namespace client_firebase
                             var subscribers = JsonConvert.DeserializeObject<Dictionary<string, bool>>(subsJson);
                             if (subscribers != null)
                             {
-                                foreach (var subscriberId in subscribers.Keys)
-                                {
-                                    // Avoid self-notification if author is subscribed
-                                    if (subscriberId == AuthSession.FirebaseLocalId) continue;
+                                foreach (var id in subscribers.Keys) recipients.Add(id);
+                            }
+                        }
 
-                                    var noti = new NotificationModel
-                                    {
-                                        Title = $"Truyện \"{book.Title}\" vừa ra chương mới!",
-                                        BookId = bookId,
-                                        ChapterName = $"Chương {chapterNum}: {chapterTitle}",
-                                        TimeAgo = "Vừa xong",
-                                        IsRead = false
-                                    };
-                                    await PostAsync($"notifications/{subscriberId}.json", noti);
+                        // 4. Send notifications to all followers of the author
+                        if (!string.IsNullOrEmpty(book.AuthorId))
+                        {
+                            string followersJson = await GetAsync($"author_followers/{book.AuthorId}.json");
+                            if (!string.IsNullOrEmpty(followersJson) && followersJson != "null")
+                            {
+                                var followers = JsonConvert.DeserializeObject<Dictionary<string, bool>>(followersJson);
+                                if (followers != null)
+                                {
+                                    foreach (var id in followers.Keys) recipients.Add(id);
                                 }
                             }
+                        }
+
+                        // Send notifications
+                        foreach (var recipientId in recipients)
+                        {
+                            // Avoid self-notification if author is recipient
+                            if (recipientId == AuthSession.FirebaseLocalId) continue;
+
+                            var noti = new NotificationModel
+                            {
+                                Title = $"Truyện \"{book.Title}\" vừa ra chương mới!",
+                                BookId = bookId,
+                                ChapterName = $"Chương {chapterNum}: {chapterTitle}",
+                                TimeAgo = "Vừa xong",
+                                IsRead = false
+                            };
+                            await PostAsync($"notifications/{recipientId}.json", noti);
                         }
                     }
                 }
@@ -746,6 +813,305 @@ namespace client_firebase
                 return true;
             }
             catch { return false; }
+        }
+
+        public static async Task IncrementBookViewsAsync(string bookId)
+        {
+            if (string.IsNullOrEmpty(bookId)) return;
+            try
+            {
+                string viewsStr = await GetAsync($"books/{bookId}/views.json");
+                int currentViews = 0;
+                if (!string.IsNullOrEmpty(viewsStr) && viewsStr != "null")
+                {
+                    int.TryParse(viewsStr, out currentViews);
+                }
+                currentViews++;
+                await PutAsync($"books/{bookId}/views.json", currentViews);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error incrementing views: " + ex.Message);
+            }
+        }
+
+        public static async Task<int> ToggleBookLikeAsync(string bookId, bool isAdd)
+        {
+            if (string.IsNullOrEmpty(bookId)) return 0;
+            try
+            {
+                string likesStr = await GetAsync($"books/{bookId}/likes.json");
+                int currentLikes = 0;
+                if (!string.IsNullOrEmpty(likesStr) && likesStr != "null")
+                {
+                    int.TryParse(likesStr, out currentLikes);
+                }
+                currentLikes = isAdd ? currentLikes + 1 : Math.Max(0, currentLikes - 1);
+                await PutAsync($"books/{bookId}/likes.json", currentLikes);
+                return currentLikes;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error toggling likes: " + ex.Message);
+                return 0;
+            }
+        }
+
+        public static async Task<bool> IsFavoriteAsync(string bookId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(bookId)) return false;
+            string res = await GetAsync($"favorites/{AuthSession.FirebaseLocalId}/{bookId}.json");
+            return !string.IsNullOrEmpty(res) && res != "null";
+        }
+
+        public static async Task<bool> IsFollowingAuthorAsync(string authorId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(authorId)) return false;
+            string res = await GetAsync($"author_followers/{authorId}/{AuthSession.FirebaseLocalId}.json");
+            return !string.IsNullOrEmpty(res) && res != "null";
+        }
+
+        public static async Task<bool> FollowAuthorAsync(string authorId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(authorId)) return false;
+            try
+            {
+                await PutAsync($"author_followers/{authorId}/{AuthSession.FirebaseLocalId}.json", true);
+                await PutAsync($"user_following/{AuthSession.FirebaseLocalId}/{authorId}.json", true);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<bool> UnfollowAuthorAsync(string authorId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(authorId)) return false;
+            try
+            {
+                await DeleteAsync($"author_followers/{authorId}/{AuthSession.FirebaseLocalId}.json");
+                await DeleteAsync($"user_following/{AuthSession.FirebaseLocalId}/{authorId}.json");
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<int> GetFollowersCountAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId)) return 0;
+            string json = await GetAsync($"author_followers/{userId}.json");
+            if (string.IsNullOrEmpty(json) || json == "null") return 0;
+            try
+            {
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, bool>>(json);
+                return dict?.Count ?? 0;
+            }
+            catch { return 0; }
+        }
+
+        public static async Task<int> GetFollowingCountAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId)) return 0;
+            string json = await GetAsync($"user_following/{userId}.json");
+            if (string.IsNullOrEmpty(json) || json == "null") return 0;
+            try
+            {
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, bool>>(json);
+                return dict?.Count ?? 0;
+            }
+            catch { return 0; }
+        }
+
+        public static async Task<double> RateBookAsync(string bookId, double ratingValue)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(bookId)) return 5.0;
+            try
+            {
+                // Save user's rating
+                await PutAsync($"book_ratings/{bookId}/{AuthSession.FirebaseLocalId}.json", ratingValue);
+
+                // Fetch all ratings for this book
+                string allRatingsJson = await GetAsync($"book_ratings/{bookId}.json");
+                if (!string.IsNullOrEmpty(allRatingsJson) && allRatingsJson != "null")
+                {
+                    var ratings = JsonConvert.DeserializeObject<Dictionary<string, double>>(allRatingsJson);
+                    if (ratings != null && ratings.Count > 0)
+                    {
+                        double sum = 0;
+                        foreach (var r in ratings.Values)
+                        {
+                            sum += r;
+                        }
+                        double avg = sum / ratings.Count;
+                        avg = Math.Round(avg, 1);
+                        // Save average rating to the book
+                        await PutAsync($"books/{bookId}/rating.json", avg);
+                        return avg;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error rating book: " + ex.Message);
+            }
+            return 5.0;
+        }
+
+        public static async Task<bool> UpdateUserAvatarAsync(string base64Avatar)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return false;
+            try
+            {
+                await PutAsync($"users/{AuthSession.FirebaseLocalId}/avatar.json", base64Avatar);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<bool> DeleteConversationAsync(string partnerId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(partnerId)) return false;
+            try
+            {
+                string chatId = GetChatId(AuthSession.FirebaseLocalId, partnerId);
+                await DeleteAsync($"messages/{chatId}.json");
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<bool> BlockUserAsync(string blockedUserId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(blockedUserId)) return false;
+            try
+            {
+                await PutAsync($"blocked_users/{AuthSession.FirebaseLocalId}/{blockedUserId}.json", true);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<bool> IsUserBlockedAsync(string blockedUserId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(blockedUserId)) return false;
+            string res = await GetAsync($"blocked_users/{AuthSession.FirebaseLocalId}/{blockedUserId}.json");
+            return !string.IsNullOrEmpty(res) && res != "null";
+        }
+
+        public static async Task<bool> IsBlockedByEitherAsync(string partnerId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(partnerId)) return false;
+            // Check if we blocked them
+            string res1 = await GetAsync($"blocked_users/{AuthSession.FirebaseLocalId}/{partnerId}.json");
+            if (!string.IsNullOrEmpty(res1) && res1 != "null") return true;
+            // Check if they blocked us
+            string res2 = await GetAsync($"blocked_users/{partnerId}/{AuthSession.FirebaseLocalId}.json");
+            if (!string.IsNullOrEmpty(res2) && res2 != "null") return true;
+            return false;
+        }
+
+        public static async Task<bool> SendMessageWithFileAsync(string partnerId, string text, string fileType, string fileBase64, string fileName)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(partnerId)) return false;
+
+            if (await IsBlockedByEitherAsync(partnerId))
+            {
+                System.Windows.Forms.MessageBox.Show("Không thể gửi tin nhắn. Người dùng đã bị chặn hoặc bạn đã bị chặn bởi người này.", "Lỗi");
+                return false;
+            }
+
+            string chatId = GetChatId(AuthSession.FirebaseLocalId, partnerId);
+            var message = new MessageModel
+            {
+                SenderId = AuthSession.FirebaseLocalId,
+                ReceiverId = partnerId,
+                Text = text,
+                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                FileType = fileType,
+                FileBase64 = fileBase64,
+                FileName = fileName
+            };
+
+            try
+            {
+                await PostAsync($"messages/{chatId}.json", message);
+                await SetChatUnreadAsync(partnerId, true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error sending file message: " + ex.Message);
+                return false;
+            }
+        }
+
+        public static async Task SetChatUnreadAsync(string partnerId, bool isUnread)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(partnerId)) return;
+            try
+            {
+                if (isUnread)
+                {
+                    await PutAsync($"unread_chats/{partnerId}/{AuthSession.FirebaseLocalId}.json", true);
+                }
+                else
+                {
+                    await DeleteAsync($"unread_chats/{AuthSession.FirebaseLocalId}/{partnerId}.json");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error setting chat unread: " + ex.Message);
+            }
+        }
+
+        public static async Task<bool> HasAnyUnreadChatsAsync()
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return false;
+            try
+            {
+                string json = await GetAsync($"unread_chats/{AuthSession.FirebaseLocalId}.json");
+                return !string.IsNullOrEmpty(json) && json != "null";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static async Task<bool> HasAnyUnreadNotificationsAsync()
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return false;
+            try
+            {
+                var notifications = await GetNotificationsAsync();
+                return notifications.Any(n => !n.IsRead);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static async Task<int> LikeCommentAsync(string bookId, string commentId)
+        {
+            if (string.IsNullOrEmpty(bookId) || string.IsNullOrEmpty(commentId)) return 0;
+            try
+            {
+                string likesStr = await GetAsync($"comments/{bookId}/{commentId}/Likes.json");
+                int currentLikes = 0;
+                if (!string.IsNullOrEmpty(likesStr) && likesStr != "null")
+                {
+                    int.TryParse(likesStr, out currentLikes);
+                }
+                currentLikes++;
+                await PutAsync($"comments/{bookId}/{commentId}/Likes.json", currentLikes);
+                return currentLikes;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error liking comment: " + ex.Message);
+                return 0;
+            }
         }
     }
 

@@ -11,6 +11,9 @@ namespace client_firebase
     {
         private int activeTab = 0; // 0 = Bookmark, 1 = History, 2 = Favorites
         private List<BookModel> allBooks = new List<BookModel>();
+        private List<string> cachedBookmarks = new List<string>();
+        private List<string> cachedHistory = new List<string>();
+        private List<string> cachedFavorites = new List<string>();
 
         public UC_Library()
         {
@@ -23,30 +26,46 @@ namespace client_firebase
             btnEdit.Click += btnEdit_Click;
             btnSettings.Click += btnSettings_Click;
 
+            pbAvatar.Cursor = Cursors.Hand;
+            pbAvatar.Click += pbAvatar_Click;
+
             this.Load += UC_Library_Load;
         }
 
         private async void UC_Library_Load(object sender, EventArgs e)
         {
-            await LoadUserProfileAsync();
-            await LoadBooksDataAsync();
+            await RefreshLibraryData();
         }
 
         public async Task RefreshLibraryData()
         {
-            await LoadUserProfileAsync();
-            await LoadBooksDataAsync();
+            var taskProfile = LoadUserProfileAsync();
+            var taskBooks = LoadBooksDataAsync();
+            await Task.WhenAll(taskProfile, taskBooks);
         }
 
         private async Task LoadUserProfileAsync()
         {
             try
             {
-                var profile = await FirebaseDatabaseService.GetCurrentUserProfileAsync();
+                var profileTask = FirebaseDatabaseService.GetCurrentUserProfileAsync();
+                var bioTask = FirebaseDatabaseService.GetUserBioAsync();
+                var bookCountTask = FirebaseDatabaseService.GetUserBookCountAsync();
+                var followersTask = FirebaseDatabaseService.GetFollowersCountAsync(AuthSession.FirebaseLocalId);
+                var followingTask = FirebaseDatabaseService.GetFollowingCountAsync(AuthSession.FirebaseLocalId);
+
+                await Task.WhenAll(profileTask, bioTask, bookCountTask, followersTask, followingTask);
+
+                var profile = profileTask.Result;
+                string bio = bioTask.Result;
+                int bookCount = bookCountTask.Result;
+                int followersCount = followersTask.Result;
+                int followingCount = followingTask.Result;
+
                 if (profile != null)
                 {
                     lblUsername.Text = profile.Username;
-                    DrawAvatar(pbAvatar, profile.Username);
+                    DrawAvatar(pbAvatar, profile.Username, profile.Avatar);
                 }
                 else
                 {
@@ -54,13 +73,10 @@ namespace client_firebase
                     DrawAvatar(pbAvatar, "Người đọc");
                 }
 
-                // Load Bio
-                string bio = await FirebaseDatabaseService.GetUserBioAsync();
                 lblBio.Text = bio;
-
-                // Load dynamic book count
-                int bookCount = await FirebaseDatabaseService.GetUserBookCountAsync();
                 lblPostedCount.Text = $"{bookCount} Truyện đã đăng";
+                lblFollowers.Text = $"{followersCount} Người theo dõi";
+                lblFollowing.Text = $"{followingCount} Đang theo dõi";
             }
             catch (Exception ex)
             {
@@ -71,8 +87,28 @@ namespace client_firebase
         private async Task LoadBooksDataAsync()
         {
             this.Cursor = Cursors.WaitCursor;
-            allBooks = await FirebaseDatabaseService.GetAllBooksAsync();
-            this.Cursor = Cursors.Default;
+            try
+            {
+                var allBooksTask = FirebaseDatabaseService.GetAllBooksAsync();
+                var bookmarksTask = FirebaseDatabaseService.GetBookmarkedBookIdsAsync();
+                var historyTask = FirebaseDatabaseService.GetHistoryBookIdsAsync();
+                var favoritesTask = FirebaseDatabaseService.GetFavoriteBookIdsAsync();
+
+                await Task.WhenAll(allBooksTask, bookmarksTask, historyTask, favoritesTask);
+
+                allBooks = allBooksTask.Result;
+                cachedBookmarks = bookmarksTask.Result;
+                cachedHistory = historyTask.Result;
+                cachedFavorites = favoritesTask.Result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error loading books data: " + ex.Message);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
 
             await RenderBooksListAsync();
         }
@@ -101,19 +137,19 @@ namespace client_firebase
         {
             flpBooks.Controls.Clear();
 
-            List<string> targetBookIds = new List<string>();
+            List<string> targetBookIds;
 
             if (activeTab == 0)
             {
-                targetBookIds = await FirebaseDatabaseService.GetBookmarkedBookIdsAsync();
+                targetBookIds = cachedBookmarks;
             }
             else if (activeTab == 1)
             {
-                targetBookIds = await FirebaseDatabaseService.GetHistoryBookIdsAsync();
+                targetBookIds = cachedHistory;
             }
             else
             {
-                targetBookIds = await FirebaseDatabaseService.GetFavoriteBookIdsAsync();
+                targetBookIds = cachedFavorites;
             }
 
             if (targetBookIds.Count == 0)
@@ -211,14 +247,78 @@ namespace client_firebase
             }
         }
 
-        private void btnSettings_Click(object sender, EventArgs e)
+        private async void btnSettings_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Màn hình Cài đặt cá nhân sẽ được phát triển sau!", "Cài đặt");
+            using (var form = new FormEditProfile())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    await RefreshLibraryData();
+                }
+            }
         }
 
-        private void DrawAvatar(PictureBox pb, string name)
+        private async void pbAvatar_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.bmp;*.gif";
+                ofd.Title = "Chọn ảnh đại diện của bạn";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        byte[] bytes = File.ReadAllBytes(ofd.FileName);
+                        string base64 = Convert.ToBase64String(bytes);
+
+                        this.Cursor = Cursors.WaitCursor;
+                        bool success = await FirebaseDatabaseService.UpdateUserAvatarAsync(base64);
+                        this.Cursor = Cursors.Default;
+
+                        if (success)
+                        {
+                            MessageBox.Show("Cập nhật ảnh đại diện thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            await RefreshLibraryData();
+                            if (this.ParentForm is MainForm mf)
+                            {
+                                await mf.UpdateProfileAvatar();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Cập nhật ảnh đại diện thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi đọc file ảnh: " + ex.Message, "Lỗi");
+                    }
+                }
+            }
+        }
+
+        private void DrawAvatar(PictureBox pb, string name, string avatarBase64 = null)
         {
             pb.Paint -= pb_PaintAvatar;
+            if (!string.IsNullOrEmpty(avatarBase64))
+            {
+                try
+                {
+                    byte[] bytes = Convert.FromBase64String(avatarBase64);
+                    using (var ms = new MemoryStream(bytes))
+                    {
+                        pb.Image = Image.FromStream(ms);
+                        pb.Image = (Image)pb.Image.Clone();
+                    }
+                    return; // Bypass dynamic Paint avatar
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error parsing user avatar: " + ex.Message);
+                }
+            }
+
+            pb.Image = null;
             pb.Tag = name;
             pb.Paint += pb_PaintAvatar;
             pb.Invalidate();

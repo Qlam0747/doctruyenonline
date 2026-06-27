@@ -15,10 +15,21 @@ namespace client_firebase
 
         private BookModel _book;
 
-        public SearchBookCard(BookModel book)
+        // ==========================================
+        // 1. SỬA ĐỔI: Thêm Constructor mặc định KHÔNG tham số cho Designer
+        // ==========================================
+        public SearchBookCard()
+        {
+            InitializeComponent();
+            SetupClickEvents(); // Tách phần xử lý logic sự kiện ra ngoài
+        }
+
+        // ==========================================
+        // 2. GIỮ NGUYÊN: Constructor truyền data dùng khi chạy ứng dụng
+        // ==========================================
+        public SearchBookCard(BookModel book) : this() // Gọi lại constructor mặc định ở trên trước
         {
             _book = book;
-            InitializeComponent();
             BindData();
         }
 
@@ -46,7 +57,8 @@ namespace client_firebase
                 Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(33, 37, 41),
                 AutoEllipsis = true,
-                TextAlign = ContentAlignment.MiddleLeft
+                TextAlign = ContentAlignment.MiddleLeft,
+                Text = "Tên sách mẫu" // Gán text mặc định để Designer hiển thị trực quan
             };
 
             // Author
@@ -57,7 +69,8 @@ namespace client_firebase
                 Font = new Font("Segoe UI", 8F, FontStyle.Regular),
                 ForeColor = Color.Gray,
                 AutoEllipsis = true,
-                TextAlign = ContentAlignment.MiddleLeft
+                TextAlign = ContentAlignment.MiddleLeft,
+                Text = "Tác giả"
             };
 
             // Book Icon
@@ -66,6 +79,7 @@ namespace client_firebase
                 Location = new Point(8, 204),
                 Size = new Size(16, 16),
                 SizeMode = PictureBoxSizeMode.Zoom,
+                // Thêm kiểm tra tránh lỗi nếu file Resource chưa được build hoặc thiếu
                 Image = global::client_firebase.Properties.Resources.book__1_,
             };
 
@@ -76,7 +90,8 @@ namespace client_firebase
                 Size = new Size(40, 18),
                 Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(108, 92, 231),
-                TextAlign = ContentAlignment.MiddleLeft
+                TextAlign = ContentAlignment.MiddleLeft,
+                Text = "0"
             };
 
             // Status Label
@@ -96,11 +111,20 @@ namespace client_firebase
             this.Controls.Add(picBookIcon);
             this.Controls.Add(lblChapters);
             this.Controls.Add(lblStatus);
+        }
 
-            // Wire up clicks to navigate to book details
+        // ==========================================
+        // 3. SỬA ĐỔI: Tách hàm gán sự kiện Click & Check Null an toàn
+        // ==========================================
+        private void SetupClickEvents()
+        {
             Action clickAction = () =>
             {
-                if (this.ParentForm is MainForm mf)
+                // KHÔNG chạy logic này nếu đang ở chế độ Design kéo thả của Visual Studio
+                if (this.DesignMode) return;
+
+                // Kiểm tra an toàn xem _book có dữ liệu thực tế chưa
+                if (_book != null && this.ParentForm is MainForm mf)
                 {
                     mf.ShowBookDetail(_book);
                 }
@@ -123,7 +147,7 @@ namespace client_firebase
             int chapterCount = _book.Chapters != null ? _book.Chapters.Count : 0;
             lblChapters.Text = chapterCount.ToString();
 
-            // Dynamic status based on chapter count (similar to complete vs ongoing)
+            // Dynamic status based on chapter count
             if (chapterCount == 0)
             {
                 lblStatus.Text = "Đang soạn";
@@ -161,7 +185,7 @@ namespace client_firebase
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            
+
             // Draw border
             using (var pen = new Pen(Color.FromArgb(220, 220, 220), 1))
             {

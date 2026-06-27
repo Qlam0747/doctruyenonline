@@ -134,7 +134,40 @@ namespace client_firebase
                 Size = new Size(595, 310),
                 Multiline = true,
                 ScrollBars = ScrollBars.Vertical,
-                BorderStyle = BorderStyle.FixedSingle
+                BorderStyle = BorderStyle.FixedSingle,
+                MaxLength = 500000 // Extended limit (approx. 100k+ words)
+            };
+
+            // Import File Button
+            Button btnImportFile = new Button
+            {
+                Text = "📁 Nhập từ file .txt",
+                Location = new Point(335, 140),
+                Size = new Size(135, 30),
+                BackColor = Color.FromArgb(230, 230, 230),
+                ForeColor = Color.Black,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold)
+            };
+            btnImportFile.Click += (s, e) =>
+            {
+                using (OpenFileDialog ofd = new OpenFileDialog())
+                {
+                    ofd.Filter = "Text Files|*.txt|All Files|*.*";
+                    ofd.Title = "Chọn file văn bản nội dung chương";
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            txtChapterContent.Text = System.IO.File.ReadAllText(ofd.FileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Lỗi đọc file: " + ex.Message, "Lỗi");
+                        }
+                    }
+                }
             };
 
             // Submit Button
@@ -174,6 +207,7 @@ namespace client_firebase
             this.Controls.Add(txtChapterTitle);
             this.Controls.Add(lblChapterContent);
             this.Controls.Add(btnAIAssist);
+            this.Controls.Add(btnImportFile);
             this.Controls.Add(txtChapterContent);
             this.Controls.Add(btnSubmit);
             this.Controls.Add(btnCancel);

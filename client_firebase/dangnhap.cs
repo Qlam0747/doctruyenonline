@@ -114,7 +114,7 @@ namespace client_firebase
                         ClientSecret = AppConfig.GoogleClientSecret
                     },
                     new[] { "openid", "email", "profile" },
-                    "user",
+                    Guid.NewGuid().ToString(), 
                     CancellationToken.None);
 
                 string googleIdToken = credential.Token.IdToken;

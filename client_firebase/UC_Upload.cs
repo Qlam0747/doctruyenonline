@@ -22,13 +22,80 @@ namespace client_firebase
             btnBack.Click += btnBack_Click;
             btnSubmit.Click += btnSubmit_Click;
 
+            // Adjust txtTitle width to make space for status combobox
+            txtTitle.Width = 320;
+
+            // Create status label and combobox dynamically
+            Label lblStatus = new Label
+            {
+                Text = "Trạng thái",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Location = new Point(570, 45),
+                Size = new Size(150, 15)
+            };
+            ComboBox cbStatus = new ComboBox
+            {
+                Name = "cbStatus",
+                Font = new Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular),
+                Location = new Point(570, 65),
+                Size = new Size(150, 25),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            cbStatus.Items.AddRange(new object[] { "Đang tiến hành", "Đã hoàn thành" });
+            cbStatus.SelectedIndex = 0;
+            panelStep1.Controls.Add(lblStatus);
+            panelStep1.Controls.Add(cbStatus);
+
+            // Adjust txtDescription and flpGenres height to fit more genres
+            txtDescription.Height = 160; // Reduce height from 225 to 160
+            lblGenre.Location = new Point(10, 295); // Move up
+            flpGenres.Location = new Point(10, 315);
+            flpGenres.Height = 110;
+            flpGenres.AutoScroll = true;
+
+            // Set txtChapterContent MaxLength to 500,000 characters
+            txtChapterContent.MaxLength = 500000;
+
+            // Create btnImportFile dynamically in Step 2
+            Button btnImportFile = new Button
+            {
+                Text = "📁 Nhập từ file .txt",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Size = new Size(130, 25),
+                Location = new Point(590, 155), // Right aligned, above txtChapterContent
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                BackColor = Color.FromArgb(230, 230, 230),
+                ForeColor = Color.Black
+            };
+            btnImportFile.Click += (s, e) =>
+            {
+                using (OpenFileDialog ofd = new OpenFileDialog())
+                {
+                    ofd.Filter = "Text Files|*.txt|All Files|*.*";
+                    ofd.Title = "Chọn file văn bản nội dung chương";
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            txtChapterContent.Text = File.ReadAllText(ofd.FileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Lỗi đọc file: " + ex.Message, "Lỗi");
+                        }
+                    }
+                }
+            };
+            panelStep2.Controls.Add(btnImportFile);
+
             // Load genres
             InitializeGenreButtons();
         }
 
         private void InitializeGenreButtons()
         {
-            string[] genres = { "Phiêu lưu", "Lãng mạn", "Viễn tưởng", "Kinh dị", "Hài hước" };
+            string[] genres = { "Phiêu lưu", "Lãng mạn", "Viễn tưởng", "Kinh dị", "Hài hước", "Hành động", "Dã sử", "Trinh thám", "Cổ đại", "Huyền huyễn", "Đô thị", "Học đường", "Võ hiệp", "Khoa học" };
             flpGenres.Controls.Clear();
             foreach (var genre in genres)
             {
@@ -213,7 +280,14 @@ namespace client_firebase
             string chapTitle = txtChapterTitle.Text.Trim();
             string chapContent = txtChapterContent.Text.Trim();
 
-            string res = await FirebaseDatabaseService.UploadBookAsync(title, desc, coverBase64, selectedGenres, chapNum, chapTitle, chapContent);
+            string status = "Đang tiến hành";
+            var cbStatus = panelStep1.Controls["cbStatus"] as ComboBox;
+            if (cbStatus != null)
+            {
+                status = cbStatus.SelectedItem.ToString();
+            }
+
+            string res = await FirebaseDatabaseService.UploadBookAsync(title, desc, coverBase64, selectedGenres, chapNum, chapTitle, chapContent, status);
 
             this.Cursor = Cursors.Default;
             btnSubmit.Enabled = true;

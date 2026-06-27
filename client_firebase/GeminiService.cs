@@ -10,6 +10,8 @@ namespace client_firebase
 {
     public static class GeminiService
     {
+        private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+
         public static async Task<string> GenerateTextAsync(string prompt)
         {
             string apiKey = AppConfig.GeminiApiKey;
@@ -39,30 +41,25 @@ namespace client_firebase
 
             try
             {
-                using (var client = new HttpClient())
-                {
-                    // Set a timeout of 15 seconds for responsiveness
-                    client.Timeout = TimeSpan.FromSeconds(15);
-                    HttpResponseMessage response = await client.PostAsync(url, content);
-                    string responseString = await response.Content.ReadAsStringAsync();
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                string responseString = await response.Content.ReadAsStringAsync();
 
-                    if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
+                {
+                    JObject json = JObject.Parse(responseString);
+                    string text = json["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
+                    return text ?? "Không nhận được phản hồi từ AI.";
+                }
+                else
+                {
+                    try
                     {
-                        JObject json = JObject.Parse(responseString);
-                        string text = json["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
-                        return text ?? "Không nhận được phản hồi từ AI.";
+                        JObject errJson = JObject.Parse(responseString);
+                        string errMsg = errJson["error"]?["message"]?.ToString();
+                        if (!string.IsNullOrEmpty(errMsg)) return "Lỗi AI API: " + errMsg;
                     }
-                    else
-                    {
-                        try
-                        {
-                            JObject errJson = JObject.Parse(responseString);
-                            string errMsg = errJson["error"]?["message"]?.ToString();
-                            if (!string.IsNullOrEmpty(errMsg)) return "Lỗi AI API: " + errMsg;
-                        }
-                        catch {}
-                        return $"Lỗi API (Mã lỗi {response.StatusCode}): " + responseString;
-                    }
+                    catch {}
+                    return $"Lỗi API (Mã lỗi {response.StatusCode}): " + responseString;
                 }
             }
             catch (Exception ex)

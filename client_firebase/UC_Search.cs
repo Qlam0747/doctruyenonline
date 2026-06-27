@@ -16,9 +16,9 @@ namespace client_firebase
 
         private readonly string[] GenresList = new string[]
         {
-            "Huyền Huyễn", "Lãng Mạn", "Trinh Thám", "Kinh Dị", "Phiêu Lưu",
-            "Khoa Học Viễn Tưởng", "Giả Tưởng", "Hài Hước", "Võng Du", "Đô Thị",
-            "Học Đường", "Xuyên Không"
+            "Phiêu lưu", "Lãng mạn", "Viễn tưởng", "Kinh dị", "Hài hước",
+            "Hành động", "Dã sử", "Trinh thám", "Cổ đại", "Huyền huyễn",
+            "Đô thị", "Học đường", "Võ hiệp", "Khoa học"
         };
 
         private readonly string[] SortList = new string[]
@@ -227,7 +227,7 @@ namespace client_firebase
                                     (b.AuthorName != null && b.AuthorName.ToLower().Contains(query));
 
                 bool matchesGenres = _selectedGenres.Count == 0 || 
-                                     _selectedGenres.All(g => b.Genres != null && b.Genres.Contains(g));
+                                     _selectedGenres.All(g => b.Genres != null && b.Genres.Any(bg => string.Equals(bg, g, StringComparison.OrdinalIgnoreCase)));
 
                 return matchesQuery && matchesGenres;
             }).ToList();
@@ -239,12 +239,15 @@ namespace client_firebase
             }
             else if (_activeSort == "Yêu thích")
             {
-                filtered.Sort((x, y) => y.Rating.CompareTo(x.Rating));
+                filtered.Sort((x, y) => {
+                    int comp = y.Likes.CompareTo(x.Likes);
+                    if (comp == 0) return y.Rating.CompareTo(x.Rating);
+                    return comp;
+                });
             }
             else if (_activeSort == "Mới cập nhật")
             {
-                // Push chronological order using Firebase IDs (Reverse list)
-                filtered.Reverse();
+                filtered.Sort((x, y) => y.UpdatedAt.CompareTo(x.UpdatedAt));
             }
 
             // 3. Render results

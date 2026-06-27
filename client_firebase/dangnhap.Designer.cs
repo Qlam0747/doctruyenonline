@@ -58,7 +58,7 @@
             this.lblTagline.ForeColor = System.Drawing.Color.Gray;
             this.lblTagline.Location = new System.Drawing.Point(50, 215);
             this.lblTagline.Name = "lblTagline";
-            this.lblTagline.Size = new System.Drawing.Size(180, 15);
+            this.lblTagline.Size = new System.Drawing.Size(177, 15);
             this.lblTagline.TabIndex = 1;
             this.lblTagline.Text = "Khám phá thế giới truyện online";
             // 
@@ -69,7 +69,7 @@
             this.labelLogo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.labelLogo.Location = new System.Drawing.Point(40, 170);
             this.labelLogo.Name = "labelLogo";
-            this.labelLogo.Size = new System.Drawing.Size(201, 45);
+            this.labelLogo.Size = new System.Drawing.Size(218, 45);
             this.labelLogo.TabIndex = 0;
             this.labelLogo.Text = "📖 StoryHub";
             // 
@@ -148,7 +148,7 @@
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(195)))), ((int)(((byte)(255)))));
             this.label7.Location = new System.Drawing.Point(178, 350);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(63, 13);
+            this.label7.Size = new System.Drawing.Size(62, 13);
             this.label7.TabIndex = 10;
             this.label7.Text = "Login with";
             // 
@@ -198,7 +198,7 @@
             this.lblForgetPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(195)))), ((int)(((byte)(255)))));
             this.lblForgetPassword.Location = new System.Drawing.Point(270, 220);
             this.lblForgetPassword.Name = "lblForgetPassword";
-            this.lblForgetPassword.Size = new System.Drawing.Size(89, 13);
+            this.lblForgetPassword.Size = new System.Drawing.Size(84, 13);
             this.lblForgetPassword.TabIndex = 6;
             this.lblForgetPassword.Text = "Forget Password";
             // 

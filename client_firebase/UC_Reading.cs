@@ -36,6 +36,7 @@ namespace client_firebase
 
             // Log to reading history
             await FirebaseDatabaseService.AddToHistoryAsync(book.Id);
+            await FirebaseDatabaseService.IncrementBookViewsAsync(book.Id);
 
             this.Cursor = Cursors.WaitCursor;
             chaptersList = await FirebaseDatabaseService.GetChaptersAsync(book.Id);

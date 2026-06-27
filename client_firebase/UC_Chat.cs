@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,6 +26,59 @@ namespace client_firebase
 
             btnSend.Click += btnSend_Click;
             txtInput.KeyDown += txtInput_KeyDown;
+
+            // Register Options dropdown click
+            btnHeaderOptions.Click += btnHeaderOptions_Click;
+
+            // Shift input bar to fit attachment and emoji buttons
+            txtInput.Location = new Point(125, 12);
+            txtInput.Width = 355;
+
+            Button btnAttachFile = new Button
+            {
+                Text = "📁",
+                Font = new Font("Segoe UI", 12F),
+                Size = new Size(32, 36),
+                Location = new Point(10, 12),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                BackColor = Color.FromArgb(240, 240, 240),
+                ForeColor = Color.Black
+            };
+            btnAttachFile.FlatAppearance.BorderSize = 0;
+            btnAttachFile.Click += btnAttachFile_Click;
+
+            Button btnAttachImage = new Button
+            {
+                Text = "📷",
+                Font = new Font("Segoe UI", 12F),
+                Size = new Size(32, 36),
+                Location = new Point(48, 12),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                BackColor = Color.FromArgb(240, 240, 240),
+                ForeColor = Color.Black
+            };
+            btnAttachImage.FlatAppearance.BorderSize = 0;
+            btnAttachImage.Click += btnAttachImage_Click;
+
+            Button btnEmoji = new Button
+            {
+                Text = "😀",
+                Font = new Font("Segoe UI", 12F),
+                Size = new Size(32, 36),
+                Location = new Point(86, 12),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                BackColor = Color.FromArgb(240, 240, 240),
+                ForeColor = Color.Black
+            };
+            btnEmoji.FlatAppearance.BorderSize = 0;
+            btnEmoji.Click += btnEmoji_Click;
+
+            panelInput.Controls.Add(btnAttachFile);
+            panelInput.Controls.Add(btnAttachImage);
+            panelInput.Controls.Add(btnEmoji);
 
             // Set up polling timer for new messages (every 3 seconds)
             pollTimer = new Timer();
@@ -100,7 +155,7 @@ namespace client_firebase
                     Size = new Size(40, 40),
                     SizeMode = PictureBoxSizeMode.Zoom
                 };
-                DrawAvatar(pbAvatar, user.Username);
+                DrawAvatar(pbAvatar, user.Username, user.Avatar);
 
                 Label lblName = new Label
                 {
@@ -176,6 +231,9 @@ namespace client_firebase
         {
             selectedUser = user;
 
+            // Clear unread flag for this chat
+            await FirebaseDatabaseService.SetChatUnreadAsync(user.LocalId, false);
+
             // Highlight chosen card
             foreach (Control ctrl in flpContacts.Controls)
             {
@@ -186,9 +244,18 @@ namespace client_firebase
             }
             card.BackColor = Color.FromArgb(235, 233, 255); // Pale violet matching selected
 
+            // Determine role: anyone who uploaded a book is an Author, else Reader
+            bool isAuthor = false;
+            try
+            {
+                var books = await FirebaseDatabaseService.GetAllBooksAsync();
+                isAuthor = books.Any(b => b.AuthorId == user.LocalId);
+            }
+            catch {}
+
             // Update header info
             lblHeaderName.Text = user.Username;
-            lblHeaderRole.Text = "Độc giả";
+            lblHeaderRole.Text = isAuthor ? "Tác giả" : "Độc giả";
             DrawAvatar(pbHeaderAvatar, user.Username);
 
             ShowChatArea(true);
@@ -238,25 +305,127 @@ namespace client_firebase
                 AutoSize = true
             };
 
-            // Message Text
-            Label lblText = new Label
-            {
-                Text = msg.Text,
-                Font = new Font("Segoe UI", 9.75F, FontStyle.Regular),
-                ForeColor = isMe ? Color.White : Color.Black,
-                AutoSize = true,
-                MaximumSize = new Size(maxBubbleWidth, 0)
-            };
-
             // Bubble Panel
             Panel bubble = new Panel
             {
                 BackColor = isMe ? Color.FromArgb(108, 92, 231) : Color.FromArgb(230, 230, 230),
                 Padding = new Padding(10, 8, 10, 8),
-                AutoSize = true
             };
-            bubble.Controls.Add(lblText);
-            lblText.Location = new Point(10, 8);
+
+            if (msg.FileType == "image" && !string.IsNullOrEmpty(msg.FileBase64))
+            {
+                PictureBox pbMsg = new PictureBox
+                {
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    Size = new Size(180, 120),
+                    Cursor = Cursors.Hand,
+                    Location = new Point(10, 8)
+                };
+                try
+                {
+                    byte[] bytes = Convert.FromBase64String(msg.FileBase64);
+                    using (var ms = new MemoryStream(bytes))
+                    {
+                        pbMsg.Image = Image.FromStream(ms);
+                        pbMsg.Image = (Image)pbMsg.Image.Clone();
+                    }
+                }
+                catch
+                {
+                    pbMsg.Image = null;
+                }
+                pbMsg.Click += (s, e) =>
+                {
+                    // Show full-size image in a temporary popup Form
+                    Form imgForm = new Form
+                    {
+                        Text = "Xem hình ảnh",
+                        Size = new Size(600, 500),
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
+                    PictureBox pbFull = new PictureBox
+                    {
+                        Image = pbMsg.Image,
+                        Dock = DockStyle.Fill,
+                        SizeMode = PictureBoxSizeMode.Zoom
+                    };
+                    imgForm.Controls.Add(pbFull);
+                    imgForm.ShowDialog();
+                };
+                bubble.Width = 200;
+                bubble.Height = 136;
+                bubble.Controls.Add(pbMsg);
+            }
+            else if (msg.FileType == "file" && !string.IsNullOrEmpty(msg.FileBase64))
+            {
+                Label lblFileIcon = new Label
+                {
+                    Text = "📎 Tệp tin:",
+                    Font = new Font("Segoe UI", 9.75F, FontStyle.Bold),
+                    ForeColor = isMe ? Color.White : Color.Black,
+                    Location = new Point(10, 8),
+                    AutoSize = true
+                };
+                Label lblFileName = new Label
+                {
+                    Text = msg.FileName ?? "document.dat",
+                    Font = new Font("Segoe UI", 9.75F, FontStyle.Underline),
+                    ForeColor = isMe ? Color.White : Color.FromArgb(108, 92, 231),
+                    Location = new Point(10, 26),
+                    Size = new Size(180, 20),
+                    AutoEllipsis = true,
+                    Cursor = Cursors.Hand
+                };
+                lblFileName.Click += (s, e) =>
+                {
+                    // Save file dialog to download
+                    using (SaveFileDialog sfd = new SaveFileDialog())
+                    {
+                        sfd.FileName = msg.FileName ?? "document.dat";
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            try
+                            {
+                                byte[] bytes = Convert.FromBase64String(msg.FileBase64);
+                                File.WriteAllBytes(sfd.FileName, bytes);
+                                MessageBox.Show("Đã tải tệp tin thành công!", "Tải xuống");
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Lỗi tải tệp tin: " + ex.Message, "Lỗi");
+                            }
+                        }
+                    }
+                };
+                bubble.Width = 200;
+                bubble.Height = 55;
+                bubble.Controls.Add(lblFileIcon);
+                bubble.Controls.Add(lblFileName);
+            }
+            else
+            {
+                // Message Text
+                Label lblText = new Label
+                {
+                    Text = msg.Text,
+                    Font = new Font("Segoe UI", 9.75F, FontStyle.Regular),
+                    ForeColor = isMe ? Color.White : Color.Black,
+                    Location = new Point(10, 8),
+                    MaximumSize = new Size(maxBubbleWidth, 0),
+                    AutoSize = true
+                };
+
+                // Measure size to fit text perfectly
+                Size bubbleSize;
+                using (Graphics g = flpMessages.CreateGraphics())
+                {
+                    SizeF sf = g.MeasureString(msg.Text, lblText.Font, maxBubbleWidth);
+                    bubbleSize = new Size((int)Math.Ceiling(sf.Width) + 20, (int)Math.Ceiling(sf.Height) + 16);
+                }
+                lblText.Size = bubbleSize;
+                bubble.Size = bubbleSize;
+                bubble.Controls.Add(lblText);
+            }
 
             // Layout row Panel
             rowPanel.Controls.Add(lblTime);
@@ -265,13 +434,11 @@ namespace client_firebase
             // Positioning based on sender
             if (isMe)
             {
-                // Align right
                 lblTime.Location = new Point((rowPanel.Width - lblTime.Width) / 2, 0);
                 bubble.Location = new Point(rowPanel.Width - bubble.Width - 10, 16);
             }
             else
             {
-                // Align left
                 lblTime.Location = new Point((rowPanel.Width - lblTime.Width) / 2, 0);
                 bubble.Location = new Point(10, 16);
             }
@@ -299,9 +466,28 @@ namespace client_firebase
             flpMessages.PerformLayout();
         }
 
-        private void DrawAvatar(PictureBox pb, string name)
+        private void DrawAvatar(PictureBox pb, string name, string avatarBase64 = null)
         {
-            pb.Paint -= pb_PaintAvatar; // Remove existing to prevent multiple
+            pb.Paint -= pb_PaintAvatar;
+            if (!string.IsNullOrEmpty(avatarBase64))
+            {
+                try
+                {
+                    byte[] bytes = Convert.FromBase64String(avatarBase64);
+                    using (var ms = new MemoryStream(bytes))
+                    {
+                        pb.Image = Image.FromStream(ms);
+                        pb.Image = (Image)pb.Image.Clone();
+                    }
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error parsing user avatar: " + ex.Message);
+                }
+            }
+
+            pb.Image = null;
             pb.Tag = name;
             pb.Paint += pb_PaintAvatar;
             pb.Invalidate();
@@ -429,6 +615,165 @@ namespace client_firebase
                     card.Visible = matches;
                 }
             }
+        }
+
+        private async void btnAttachFile_Click(object sender, EventArgs e)
+        {
+            if (selectedUser == null) return;
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Document Files|*.pdf;*.docx;*.xlsx;*.txt;*.zip|All Files|*.*";
+                ofd.Title = "Chọn file đính kèm";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        byte[] bytes = File.ReadAllBytes(ofd.FileName);
+                        string base64 = Convert.ToBase64String(bytes);
+                        string fileName = Path.GetFileName(ofd.FileName);
+
+                        btnSend.Enabled = false;
+                        this.Cursor = Cursors.WaitCursor;
+                        bool sent = await FirebaseDatabaseService.SendMessageWithFileAsync(
+                            selectedUser.LocalId,
+                            $"Đã gửi file: {fileName}",
+                            "file",
+                            base64,
+                            fileName
+                        );
+                        this.Cursor = Cursors.Default;
+                        btnSend.Enabled = true;
+
+                        if (sent)
+                        {
+                            await LoadMessagesAsync();
+                            UpdateLastMessageInList(selectedUser.LocalId, $"📎 Tệp tin: {fileName}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi đọc file đính kèm: " + ex.Message, "Lỗi");
+                    }
+                }
+            }
+        }
+
+        private async void btnAttachImage_Click(object sender, EventArgs e)
+        {
+            if (selectedUser == null) return;
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.bmp;*.gif";
+                ofd.Title = "Chọn hình ảnh gửi";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        byte[] bytes = File.ReadAllBytes(ofd.FileName);
+                        string base64 = Convert.ToBase64String(bytes);
+                        string fileName = Path.GetFileName(ofd.FileName);
+
+                        btnSend.Enabled = false;
+                        this.Cursor = Cursors.WaitCursor;
+                        bool sent = await FirebaseDatabaseService.SendMessageWithFileAsync(
+                            selectedUser.LocalId,
+                            "[Hình ảnh]",
+                            "image",
+                            base64,
+                            fileName
+                        );
+                        this.Cursor = Cursors.Default;
+                        btnSend.Enabled = true;
+
+                        if (sent)
+                        {
+                            await LoadMessagesAsync();
+                            UpdateLastMessageInList(selectedUser.LocalId, "📷 [Hình ảnh]");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi đọc file hình ảnh: " + ex.Message, "Lỗi");
+                    }
+                }
+            }
+        }
+
+        private void btnEmoji_Click(object sender, EventArgs e)
+        {
+            ContextMenuStrip emojiMenu = new ContextMenuStrip();
+            string[] emojis = { "😀", "😂", "🥰", "👍", "🔥", "🎉", "❤️", "😮", "😭", "🙏" };
+            foreach (var emoji in emojis)
+            {
+                var item = emojiMenu.Items.Add(emoji);
+                item.Click += (s, ev) =>
+                {
+                    txtInput.SelectedText = emoji;
+                };
+            }
+            emojiMenu.Show(Cursor.Position);
+        }
+
+        private async void btnHeaderOptions_Click(object sender, EventArgs e)
+        {
+            if (selectedUser == null) return;
+
+            ContextMenuStrip optionsMenu = new ContextMenuStrip();
+
+            var blockItem = optionsMenu.Items.Add("🚫 Chặn người dùng");
+            var viewFilesItem = optionsMenu.Items.Add("📂 Xem file/hình ảnh đã gửi");
+            var deleteItem = optionsMenu.Items.Add("🗑️ Xóa hội thoại");
+
+            blockItem.Click += async (s, ev) =>
+            {
+                var dr = MessageBox.Show($"Bạn có chắc chắn muốn chặn {selectedUser.Username}? Hai bên sẽ không thể nhắn tin cho nhau.", "Xác nhận chặn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Yes)
+                {
+                    bool res = await FirebaseDatabaseService.BlockUserAsync(selectedUser.LocalId);
+                    if (res)
+                    {
+                        MessageBox.Show("Đã chặn người dùng thành công.", "Thông báo");
+                    }
+                }
+            };
+
+            viewFilesItem.Click += async (s, ev) =>
+            {
+                var messages = await FirebaseDatabaseService.GetMessagesAsync(selectedUser.LocalId);
+                var files = messages.Where(m => m.FileType == "image" || m.FileType == "file").ToList();
+                if (files.Count == 0)
+                {
+                    MessageBox.Show("Không có tệp đính kèm nào được gửi trong cuộc trò chuyện này.", "Thông báo");
+                    return;
+                }
+
+                using (Form listForm = new Form { Text = "Tệp đính kèm đã gửi", Size = new Size(400, 300), StartPosition = FormStartPosition.CenterParent })
+                {
+                    ListBox lb = new ListBox { Dock = DockStyle.Fill };
+                    foreach (var f in files)
+                    {
+                        lb.Items.Add($"{FormatTime(f.Timestamp)} - {(f.FileType == "image" ? "📷" : "📎")} {f.FileName ?? "File đính kèm"}");
+                    }
+                    listForm.Controls.Add(lb);
+                    listForm.ShowDialog();
+                }
+            };
+
+            deleteItem.Click += async (s, ev) =>
+            {
+                var dr = MessageBox.Show("Bạn có chắc chắn muốn xóa toàn bộ tin nhắn trong hội thoại này? Thao tác không thể khôi phục.", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Yes)
+                {
+                    bool res = await FirebaseDatabaseService.DeleteConversationAsync(selectedUser.LocalId);
+                    if (res)
+                    {
+                        flpMessages.Controls.Clear();
+                        MessageBox.Show("Đã xóa hội thoại thành công.", "Thông báo");
+                    }
+                }
+            };
+
+            optionsMenu.Show(Cursor.Position);
         }
     }
 }
