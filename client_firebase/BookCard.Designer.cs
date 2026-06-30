@@ -40,11 +40,11 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Gainsboro;
+            this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(160, 200);
+            this.pictureBox1.Size = new System.Drawing.Size(160, 174);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -54,7 +54,7 @@
             this.lblTitle.AutoEllipsis = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.lblTitle.Location = new System.Drawing.Point(8, 205);
+            this.lblTitle.Location = new System.Drawing.Point(8, 183);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(144, 20);
             this.lblTitle.TabIndex = 1;
@@ -65,7 +65,7 @@
             this.lblAuthor.AutoEllipsis = true;
             this.lblAuthor.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAuthor.ForeColor = System.Drawing.Color.Gray;
-            this.lblAuthor.Location = new System.Drawing.Point(8, 225);
+            this.lblAuthor.Location = new System.Drawing.Point(8, 204);
             this.lblAuthor.Name = "lblAuthor";
             this.lblAuthor.Size = new System.Drawing.Size(144, 15);
             this.lblAuthor.TabIndex = 2;
@@ -76,7 +76,7 @@
             this.panelInfo.Controls.Add(this.lblRating);
             this.panelInfo.Controls.Add(this.lblViews);
             this.panelInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelInfo.Location = new System.Drawing.Point(0, 245);
+            this.panelInfo.Location = new System.Drawing.Point(0, 226);
             this.panelInfo.Name = "panelInfo";
             this.panelInfo.Size = new System.Drawing.Size(160, 25);
             this.panelInfo.TabIndex = 3;
@@ -100,7 +100,7 @@
             this.lblViews.ForeColor = System.Drawing.Color.Gray;
             this.lblViews.Location = new System.Drawing.Point(100, 5);
             this.lblViews.Name = "lblViews";
-            this.lblViews.Size = new System.Drawing.Size(52, 13);
+            this.lblViews.Size = new System.Drawing.Size(51, 13);
             this.lblViews.TabIndex = 5;
             this.lblViews.Text = "1.2k xem";
             this.lblViews.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -117,7 +117,7 @@
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Margin = new System.Windows.Forms.Padding(10);
             this.Name = "BookCard";
-            this.Size = new System.Drawing.Size(160, 270);
+            this.Size = new System.Drawing.Size(160, 251);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelInfo.ResumeLayout(false);
             this.panelInfo.PerformLayout();

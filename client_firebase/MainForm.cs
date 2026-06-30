@@ -61,6 +61,12 @@ namespace client_firebase
 
             // Khởi tạo menu cho avatar user
             InitializeUserMenu();
+
+            // Căn giữa thanh điều hướng panelNav
+            panelNav.Left = (panelTop.Width - panelNav.Width) / 2;
+            this.panelTop.SizeChanged += (s, e) => {
+                panelNav.Left = (panelTop.Width - panelNav.Width) / 2;
+            };
         }
 
         private Panel panelUserMenu;

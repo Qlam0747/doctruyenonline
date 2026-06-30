@@ -11,9 +11,53 @@ namespace client_firebase
         public UC_Home()
         {
             InitializeComponent();
+
+            // Configure FlowLayoutPanels for auto-sizing and layout
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+            flowLayoutPanel2.AutoSize = true;
+            flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
             EnableDoubleBuffer(flowLayoutPanel1);
             EnableDoubleBuffer(flowLayoutPanel2);
             this.Load += (s, e) => LoadBooksAsync();
+        }
+
+        protected override void OnLayout(LayoutEventArgs levent)
+        {
+            base.OnLayout(levent);
+
+            if (label2 == null || flowLayoutPanel1 == null || label3 == null || flowLayoutPanel2 == null)
+                return;
+
+            int scrollX = this.AutoScrollPosition.X;
+            int scrollY = this.AutoScrollPosition.Y;
+
+            // Width of the panels (excluding margins/padding)
+            int contentWidth = Math.Max(100, this.ClientSize.Width - 40);
+
+            // Compute unscrolled Y coordinates sequentially
+            int currentY = 20;
+
+            // 1. label2
+            label2.Location = new Point(20 + scrollX, currentY + scrollY);
+            currentY += label2.Height + 10;
+
+            // 2. flowLayoutPanel1
+            flowLayoutPanel1.Width = contentWidth;
+            flowLayoutPanel1.Location = new Point(20 + scrollX, currentY + scrollY);
+            currentY += flowLayoutPanel1.Height + 20;
+
+            // 3. label3
+            label3.Location = new Point(20 + scrollX, currentY + scrollY);
+            currentY += label3.Height + 10;
+
+            // 4. flowLayoutPanel2
+            flowLayoutPanel2.Width = contentWidth;
+            flowLayoutPanel2.Location = new Point(20 + scrollX, currentY + scrollY);
         }
 
         private void EnableDoubleBuffer(Control control)
@@ -56,6 +100,7 @@ namespace client_firebase
                     BookCard card = CreateBookCard(b);
                     flowLayoutPanel2.Controls.Add(card);
                 }
+                this.PerformLayout();
             }
             catch (Exception ex)
             {
@@ -107,6 +152,11 @@ namespace client_firebase
             card.lblViews.Click += (s, e) => clickAction();
 
             return card;
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

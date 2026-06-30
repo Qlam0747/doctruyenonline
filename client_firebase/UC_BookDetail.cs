@@ -17,6 +17,7 @@ namespace client_firebase
         private Button btnFollowAuthor = null;
         private bool isFavorite = false;
         private bool isFollowingAuthor = false;
+        private TableLayoutPanel tlpButtons = null;
 
         public UC_BookDetail()
         {
@@ -25,11 +26,71 @@ namespace client_firebase
             txtComment.GotFocus += (s, e) => { if (txtComment.Text == "Viết bình luận của bạn...") { txtComment.Text = ""; txtComment.ForeColor = Color.Black; } };
             txtComment.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(txtComment.Text)) { txtComment.Text = "Viết bình luận của bạn..."; txtComment.ForeColor = Color.Gray; } };
 
+            InitializeButtonsLayout();
+
             btnRead.Click += btnRead_Click;
             btnBookmark.Click += btnBookmark_Click;
             btnRate.Click += btnRate_Click;
             btnChat.Click += btnChat_Click;
             btnPostComment.Click += btnPostComment_Click;
+        }
+
+        private void InitializeButtonsLayout()
+        {
+            if (tlpButtons == null)
+            {
+                tlpButtons = new TableLayoutPanel
+                {
+                    Location = new Point(160, 172),
+                    Size = new Size(panelInfoCard.Width - 175, 36),
+                    Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+                    ColumnCount = 5,
+                    RowCount = 1,
+                    BackColor = Color.Transparent
+                };
+
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+
+                tlpButtons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+                panelInfoCard.Controls.Add(tlpButtons);
+
+                // Add existing controls from designer to tlpButtons
+                panelInfoCard.Controls.Remove(btnRead);
+                panelInfoCard.Controls.Remove(btnBookmark);
+                panelInfoCard.Controls.Remove(btnRate);
+                panelInfoCard.Controls.Remove(btnChat);
+
+                btnRead.Dock = DockStyle.Fill;
+                btnRead.Margin = new Padding(3);
+                btnRead.FlatAppearance.BorderSize = 0;
+
+                btnBookmark.Dock = DockStyle.Fill;
+                btnBookmark.Margin = new Padding(3);
+                btnBookmark.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+                btnBookmark.FlatAppearance.BorderSize = 1;
+
+                btnRate.Dock = DockStyle.Fill;
+                btnRate.Margin = new Padding(3);
+                btnRate.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+                btnRate.FlatAppearance.BorderSize = 1;
+
+                btnChat.Dock = DockStyle.Fill;
+                btnChat.Margin = new Padding(3);
+                btnChat.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+                btnChat.FlatAppearance.BorderSize = 1;
+
+                tlpButtons.Controls.Add(btnRead, 0, 0);
+                tlpButtons.Controls.Add(btnBookmark, 1, 0);
+                // btnFavorite will be in column 2 (added in SetBook)
+                tlpButtons.Controls.Add(btnRate, 3, 0);
+                // btnChat/btnAddChapter will be in column 4
+                tlpButtons.Controls.Add(btnChat, 4, 0);
+            }
         }
 
         public async void SetBook(BookModel book)
@@ -51,23 +112,19 @@ namespace client_firebase
             chaptersList = chaptersTask.Result;
             var commentsList = commentsTask.Result;
 
-            btnBookmark.Location = new Point(250, 175);
-            btnBookmark.Width = 85;
-            btnBookmark.Text = isBookmarked ? "🔖 Đã bookmark" : "🔖 Bookmark";
             if (isBookmarked)
             {
                 btnBookmark.BackColor = Color.FromArgb(108, 92, 231);
                 btnBookmark.ForeColor = Color.White;
+                btnBookmark.FlatAppearance.BorderSize = 0;
             }
             else
             {
                 btnBookmark.BackColor = Color.White;
                 btnBookmark.ForeColor = Color.Black;
+                btnBookmark.FlatAppearance.BorderSize = 1;
+                btnBookmark.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
             }
-
-            // Adjust Read button
-            btnRead.Location = new Point(160, 175);
-            btnRead.Width = 85;
 
             // Configure Favorite button
             if (btnFavorite == null)
@@ -75,19 +132,17 @@ namespace client_firebase
                 btnFavorite = new Button
                 {
                     Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                    Size = new Size(85, 30),
-                    Location = new Point(340, 175),
                     FlatStyle = FlatStyle.Flat,
                     Cursor = Cursors.Hand,
+                    Dock = DockStyle.Fill,
+                    Margin = new Padding(3)
                 };
+                btnFavorite.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+                btnFavorite.FlatAppearance.BorderSize = 1;
                 btnFavorite.Click += btnFavorite_Click;
-                panelInfoCard.Controls.Add(btnFavorite);
+                tlpButtons.Controls.Add(btnFavorite, 2, 0);
             }
             UpdateFavoriteButtonUI();
-
-            // Adjust Rate button
-            btnRate.Location = new Point(430, 175);
-            btnRate.Width = 85;
 
             // Configure Follow Author button
             if (btnFollowAuthor == null)
@@ -96,10 +151,12 @@ namespace client_firebase
                 {
                     Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                     Size = new Size(85, 30),
-                    Location = new Point(520, 175),
+                    Location = new Point(395, 45),
                     FlatStyle = FlatStyle.Flat,
                     Cursor = Cursors.Hand,
                 };
+                btnFollowAuthor.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+                btnFollowAuthor.FlatAppearance.BorderSize = 1;
                 btnFollowAuthor.Click += btnFollowAuthor_Click;
                 panelInfoCard.Controls.Add(btnFollowAuthor);
             }
@@ -123,16 +180,16 @@ namespace client_firebase
                     {
                         Text = "➕ Thêm chương",
                         Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                        Size = new Size(100, 30),
-                        Location = new Point(610, 175),
                         FlatStyle = FlatStyle.Flat,
                         Cursor = Cursors.Hand,
                         BackColor = Color.FromArgb(46, 204, 113), // Emerald Green
-                        ForeColor = Color.White
+                        ForeColor = Color.White,
+                        Dock = DockStyle.Fill,
+                        Margin = new Padding(3)
                     };
                     btnAddChapter.FlatAppearance.BorderSize = 0;
                     btnAddChapter.Click += btnAddChapter_Click;
-                    panelInfoCard.Controls.Add(btnAddChapter);
+                    tlpButtons.Controls.Add(btnAddChapter, 4, 0);
                 }
                 btnAddChapter.Visible = true;
                 btnChat.Visible = false;
@@ -141,8 +198,6 @@ namespace client_firebase
             {
                 if (btnAddChapter != null) btnAddChapter.Visible = false;
                 btnChat.Visible = true;
-                btnChat.Location = new Point(610, 175);
-                btnChat.Width = 100;
             }
 
             // Bind values
@@ -453,8 +508,8 @@ namespace client_firebase
                 await FirebaseDatabaseService.AddToBookmarksAsync(currentBook.Id);
                 btnBookmark.BackColor = Color.FromArgb(108, 92, 231);
                 btnBookmark.ForeColor = Color.White;
-                btnBookmark.Text = "🔖 Đã bookmark";
-                MessageBox.Show("Đã thêm truyện vào Bookmark!", "Bookmark");
+                btnBookmark.Text = "🔖 Bookmark";
+                btnBookmark.FlatAppearance.BorderSize = 0;
             }
             else
             {
@@ -462,7 +517,8 @@ namespace client_firebase
                 btnBookmark.BackColor = Color.White;
                 btnBookmark.ForeColor = Color.Black;
                 btnBookmark.Text = "🔖 Bookmark";
-                MessageBox.Show("Đã xóa khỏi Bookmark!", "Bookmark");
+                btnBookmark.FlatAppearance.BorderSize = 1;
+                btnBookmark.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
             }
             btnBookmark.Enabled = true;
         }
@@ -474,12 +530,15 @@ namespace client_firebase
                 btnFavorite.Text = "❤️ Yêu thích";
                 btnFavorite.BackColor = Color.FromArgb(231, 76, 60); // Red
                 btnFavorite.ForeColor = Color.White;
+                btnFavorite.FlatAppearance.BorderSize = 0;
             }
             else
             {
                 btnFavorite.Text = "♡ Yêu thích";
                 btnFavorite.BackColor = Color.White;
                 btnFavorite.ForeColor = Color.Black;
+                btnFavorite.FlatAppearance.BorderSize = 1;
+                btnFavorite.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
             }
         }
 
@@ -487,15 +546,18 @@ namespace client_firebase
         {
             if (isFollowingAuthor)
             {
-                btnFollowAuthor.Text = "👥 Đang theo TG";
+                btnFollowAuthor.Text = "👥 Followed";
                 btnFollowAuthor.BackColor = Color.FromArgb(52, 152, 219); // Blue
                 btnFollowAuthor.ForeColor = Color.White;
+                btnFollowAuthor.FlatAppearance.BorderSize = 0;
             }
             else
             {
-                btnFollowAuthor.Text = "👤 Theo dõi TG";
+                btnFollowAuthor.Text = "👤 Follow";
                 btnFollowAuthor.BackColor = Color.White;
                 btnFollowAuthor.ForeColor = Color.Black;
+                btnFollowAuthor.FlatAppearance.BorderSize = 1;
+                btnFollowAuthor.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
             }
         }
 
@@ -532,12 +594,10 @@ namespace client_firebase
             if (isFollowingAuthor)
             {
                 await FirebaseDatabaseService.FollowAuthorAsync(currentBook.AuthorId);
-                MessageBox.Show("Đã theo dõi tác giả!", "Theo dõi");
             }
             else
             {
                 await FirebaseDatabaseService.UnfollowAuthorAsync(currentBook.AuthorId);
-                MessageBox.Show("Đã hủy theo dõi tác giả!", "Theo dõi");
             }
             UpdateFollowAuthorButtonUI();
             btnFollowAuthor.Enabled = true;
@@ -654,10 +714,22 @@ namespace client_firebase
             if (currentBook == null) return;
 
             int nextChapterNum = chaptersList.Count + 1;
-            using (var form = new FormAddChapter(currentBook.Id, currentBook.Title, currentBook.Description, nextChapterNum))
+            using (var form = new FormAddChapter(currentBook.Id, currentBook.Title, currentBook.Description, nextChapterNum, currentBook.Status))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    // Reload book details to refresh status
+                    var updatedBook = await FirebaseDatabaseService.GetBookByIdAsync(currentBook.Id);
+                    if (updatedBook != null)
+                    {
+                        currentBook = updatedBook;
+                        var lblStatus = panelInfoCard.Controls["lblStatus"] as Label;
+                        if (lblStatus != null)
+                        {
+                            lblStatus.Text = $"({currentBook.Status ?? "Đang tiến hành"})";
+                        }
+                    }
+
                     chaptersList = await FirebaseDatabaseService.GetChaptersAsync(currentBook.Id);
                     lblChaptersCount.Text = $"📖 {chaptersList.Count} chương";
                     RenderChaptersList();

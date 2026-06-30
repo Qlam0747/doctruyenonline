@@ -1,4 +1,4 @@
-﻿namespace client_firebase
+namespace client_firebase
 {
     partial class MainForm
     {
@@ -29,19 +29,21 @@
         private void InitializeComponent()
         {
             this.panelTop = new System.Windows.Forms.Panel();
-            this.btnProfile = new ReaLTaiizor.Controls.HopePictureBox();
-            this.btnNotification = new ReaLTaiizor.Controls.HopePictureBox();
-            this.btnChat = new ReaLTaiizor.Controls.HopePictureBox();
-            this.btnUpload = new ReaLTaiizor.Controls.HopePictureBox();
-            this.btnLibrary = new ReaLTaiizor.Controls.HopePictureBox();
-            this.btnSearch = new ReaLTaiizor.Controls.HopePictureBox();
-            this.btnHome = new ReaLTaiizor.Controls.HopePictureBox();
+            this.btnProfile = new System.Windows.Forms.PictureBox();
+            this.btnNotification = new System.Windows.Forms.PictureBox();
+            this.panelNav = new System.Windows.Forms.Panel();
+            this.btnChat = new System.Windows.Forms.PictureBox();
+            this.btnUpload = new System.Windows.Forms.PictureBox();
+            this.btnLibrary = new System.Windows.Forms.PictureBox();
+            this.btnSearch = new System.Windows.Forms.PictureBox();
+            this.btnHome = new System.Windows.Forms.PictureBox();
             this.lblLogo = new System.Windows.Forms.Label();
-            this.picLogo = new ReaLTaiizor.Controls.HopePictureBox();
+            this.picLogo = new System.Windows.Forms.PictureBox();
             this.panelContent = new System.Windows.Forms.Panel();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnProfile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnNotification)).BeginInit();
+            this.panelNav.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnChat)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpload)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnLibrary)).BeginInit();
@@ -55,11 +57,7 @@
             this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.panelTop.Controls.Add(this.btnProfile);
             this.panelTop.Controls.Add(this.btnNotification);
-            this.panelTop.Controls.Add(this.btnChat);
-            this.panelTop.Controls.Add(this.btnUpload);
-            this.panelTop.Controls.Add(this.btnLibrary);
-            this.panelTop.Controls.Add(this.btnSearch);
-            this.panelTop.Controls.Add(this.btnHome);
+            this.panelTop.Controls.Add(this.panelNav);
             this.panelTop.Controls.Add(this.lblLogo);
             this.panelTop.Controls.Add(this.picLogo);
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
@@ -76,13 +74,10 @@
             this.btnProfile.Image = global::client_firebase.Properties.Resources.user;
             this.btnProfile.Location = new System.Drawing.Point(845, 15);
             this.btnProfile.Name = "btnProfile";
-            this.btnProfile.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnProfile.Size = new System.Drawing.Size(32, 32);
             this.btnProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnProfile.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.btnProfile.TabIndex = 9;
             this.btnProfile.TabStop = false;
-            this.btnProfile.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             // 
             // btnNotification
             // 
@@ -92,28 +87,35 @@
             this.btnNotification.Image = global::client_firebase.Properties.Resources.bell;
             this.btnNotification.Location = new System.Drawing.Point(795, 15);
             this.btnNotification.Name = "btnNotification";
-            this.btnNotification.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnNotification.Size = new System.Drawing.Size(32, 32);
             this.btnNotification.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnNotification.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.btnNotification.TabIndex = 8;
             this.btnNotification.TabStop = false;
-            this.btnNotification.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // 
+            // panelNav
+            // 
+            this.panelNav.BackColor = System.Drawing.Color.Transparent;
+            this.panelNav.Controls.Add(this.btnChat);
+            this.panelNav.Controls.Add(this.btnUpload);
+            this.panelNav.Controls.Add(this.btnLibrary);
+            this.panelNav.Controls.Add(this.btnSearch);
+            this.panelNav.Controls.Add(this.btnHome);
+            this.panelNav.Location = new System.Drawing.Point(280, 0);
+            this.panelNav.Name = "panelNav";
+            this.panelNav.Size = new System.Drawing.Size(340, 60);
+            this.panelNav.TabIndex = 10;
             // 
             // btnChat
             // 
             this.btnChat.BackColor = System.Drawing.Color.Transparent;
             this.btnChat.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnChat.Image = global::client_firebase.Properties.Resources.chat;
-            this.btnChat.Location = new System.Drawing.Point(659, 15);
+            this.btnChat.Location = new System.Drawing.Point(308, 14);
             this.btnChat.Name = "btnChat";
-            this.btnChat.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnChat.Size = new System.Drawing.Size(32, 32);
             this.btnChat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnChat.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.btnChat.TabIndex = 7;
             this.btnChat.TabStop = false;
-            this.btnChat.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.btnChat.Click += new System.EventHandler(this.btnChat_Click);
             // 
             // btnUpload
@@ -121,15 +123,12 @@
             this.btnUpload.BackColor = System.Drawing.Color.Transparent;
             this.btnUpload.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnUpload.Image = global::client_firebase.Properties.Resources.up_loading;
-            this.btnUpload.Location = new System.Drawing.Point(558, 15);
+            this.btnUpload.Location = new System.Drawing.Point(231, 14);
             this.btnUpload.Name = "btnUpload";
-            this.btnUpload.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnUpload.Size = new System.Drawing.Size(32, 32);
             this.btnUpload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnUpload.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.btnUpload.TabIndex = 6;
             this.btnUpload.TabStop = false;
-            this.btnUpload.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // btnLibrary
@@ -137,15 +136,12 @@
             this.btnLibrary.BackColor = System.Drawing.Color.Transparent;
             this.btnLibrary.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLibrary.Image = global::client_firebase.Properties.Resources.book__1_;
-            this.btnLibrary.Location = new System.Drawing.Point(448, 15);
+            this.btnLibrary.Location = new System.Drawing.Point(154, 14);
             this.btnLibrary.Name = "btnLibrary";
-            this.btnLibrary.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnLibrary.Size = new System.Drawing.Size(32, 32);
             this.btnLibrary.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnLibrary.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.btnLibrary.TabIndex = 5;
             this.btnLibrary.TabStop = false;
-            this.btnLibrary.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.btnLibrary.Click += new System.EventHandler(this.btnLibrary_Click);
             // 
             // btnSearch
@@ -153,15 +149,12 @@
             this.btnSearch.BackColor = System.Drawing.Color.Transparent;
             this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.Image = global::client_firebase.Properties.Resources.search;
-            this.btnSearch.Location = new System.Drawing.Point(346, 15);
+            this.btnSearch.Location = new System.Drawing.Point(77, 14);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnSearch.Size = new System.Drawing.Size(32, 32);
             this.btnSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnSearch.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.btnSearch.TabIndex = 4;
             this.btnSearch.TabStop = false;
-            this.btnSearch.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // btnHome
@@ -169,15 +162,12 @@
             this.btnHome.BackColor = System.Drawing.Color.Transparent;
             this.btnHome.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnHome.Image = global::client_firebase.Properties.Resources.home;
-            this.btnHome.Location = new System.Drawing.Point(250, 15);
+            this.btnHome.Location = new System.Drawing.Point(0, 14);
             this.btnHome.Name = "btnHome";
-            this.btnHome.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.btnHome.Size = new System.Drawing.Size(32, 32);
             this.btnHome.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnHome.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.btnHome.TabIndex = 3;
             this.btnHome.TabStop = false;
-            this.btnHome.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
             // 
             // lblLogo
@@ -198,16 +188,14 @@
             this.picLogo.Image = global::client_firebase.Properties.Resources.book;
             this.picLogo.Location = new System.Drawing.Point(14, 15);
             this.picLogo.Name = "picLogo";
-            this.picLogo.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
             this.picLogo.Size = new System.Drawing.Size(35, 32);
             this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picLogo.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.picLogo.TabIndex = 2;
             this.picLogo.TabStop = false;
-            this.picLogo.TextRenderingType = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             // 
             // panelContent
             // 
+            this.panelContent.AutoScroll = true;
             this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(0, 60);
@@ -219,6 +207,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelTop);
@@ -231,6 +220,7 @@
             this.panelTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnProfile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnNotification)).EndInit();
+            this.panelNav.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnChat)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpload)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnLibrary)).EndInit();
@@ -244,15 +234,16 @@
         #endregion
 
         private System.Windows.Forms.Panel panelTop;
-        private ReaLTaiizor.Controls.HopePictureBox picLogo;
+        private System.Windows.Forms.Panel panelNav;
+        private System.Windows.Forms.PictureBox picLogo;
         private System.Windows.Forms.Label lblLogo;
-        private ReaLTaiizor.Controls.HopePictureBox btnChat;
-        private ReaLTaiizor.Controls.HopePictureBox btnUpload;
-        private ReaLTaiizor.Controls.HopePictureBox btnLibrary;
-        private ReaLTaiizor.Controls.HopePictureBox btnSearch;
-        private ReaLTaiizor.Controls.HopePictureBox btnHome;
-        private ReaLTaiizor.Controls.HopePictureBox btnNotification;
-        private ReaLTaiizor.Controls.HopePictureBox btnProfile;
+        private System.Windows.Forms.PictureBox btnChat;
+        private System.Windows.Forms.PictureBox btnUpload;
+        private System.Windows.Forms.PictureBox btnLibrary;
+        private System.Windows.Forms.PictureBox btnSearch;
+        private System.Windows.Forms.PictureBox btnHome;
+        private System.Windows.Forms.PictureBox btnNotification;
+        private System.Windows.Forms.PictureBox btnProfile;
         private System.Windows.Forms.Panel panelContent;
     }
 }

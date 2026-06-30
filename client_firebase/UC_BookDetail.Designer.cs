@@ -59,7 +59,7 @@ namespace client_firebase
             this.panelMain.Location = new System.Drawing.Point(0, 0);
             this.panelMain.Name = "panelMain";
             this.panelMain.Padding = new System.Windows.Forms.Padding(15);
-            this.panelMain.Size = new System.Drawing.Size(800, 600);
+            this.panelMain.Size = new System.Drawing.Size(800, 689);
             this.panelMain.TabIndex = 0;
             // 
             // panelCommentsCard
@@ -71,9 +71,9 @@ namespace client_firebase
             this.panelCommentsCard.Controls.Add(this.btnPostComment);
             this.panelCommentsCard.Controls.Add(this.txtComment);
             this.panelCommentsCard.Controls.Add(this.lblCommentsHeader);
-            this.panelCommentsCard.Location = new System.Drawing.Point(15, 415);
+            this.panelCommentsCard.Location = new System.Drawing.Point(15, 534);
             this.panelCommentsCard.Name = "panelCommentsCard";
-            this.panelCommentsCard.Size = new System.Drawing.Size(750, 300);
+            this.panelCommentsCard.Size = new System.Drawing.Size(750, 522);
             this.panelCommentsCard.TabIndex = 2;
             // 
             // flpComments
@@ -85,7 +85,7 @@ namespace client_firebase
             this.flpComments.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpComments.Location = new System.Drawing.Point(20, 150);
             this.flpComments.Name = "flpComments";
-            this.flpComments.Size = new System.Drawing.Size(710, 135);
+            this.flpComments.Size = new System.Drawing.Size(710, 357);
             this.flpComments.TabIndex = 3;
             this.flpComments.WrapContents = false;
             // 
@@ -127,7 +127,7 @@ namespace client_firebase
             this.lblCommentsHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.lblCommentsHeader.Location = new System.Drawing.Point(20, 15);
             this.lblCommentsHeader.Name = "lblCommentsHeader";
-            this.lblCommentsHeader.Size = new System.Drawing.Size(95, 20);
+            this.lblCommentsHeader.Size = new System.Drawing.Size(101, 20);
             this.lblCommentsHeader.TabIndex = 0;
             this.lblCommentsHeader.Text = "💬 Bình luận";
             // 
@@ -138,9 +138,9 @@ namespace client_firebase
             this.panelChaptersCard.BackColor = System.Drawing.Color.White;
             this.panelChaptersCard.Controls.Add(this.flpChapters);
             this.panelChaptersCard.Controls.Add(this.lblChaptersHeader);
-            this.panelChaptersCard.Location = new System.Drawing.Point(15, 250);
+            this.panelChaptersCard.Location = new System.Drawing.Point(15, 244);
             this.panelChaptersCard.Name = "panelChaptersCard";
-            this.panelChaptersCard.Size = new System.Drawing.Size(750, 150);
+            this.panelChaptersCard.Size = new System.Drawing.Size(750, 284);
             this.panelChaptersCard.TabIndex = 1;
             // 
             // flpChapters
@@ -150,9 +150,9 @@ namespace client_firebase
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flpChapters.AutoScroll = true;
             this.flpChapters.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpChapters.Location = new System.Drawing.Point(20, 45);
+            this.flpChapters.Location = new System.Drawing.Point(20, 34);
             this.flpChapters.Name = "flpChapters";
-            this.flpChapters.Size = new System.Drawing.Size(710, 90);
+            this.flpChapters.Size = new System.Drawing.Size(710, 235);
             this.flpChapters.TabIndex = 1;
             this.flpChapters.WrapContents = false;
             // 
@@ -161,9 +161,9 @@ namespace client_firebase
             this.lblChaptersHeader.AutoSize = true;
             this.lblChaptersHeader.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblChaptersHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
-            this.lblChaptersHeader.Location = new System.Drawing.Point(20, 15);
+            this.lblChaptersHeader.Location = new System.Drawing.Point(20, 7);
             this.lblChaptersHeader.Name = "lblChaptersHeader";
-            this.lblChaptersHeader.Size = new System.Drawing.Size(155, 20);
+            this.lblChaptersHeader.Size = new System.Drawing.Size(164, 20);
             this.lblChaptersHeader.TabIndex = 0;
             this.lblChaptersHeader.Text = "📖 Danh sách chương";
             // 
@@ -186,7 +186,7 @@ namespace client_firebase
             this.panelInfoCard.Controls.Add(this.pbAuthor);
             this.panelInfoCard.Controls.Add(this.lblTitle);
             this.panelInfoCard.Controls.Add(this.pbCover);
-            this.panelInfoCard.Location = new System.Drawing.Point(15, 15);
+            this.panelInfoCard.Location = new System.Drawing.Point(15, 18);
             this.panelInfoCard.Name = "panelInfoCard";
             this.panelInfoCard.Size = new System.Drawing.Size(750, 220);
             this.panelInfoCard.TabIndex = 0;
@@ -249,7 +249,7 @@ namespace client_firebase
             this.lblRating.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
             this.lblRating.Location = new System.Drawing.Point(495, 145);
             this.lblRating.Name = "lblRating";
-            this.lblRating.Size = new System.Drawing.Size(102, 15);
+            this.lblRating.Size = new System.Drawing.Size(88, 15);
             this.lblRating.TabIndex = 9;
             this.lblRating.Text = "⭐ 5.0 ★★★★★";
             // 
@@ -260,7 +260,7 @@ namespace client_firebase
             this.lblChaptersCount.ForeColor = System.Drawing.Color.Gray;
             this.lblChaptersCount.Location = new System.Drawing.Point(395, 145);
             this.lblChaptersCount.Name = "lblChaptersCount";
-            this.lblChaptersCount.Size = new System.Drawing.Size(69, 15);
+            this.lblChaptersCount.Size = new System.Drawing.Size(72, 15);
             this.lblChaptersCount.TabIndex = 8;
             this.lblChaptersCount.Text = "📖 1 chương";
             // 
@@ -271,7 +271,7 @@ namespace client_firebase
             this.lblLikesCount.ForeColor = System.Drawing.Color.Gray;
             this.lblLikesCount.Location = new System.Drawing.Point(285, 145);
             this.lblLikesCount.Name = "lblLikesCount";
-            this.lblLikesCount.Size = new System.Drawing.Size(84, 15);
+            this.lblLikesCount.Size = new System.Drawing.Size(90, 15);
             this.lblLikesCount.TabIndex = 7;
             this.lblLikesCount.Text = "♡ 12k lượt thích";
             // 
@@ -304,7 +304,7 @@ namespace client_firebase
             this.lblAuthorRole.ForeColor = System.Drawing.Color.Gray;
             this.lblAuthorRole.Location = new System.Drawing.Point(205, 65);
             this.lblAuthorRole.Name = "lblAuthorRole";
-            this.lblAuthorRole.Size = new System.Drawing.Size(43, 13);
+            this.lblAuthorRole.Size = new System.Drawing.Size(41, 13);
             this.lblAuthorRole.TabIndex = 4;
             this.lblAuthorRole.Text = "Tác giả";
             // 
@@ -314,7 +314,7 @@ namespace client_firebase
             this.lblAuthorName.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAuthorName.Location = new System.Drawing.Point(205, 45);
             this.lblAuthorName.Name = "lblAuthorName";
-            this.lblAuthorName.Size = new System.Drawing.Size(89, 17);
+            this.lblAuthorName.Size = new System.Drawing.Size(83, 17);
             this.lblAuthorName.TabIndex = 3;
             this.lblAuthorName.Text = "J.K. Rowling";
             // 
@@ -333,7 +333,7 @@ namespace client_firebase
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(160, 15);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(121, 25);
+            this.lblTitle.Size = new System.Drawing.Size(124, 25);
             this.lblTitle.TabIndex = 1;
             this.lblTitle.Text = "Harry Potter";
             // 
@@ -354,7 +354,7 @@ namespace client_firebase
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.Controls.Add(this.panelMain);
             this.Name = "UC_BookDetail";
-            this.Size = new System.Drawing.Size(800, 600);
+            this.Size = new System.Drawing.Size(800, 689);
             this.panelMain.ResumeLayout(false);
             this.panelCommentsCard.ResumeLayout(false);
             this.panelCommentsCard.PerformLayout();

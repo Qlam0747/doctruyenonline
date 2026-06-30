@@ -316,8 +316,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UC_BookDetail.resx">
+      <DependentUpon>UC_BookDetail.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UC_Home.resx">
       <DependentUpon>UC_Home.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Upload.resx">
+      <DependentUpon>UC_Upload.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

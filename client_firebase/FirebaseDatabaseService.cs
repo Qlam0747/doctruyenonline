@@ -332,7 +332,7 @@ namespace client_firebase
             }
         }
 
-        public static async Task<string> UploadChapterAsync(string bookId, string chapterNum, string chapterTitle, string chapterContent)
+        public static async Task<string> UploadChapterAsync(string bookId, string chapterNum, string chapterTitle, string chapterContent, string status = null)
         {
             try
             {
@@ -351,6 +351,11 @@ namespace client_firebase
 
                 // Update book's UpdatedAt timestamp
                 await PutAsync($"books/{bookId}/updatedAt.json", now);
+
+                if (!string.IsNullOrEmpty(status))
+                {
+                    await PutAsync($"books/{bookId}/status.json", status);
+                }
 
                 // 2. Query the book title to construct a notification
                 string bookJson = await GetAsync($"books/{bookId}.json");
@@ -438,6 +443,27 @@ namespace client_firebase
                 System.Diagnostics.Debug.WriteLine("Error parsing books: " + ex.Message);
             }
             return books;
+        }
+
+        public static async Task<BookModel> GetBookByIdAsync(string bookId)
+        {
+            try
+            {
+                string json = await GetAsync($"books/{bookId}.json");
+                if (string.IsNullOrEmpty(json) || json == "null") return null;
+
+                var book = JsonConvert.DeserializeObject<BookModel>(json);
+                if (book != null)
+                {
+                    book.Id = bookId;
+                }
+                return book;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error parsing book by id: " + ex.Message);
+                return null;
+            }
         }
 
         private static async Task DeleteAsync(string path)
@@ -593,6 +619,21 @@ namespace client_firebase
                         await PatchAsync($"notifications/{AuthSession.FirebaseLocalId}/{n.Id}.json", update);
                     }
                 }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static async Task<bool> MarkNotificationAsReadAsync(string notiId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(notiId)) return false;
+            try
+            {
+                var update = new Dictionary<string, bool> { { "IsRead", true } };
+                await PatchAsync($"notifications/{AuthSession.FirebaseLocalId}/{notiId}.json", update);
                 return true;
             }
             catch

@@ -38,10 +38,9 @@ namespace client_firebase
             // 
             this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(20, 55);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(767, 237);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(767, 268);
             this.flowLayoutPanel1.TabIndex = 3;
             // 
             // label3
@@ -49,34 +48,35 @@ namespace client_firebase
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.label3.Location = new System.Drawing.Point(20, 303);
+            this.label3.Location = new System.Drawing.Point(20, 332);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 25);
             this.label3.TabIndex = 4;
             this.label3.Text = "Xu hướng";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel2.AutoScroll = true;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(20, 340);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(20, 371);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(767, 278);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(767, 284);
             this.flowLayoutPanel2.TabIndex = 5;
             // 
             // UC_Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.label2);
             this.Name = "UC_Home";
-            this.Size = new System.Drawing.Size(807, 638);
+            this.Size = new System.Drawing.Size(807, 675);
             this.ResumeLayout(false);
             this.PerformLayout();
 

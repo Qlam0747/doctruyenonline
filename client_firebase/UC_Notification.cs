@@ -15,6 +15,8 @@ namespace client_firebase
         {
             InitializeComponent();
 
+            InitializeTabsLayout();
+
             btnTabUnread.Click += (s, e) => SwitchTab(true);
             btnTabRead.Click += (s, e) => SwitchTab(false);
             btnMarkAll.Click += btnMarkAll_Click;
@@ -22,16 +24,43 @@ namespace client_firebase
             this.Load += UC_Notification_Load;
         }
 
+        private void InitializeTabsLayout()
+        {
+            TableLayoutPanel tlpTabs = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 1,
+                BackColor = Color.Transparent,
+                Margin = new Padding(0),
+                Padding = new Padding(0)
+            };
+            tlpTabs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlpTabs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlpTabs.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            btnTabUnread.Dock = DockStyle.Fill;
+            btnTabUnread.Margin = new Padding(2);
+            btnTabRead.Dock = DockStyle.Fill;
+            btnTabRead.Margin = new Padding(2);
+
+            panelTabs.Controls.Remove(btnTabUnread);
+            panelTabs.Controls.Remove(btnTabRead);
+
+            tlpTabs.Controls.Add(btnTabUnread, 0, 0);
+            tlpTabs.Controls.Add(btnTabRead, 1, 0);
+
+            panelTabs.Controls.Add(tlpTabs);
+        }
+
         private async void UC_Notification_Load(object sender, EventArgs e)
         {
             await LoadNotificationsAsync();
-            await FirebaseDatabaseService.MarkAllNotificationsAsReadAsync();
         }
 
         public async Task RefreshNotifications()
         {
             await LoadNotificationsAsync();
-            await FirebaseDatabaseService.MarkAllNotificationsAsReadAsync();
         }
 
         private void SwitchTab(bool unread)
@@ -201,9 +230,8 @@ namespace client_firebase
                         if (targetBook != null && this.ParentForm is MainForm mf)
                         {
                             // Mark single notification as read when clicking it
-                            var update = new Dictionary<string, bool> { { "IsRead", true } };
-                            await FirebaseDatabaseService.DeleteNotificationAsync(n.Id); // delete or update to read
-                            // For simplicity, we can delete or update. Let's just navigate to book detail:
+                            await FirebaseDatabaseService.MarkNotificationAsReadAsync(n.Id);
+                            // Navigate to book detail
                             mf.ShowBookDetail(targetBook);
                         }
                         else

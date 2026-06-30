@@ -22,29 +22,7 @@ namespace client_firebase
             btnBack.Click += btnBack_Click;
             btnSubmit.Click += btnSubmit_Click;
 
-            // Adjust txtTitle width to make space for status combobox
-            txtTitle.Width = 320;
 
-            // Create status label and combobox dynamically
-            Label lblStatus = new Label
-            {
-                Text = "Trạng thái",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                Location = new Point(570, 45),
-                Size = new Size(150, 15)
-            };
-            ComboBox cbStatus = new ComboBox
-            {
-                Name = "cbStatus",
-                Font = new Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular),
-                Location = new Point(570, 65),
-                Size = new Size(150, 25),
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
-            cbStatus.Items.AddRange(new object[] { "Đang tiến hành", "Đã hoàn thành" });
-            cbStatus.SelectedIndex = 0;
-            panelStep1.Controls.Add(lblStatus);
-            panelStep1.Controls.Add(cbStatus);
 
             // Adjust txtDescription and flpGenres height to fit more genres
             txtDescription.Height = 160; // Reduce height from 225 to 160
@@ -63,6 +41,7 @@ namespace client_firebase
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 Size = new Size(130, 25),
                 Location = new Point(590, 155), // Right aligned, above txtChapterContent
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand,
                 BackColor = Color.FromArgb(230, 230, 230),
@@ -281,11 +260,6 @@ namespace client_firebase
             string chapContent = txtChapterContent.Text.Trim();
 
             string status = "Đang tiến hành";
-            var cbStatus = panelStep1.Controls["cbStatus"] as ComboBox;
-            if (cbStatus != null)
-            {
-                status = cbStatus.SelectedItem.ToString();
-            }
 
             string res = await FirebaseDatabaseService.UploadBookAsync(title, desc, coverBase64, selectedGenres, chapNum, chapTitle, chapContent, status);
 

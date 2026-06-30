@@ -10,6 +10,7 @@ namespace client_firebase
         private string _bookId;
         private string _bookTitle;
         private string _bookDesc;
+        private string _currentStatus;
         
         private Panel panelHeader;
         private Label lblTitle;
@@ -19,17 +20,20 @@ namespace client_firebase
         private TextBox txtChapterTitle;
         private Label lblChapterContent;
         private TextBox txtChapterContent;
+        private Label lblStatus;
+        private ComboBox cbStatus;
         
         private Button btnAIAssist;
         private Button btnSubmit;
         private Button btnCancel;
         private ContextMenuStrip aiMenu;
 
-        public FormAddChapter(string bookId, string bookTitle, string bookDesc, int nextChapterNum)
+        public FormAddChapter(string bookId, string bookTitle, string bookDesc, int nextChapterNum, string currentStatus = "Đang tiến hành")
         {
             _bookId = bookId;
             _bookTitle = bookTitle;
             _bookDesc = bookDesc;
+            _currentStatus = currentStatus;
             
             InitializeComponent(nextChapterNum);
             InitializeContextMenu();
@@ -89,7 +93,7 @@ namespace client_firebase
             {
                 Text = "Tiêu đề chương",
                 Location = new Point(140, 75),
-                Size = new Size(480, 20),
+                Size = new Size(330, 20),
                 Font = new Font("Segoe UI", 9.75F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(45, 52, 54)
             };
@@ -98,9 +102,30 @@ namespace client_firebase
             txtChapterTitle = new TextBox
             {
                 Location = new Point(140, 100),
-                Size = new Size(475, 27),
+                Size = new Size(330, 27),
                 BorderStyle = BorderStyle.FixedSingle
             };
+
+            // Status Label
+            lblStatus = new Label
+            {
+                Text = "Trạng thái truyện",
+                Location = new Point(485, 75),
+                Size = new Size(130, 20),
+                Font = new Font("Segoe UI", 9.75F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(45, 52, 54)
+            };
+
+            // Status ComboBox
+            cbStatus = new ComboBox
+            {
+                Location = new Point(485, 100),
+                Size = new Size(130, 27),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 9.75F, FontStyle.Regular)
+            };
+            cbStatus.Items.AddRange(new object[] { "Đang tiến hành", "Đã hoàn thành" });
+            cbStatus.SelectedIndex = _currentStatus == "Đã hoàn thành" ? 1 : 0;
 
             // Chapter Content Label
             lblChapterContent = new Label
@@ -205,6 +230,8 @@ namespace client_firebase
             this.Controls.Add(txtChapterNum);
             this.Controls.Add(lblChapterTitle);
             this.Controls.Add(txtChapterTitle);
+            this.Controls.Add(lblStatus);
+            this.Controls.Add(cbStatus);
             this.Controls.Add(lblChapterContent);
             this.Controls.Add(btnAIAssist);
             this.Controls.Add(btnImportFile);
@@ -329,7 +356,8 @@ namespace client_firebase
             btnCancel.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
-            string res = await FirebaseDatabaseService.UploadChapterAsync(_bookId, chapNum, title, content);
+            string selectedStatus = cbStatus.SelectedItem.ToString();
+            string res = await FirebaseDatabaseService.UploadChapterAsync(_bookId, chapNum, title, content, selectedStatus);
 
             this.Cursor = Cursors.Default;
             btnSubmit.Enabled = true;
