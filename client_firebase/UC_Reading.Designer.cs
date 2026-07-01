@@ -64,7 +64,7 @@ namespace client_firebase
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(35, 35);
             this.btnSettings.TabIndex = 5;
-            this.btnSettings.Text = "⚙";
+            this.btnSettings.Text = "🔍";
             this.btnSettings.UseVisualStyleBackColor = true;
             // 
             // cbChapters
@@ -85,9 +85,9 @@ namespace client_firebase
             this.lblHeaderChapName.ForeColor = System.Drawing.Color.Gray;
             this.lblHeaderChapName.Location = new System.Drawing.Point(120, 33);
             this.lblHeaderChapName.Name = "lblHeaderChapName";
-            this.lblHeaderChapName.Size = new System.Drawing.Size(220, 13);
+            this.lblHeaderChapName.Size = new System.Drawing.Size(79, 13);
             this.lblHeaderChapName.TabIndex = 3;
-            this.lblHeaderChapName.Text = "Chương 1: Harry Potter và Hòn đá phù thủy";
+            this.lblHeaderChapName.Text = "Chương ... : ...";
             // 
             // lblHeaderBookTitle
             // 
@@ -95,9 +95,9 @@ namespace client_firebase
             this.lblHeaderBookTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHeaderBookTitle.Location = new System.Drawing.Point(120, 10);
             this.lblHeaderBookTitle.Name = "lblHeaderBookTitle";
-            this.lblHeaderBookTitle.Size = new System.Drawing.Size(94, 20);
+            this.lblHeaderBookTitle.Size = new System.Drawing.Size(21, 20);
             this.lblHeaderBookTitle.TabIndex = 2;
-            this.lblHeaderBookTitle.Text = "Harry Potter";
+            this.lblHeaderBookTitle.Text = "...";
             // 
             // btnList
             // 
@@ -156,7 +156,7 @@ namespace client_firebase
             this.txtContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtContent.Size = new System.Drawing.Size(730, 335);
             this.txtContent.TabIndex = 3;
-            this.txtContent.Text = "Nội dung truyện ở đây...";
+            this.txtContent.Text = "...";
             // 
             // lblAuthor
             // 
@@ -165,9 +165,9 @@ namespace client_firebase
             this.lblAuthor.ForeColor = System.Drawing.Color.Gray;
             this.lblAuthor.Location = new System.Drawing.Point(20, 50);
             this.lblAuthor.Name = "lblAuthor";
-            this.lblAuthor.Size = new System.Drawing.Size(68, 15);
+            this.lblAuthor.Size = new System.Drawing.Size(16, 15);
             this.lblAuthor.TabIndex = 2;
-            this.lblAuthor.Text = "J.K. Rowling";
+            this.lblAuthor.Text = "...";
             // 
             // lblChapTitle
             // 
@@ -176,9 +176,9 @@ namespace client_firebase
             this.lblChapTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.lblChapTitle.Location = new System.Drawing.Point(20, 20);
             this.lblChapTitle.Name = "lblChapTitle";
-            this.lblChapTitle.Size = new System.Drawing.Size(326, 21);
+            this.lblChapTitle.Size = new System.Drawing.Size(111, 21);
             this.lblChapTitle.TabIndex = 1;
-            this.lblChapTitle.Text = "Chương 1: Harry Potter và Hòn đá phù thủy";
+            this.lblChapTitle.Text = "Chương ... : ...";
             // 
             // panelDivider
             // 
@@ -212,7 +212,7 @@ namespace client_firebase
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(160, 40);
             this.btnNext.TabIndex = 2;
-            this.btnNext.Text = "Chương sau  ➔";
+            this.btnNext.Text = "Chương sau";
             this.btnNext.UseVisualStyleBackColor = true;
             // 
             // btnListBottom
@@ -240,7 +240,7 @@ namespace client_firebase
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(160, 40);
             this.btnPrev.TabIndex = 0;
-            this.btnPrev.Text = "⬅  Chương trước";
+            this.btnPrev.Text = "Chương trước";
             this.btnPrev.UseVisualStyleBackColor = true;
             // 
             // UC_Reading

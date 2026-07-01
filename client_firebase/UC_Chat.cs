@@ -104,6 +104,153 @@ namespace client_firebase
             panelInput.Visible = show;
         }
 
+        private bool IsOnlyEmojis(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return false;
+            // Emojis, surrogate pairs, zero width joiners, skin tones, etc.
+            // \p{So} matches other symbols (which covers emojis)
+            // \p{Cs} matches surrogate pairs (common in emojis)
+            // \p{Cf} matches format characters like Zero Width Joiner (ZWJ)
+            return System.Text.RegularExpressions.Regex.IsMatch(text, @"^[\s\p{So}\p{Cs}\p{Cf}]+$");
+        }
+
+        private System.Drawing.Drawing2D.GraphicsPath GetRoundedRectanglePath(Rectangle bounds, int radius)
+        {
+            int diameter = radius * 2;
+            Size size = new Size(diameter, diameter);
+            Rectangle arc = new Rectangle(bounds.Location, size);
+            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+
+            if (radius == 0)
+            {
+                path.AddRectangle(bounds);
+                return path;
+            }
+
+            // top left arc  
+            path.AddArc(arc, 180, 90);
+
+            // top right arc  
+            arc.X = bounds.Right - diameter;
+            path.AddArc(arc, 270, 90);
+
+            // bottom right arc  
+            arc.Y = bounds.Bottom - diameter;
+            path.AddArc(arc, 0, 90);
+
+            // bottom left arc 
+            arc.X = bounds.Left;
+            path.AddArc(arc, 90, 90);
+
+            path.CloseFigure();
+            return path;
+        }
+
+        private Size MeasureTextSize(string text, Font font, int maxWidth)
+        {
+            using (Graphics g = flpMessages.CreateGraphics())
+            {
+                string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                int maxW = 0;
+                int totalH = 0;
+
+                foreach (var line in lines)
+                {
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        totalH += (int)g.MeasureString(" ", font).Height;
+                        continue;
+                    }
+
+                    SizeF sizeNoWrap = g.MeasureString(line, font);
+                    if (sizeNoWrap.Width <= maxWidth)
+                    {
+                        maxW = Math.Max(maxW, (int)Math.Ceiling(sizeNoWrap.Width));
+                        totalH += (int)Math.Ceiling(sizeNoWrap.Height);
+                    }
+                    else
+                    {
+                        SizeF sizeWrap = g.MeasureString(line, font, maxWidth);
+                        maxW = Math.Max(maxW, (int)Math.Ceiling(sizeWrap.Width));
+                        totalH += (int)Math.Ceiling(sizeWrap.Height);
+                    }
+                }
+
+                // Add minor padding to prevent cut-offs in RichTextBox
+                return new Size(Math.Min(maxW, maxWidth) + 5, totalH + 4);
+            }
+        }
+
+        private Panel CreateContactCard(UserModel user)
+        {
+            // Create contact item card
+            Panel card = new Panel
+            {
+                Width = flpContacts.Width - 25,
+                Height = 70,
+                BackColor = Color.White,
+                Margin = new Padding(0, 5, 0, 5),
+                Cursor = Cursors.Hand,
+                Tag = user
+            };
+
+            // Rounded/border style
+            card.Paint += (s, pe) =>
+            {
+                using (Pen pen = new Pen(Color.FromArgb(230, 230, 230), 1))
+                {
+                    pe.Graphics.DrawRectangle(pen, 0, 0, card.Width - 1, card.Height - 1);
+                }
+            };
+
+            PictureBox pbAvatar = new PictureBox
+            {
+                Location = new Point(10, 15),
+                Size = new Size(40, 40),
+                SizeMode = PictureBoxSizeMode.Zoom
+            };
+            DrawAvatar(pbAvatar, user.Username, user.Avatar);
+
+            Label lblName = new Label
+            {
+                Text = user.Username,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(60, 15),
+                Size = new Size(card.Width - 80, 20),
+                AutoEllipsis = true
+            };
+
+            Label lblLastMsg = new Label
+            {
+                Text = "Nhấp để trò chuyện...",
+                Font = new Font("Segoe UI", 8.25F, FontStyle.Regular),
+                ForeColor = Color.Gray,
+                Location = new Point(60, 38),
+                Size = new Size(card.Width - 80, 18),
+                AutoEllipsis = true
+            };
+
+            // Add to card
+            card.Controls.Add(pbAvatar);
+            card.Controls.Add(lblName);
+            card.Controls.Add(lblLastMsg);
+
+            // Add click handlers for card and all its children
+            Action clickAction = async () =>
+            {
+                await SelectContact(user, card);
+            };
+            card.Click += (s, e) => clickAction();
+            pbAvatar.Click += (s, e) => clickAction();
+            lblName.Click += (s, e) => clickAction();
+            lblLastMsg.Click += (s, e) => clickAction();
+
+            // Load last message asynchronously for each user
+            LoadLastMessageForContact(user, lblLastMsg);
+
+            return card;
+        }
+
         private async Task LoadContactsAsync()
         {
             flpContacts.Controls.Clear();
@@ -127,74 +274,45 @@ namespace client_firebase
                 return;
             }
 
-            foreach (var user in allUsers)
+            // Gather all users, then filter them by checking if there's any message
+            var userLastMsgs = new Dictionary<string, MessageModel>();
+            var tasks = allUsers.Select(async u =>
             {
-                // Create contact item card
-                Panel card = new Panel
+                var lastMsg = await FirebaseDatabaseService.GetLastMessageAsync(u.LocalId);
+                if (lastMsg != null)
                 {
-                    Width = flpContacts.Width - 25,
-                    Height = 70,
-                    BackColor = Color.White,
-                    Margin = new Padding(0, 5, 0, 5),
-                    Cursor = Cursors.Hand,
-                    Tag = user
-                };
-
-                // Rounded/border style
-                card.Paint += (s, pe) =>
-                {
-                    using (Pen pen = new Pen(Color.FromArgb(230, 230, 230), 1))
+                    lock (userLastMsgs)
                     {
-                        pe.Graphics.DrawRectangle(pen, 0, 0, card.Width - 1, card.Height - 1);
+                        userLastMsgs[u.LocalId] = lastMsg;
                     }
-                };
+                }
+            });
+            await Task.WhenAll(tasks);
 
-                PictureBox pbAvatar = new PictureBox
-                {
-                    Location = new Point(10, 15),
-                    Size = new Size(40, 40),
-                    SizeMode = PictureBoxSizeMode.Zoom
-                };
-                DrawAvatar(pbAvatar, user.Username, user.Avatar);
+            // Filter allUsers to only active users (those who have messages)
+            var activeUsers = allUsers.Where(u => userLastMsgs.ContainsKey(u.LocalId)).ToList();
 
-                Label lblName = new Label
-                {
-                    Text = user.Username,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                    Location = new Point(60, 15),
-                    Size = new Size(card.Width - 80, 20),
-                    AutoEllipsis = true
-                };
+            // Sort activeUsers by last message timestamp descending (latest message first)
+            activeUsers = activeUsers.OrderByDescending(u => userLastMsgs[u.LocalId].Timestamp).ToList();
 
-                Label lblLastMsg = new Label
+            if (activeUsers.Count == 0)
+            {
+                Label lblNoContacts = new Label
                 {
-                    Text = "Nhấp để trò chuyện...",
-                    Font = new Font("Segoe UI", 8.25F, FontStyle.Regular),
+                    Text = "Không có cuộc trò chuyện nào",
+                    Font = new Font("Segoe UI", 9F, FontStyle.Italic),
                     ForeColor = Color.Gray,
-                    Location = new Point(60, 38),
-                    Size = new Size(card.Width - 80, 18),
-                    AutoEllipsis = true
+                    AutoSize = true,
+                    Margin = new Padding(10)
                 };
+                flpContacts.Controls.Add(lblNoContacts);
+                return;
+            }
 
-                // Add to card
-                card.Controls.Add(pbAvatar);
-                card.Controls.Add(lblName);
-                card.Controls.Add(lblLastMsg);
-
-                // Add click handlers for card and all its children
-                Action clickAction = async () =>
-                {
-                    await SelectContact(user, card);
-                };
-                card.Click += (s, e) => clickAction();
-                pbAvatar.Click += (s, e) => clickAction();
-                lblName.Click += (s, e) => clickAction();
-                lblLastMsg.Click += (s, e) => clickAction();
-
+            foreach (var user in activeUsers)
+            {
+                Panel card = CreateContactCard(user);
                 flpContacts.Controls.Add(card);
-
-                // Load last message asynchronously for each user
-                LoadLastMessageForContact(user, lblLastMsg);
             }
         }
 
@@ -212,23 +330,77 @@ namespace client_firebase
 
         public async void SelectUserById(string userId)
         {
-            if (flpContacts.Controls.Count == 0 || allUsers.Count == 0)
+            if (allUsers.Count == 0)
             {
-                await LoadContactsAsync();
+                allUsers = await FirebaseDatabaseService.GetAllUsersAsync();
             }
 
+            UserModel targetUser = allUsers.FirstOrDefault(u => u.LocalId == userId);
+            if (targetUser == null)
+            {
+                return;
+            }
+
+            // Check if this user card already exists in flpContacts
+            Panel existingCard = null;
             foreach (Control ctrl in flpContacts.Controls)
             {
                 if (ctrl is Panel card && card.Tag is UserModel user && user.LocalId == userId)
                 {
-                    await SelectContact(user, card);
-                    return;
+                    existingCard = card;
+                    break;
                 }
+            }
+
+            if (existingCard != null)
+            {
+                await SelectContact(targetUser, existingCard);
+            }
+            else
+            {
+                // Remove the "Không có cuộc trò chuyện nào" or "Không có người dùng nào khác" labels if present
+                var labelsToRemove = flpContacts.Controls.OfType<Label>().ToList();
+                foreach (var lbl in labelsToRemove)
+                {
+                    flpContacts.Controls.Remove(lbl);
+                    lbl.Dispose();
+                }
+
+                // Create a temporary/placeholder card for this user in the contact list
+                Panel newCard = CreateContactCard(targetUser);
+                flpContacts.Controls.Add(newCard);
+                // Set child index to 0 so it appears at the top
+                flpContacts.Controls.SetChildIndex(newCard, 0);
+                await SelectContact(targetUser, newCard);
             }
         }
 
         private async Task SelectContact(UserModel user, Panel card)
         {
+            // Before changing selectedUser, check if the old selectedUser has no messages
+            if (selectedUser != null && selectedUser.LocalId != user.LocalId)
+            {
+                var oldMsgs = await FirebaseDatabaseService.GetMessagesAsync(selectedUser.LocalId);
+                if (oldMsgs.Count == 0)
+                {
+                    // Find and remove the old card from flpContacts
+                    Panel oldCard = null;
+                    foreach (Control ctrl in flpContacts.Controls)
+                    {
+                        if (ctrl is Panel p && p.Tag is UserModel u && u.LocalId == selectedUser.LocalId)
+                        {
+                            oldCard = p;
+                            break;
+                        }
+                    }
+                    if (oldCard != null)
+                    {
+                        flpContacts.Controls.Remove(oldCard);
+                        oldCard.Dispose();
+                    }
+                }
+            }
+
             selectedUser = user;
 
             // Clear unread flag for this chat
@@ -288,12 +460,34 @@ namespace client_firebase
             bool isMe = msg.SenderId == AuthSession.FirebaseLocalId;
             int maxBubbleWidth = (int)((flpMessages.Width - 50) * 0.7);
 
+            // Calculate if we need to show time (if diff between last msg timestamp is < 5 mins, skip)
+            long prevTimestamp = 0;
+            if (flpMessages.Controls.Count > 0)
+            {
+                Control lastCtrl = flpMessages.Controls[flpMessages.Controls.Count - 1];
+                if (lastCtrl.Tag is long ts)
+                {
+                    prevTimestamp = ts;
+                }
+            }
+
+            bool showTime = true;
+            if (prevTimestamp > 0)
+            {
+                long diffMs = Math.Abs(msg.Timestamp - prevTimestamp);
+                if (diffMs < 5 * 60 * 1000) // 5 minutes in milliseconds
+                {
+                    showTime = false;
+                }
+            }
+
             // Message container panel
             Panel rowPanel = new Panel
             {
                 Width = flpMessages.Width - 35,
                 Margin = new Padding(0, 5, 0, 5),
-                BackColor = Color.Transparent
+                BackColor = Color.Transparent,
+                Tag = msg.Timestamp
             };
 
             // Timestamp Label
@@ -319,7 +513,7 @@ namespace client_firebase
                     SizeMode = PictureBoxSizeMode.Zoom,
                     Size = new Size(180, 120),
                     Cursor = Cursors.Hand,
-                    Location = new Point(10, 8)
+                    Location = new Point(0, 0)
                 };
                 try
                 {
@@ -352,8 +546,10 @@ namespace client_firebase
                     imgForm.Controls.Add(pbFull);
                     imgForm.ShowDialog();
                 };
-                bubble.Width = 200;
-                bubble.Height = 136;
+                bubble.BackColor = Color.FromArgb(250, 250, 250); // Same as flpMessages BackColor
+                bubble.Padding = new Padding(0);
+                bubble.Width = 180;
+                bubble.Height = 120;
                 bubble.Controls.Add(pbMsg);
             }
             else if (msg.FileType == "file" && !string.IsNullOrEmpty(msg.FileBase64))
@@ -404,43 +600,103 @@ namespace client_firebase
             }
             else
             {
-                // Message Text
-                Label lblText = new Label
+                bool isOnlyEmoji = !string.IsNullOrEmpty(msg.Text) && IsOnlyEmojis(msg.Text);
+                if (isOnlyEmoji)
                 {
-                    Text = msg.Text,
-                    Font = new Font("Segoe UI", 9.75F, FontStyle.Regular),
-                    ForeColor = isMe ? Color.White : Color.Black,
-                    Location = new Point(10, 8),
-                    MaximumSize = new Size(maxBubbleWidth, 0),
-                    AutoSize = true
-                };
+                    // No bubble background, color emojis with larger size
+                    RichTextBox rtb = new RichTextBox
+                    {
+                        Text = msg.Text,
+                        Font = new Font("Segoe UI Emoji", 26F),
+                        ReadOnly = true,
+                        BorderStyle = BorderStyle.None,
+                        ScrollBars = RichTextBoxScrollBars.None,
+                        BackColor = Color.FromArgb(250, 250, 250), // Matches flpMessages BackColor
+                        Multiline = true,
+                        WordWrap = true,
+                        Location = new Point(0, 0)
+                    };
+                    rtb.Enter += (s, e) => { flpMessages.Focus(); };
 
-                // Measure size to fit text perfectly
-                Size bubbleSize;
-                using (Graphics g = flpMessages.CreateGraphics())
-                {
-                    SizeF sf = g.MeasureString(msg.Text, lblText.Font, maxBubbleWidth);
-                    bubbleSize = new Size((int)Math.Ceiling(sf.Width) + 20, (int)Math.Ceiling(sf.Height) + 16);
+                    // Measure text size
+                    Size emojiSize;
+                    using (Graphics g = flpMessages.CreateGraphics())
+                    {
+                        SizeF sf = g.MeasureString(msg.Text, rtb.Font, maxBubbleWidth);
+                        emojiSize = new Size((int)Math.Ceiling(sf.Width) + 15, (int)Math.Ceiling(sf.Height) + 10);
+                    }
+                    rtb.Size = emojiSize;
+
+                    bubble.BackColor = Color.FromArgb(250, 250, 250); // Matches flpMessages
+                    bubble.Size = emojiSize;
+                    bubble.Padding = new Padding(0);
+                    bubble.Controls.Add(rtb);
                 }
-                lblText.Size = bubbleSize;
-                bubble.Size = bubbleSize;
-                bubble.Controls.Add(lblText);
+                else
+                {
+                    // Regular text message. But to support color emojis in text as well, use RichTextBox too!
+                    RichTextBox rtb = new RichTextBox
+                    {
+                        Text = msg.Text,
+                        Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Regular),
+                        ReadOnly = true,
+                        BorderStyle = BorderStyle.None,
+                        ScrollBars = RichTextBoxScrollBars.None,
+                        BackColor = isMe ? Color.FromArgb(108, 92, 231) : Color.FromArgb(230, 230, 230),
+                        Multiline = true,
+                        WordWrap = true,
+                        Location = new Point(10, 8)
+                    };
+                    rtb.Enter += (s, e) => { flpMessages.Focus(); };
+                    rtb.SelectAll();
+                    rtb.SelectionColor = isMe ? Color.White : Color.Black;
+                    rtb.DeselectAll();
+
+                    Size textSize = MeasureTextSize(msg.Text, rtb.Font, maxBubbleWidth);
+                    rtb.Size = new Size(textSize.Width + 10, textSize.Height + 5);
+                    bubble.Size = new Size(rtb.Width + 20, rtb.Height + 16);
+                    bubble.Controls.Add(rtb);
+                }
+            }
+
+            // Apply rounded corners (bo cong) to non-transparent bubble panels
+            if (bubble.BackColor != Color.FromArgb(250, 250, 250))
+            {
+                using (var path = GetRoundedRectanglePath(new Rectangle(0, 0, bubble.Width, bubble.Height), 12))
+                {
+                    bubble.Region = new Region(path);
+                }
             }
 
             // Layout row Panel
-            rowPanel.Controls.Add(lblTime);
-            rowPanel.Controls.Add(bubble);
-
-            // Positioning based on sender
-            if (isMe)
+            if (showTime)
             {
-                lblTime.Location = new Point((rowPanel.Width - lblTime.Width) / 2, 0);
-                bubble.Location = new Point(rowPanel.Width - bubble.Width - 10, 16);
+                rowPanel.Controls.Add(lblTime);
+                rowPanel.Controls.Add(bubble);
+
+                if (isMe)
+                {
+                    lblTime.Location = new Point((rowPanel.Width - lblTime.Width) / 2, 0);
+                    bubble.Location = new Point(rowPanel.Width - bubble.Width - 10, 16);
+                }
+                else
+                {
+                    lblTime.Location = new Point((rowPanel.Width - lblTime.Width) / 2, 0);
+                    bubble.Location = new Point(10, 16);
+                }
             }
             else
             {
-                lblTime.Location = new Point((rowPanel.Width - lblTime.Width) / 2, 0);
-                bubble.Location = new Point(10, 16);
+                rowPanel.Controls.Add(bubble);
+
+                if (isMe)
+                {
+                    bubble.Location = new Point(rowPanel.Width - bubble.Width - 10, 0);
+                }
+                else
+                {
+                    bubble.Location = new Point(10, 0);
+                }
             }
 
             rowPanel.Height = bubble.Bottom + 5;
@@ -701,38 +957,163 @@ namespace client_firebase
 
         private void btnEmoji_Click(object sender, EventArgs e)
         {
-            ContextMenuStrip emojiMenu = new ContextMenuStrip();
-            string[] emojis = { "😀", "😂", "🥰", "👍", "🔥", "🎉", "❤️", "😮", "😭", "🙏" };
+            Button btnEmoji = sender as Button;
+            if (btnEmoji == null) return;
+
+            Form emojiPopup = new Form
+            {
+                FormBorderStyle = FormBorderStyle.None,
+                ShowInTaskbar = false,
+                StartPosition = FormStartPosition.Manual,
+                Size = new Size(185, 185),
+                BackColor = Color.White
+            };
+
+            emojiPopup.Paint += (s, pe) =>
+            {
+                using (Pen p = new Pen(Color.FromArgb(200, 200, 200), 1))
+                {
+                    pe.Graphics.DrawRectangle(p, 0, 0, emojiPopup.Width - 1, emojiPopup.Height - 1);
+                }
+            };
+
+            emojiPopup.Deactivate += (s, ev) => emojiPopup.Close();
+
+            TableLayoutPanel tlp = new TableLayoutPanel
+            {
+                ColumnCount = 5,
+                RowCount = 5,
+                Dock = DockStyle.Fill,
+                Padding = new Padding(3),
+                BackColor = Color.White
+            };
+
+            for (int i = 0; i < 5; i++)
+            {
+                tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                tlp.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            }
+
+            string[] emojis = {
+                "😀", "😂", "🥰", "👍", "🔥",
+                "🎉", "❤️", "😮", "😭", "🙏",
+                "🤔", "👏", "🥳", "✨", "😎",
+                "💡", "⭐", "🚀", "👀", "💔",
+                "💩", "🤩", "😜", "😡", "🤢"
+            };
+
             foreach (var emoji in emojis)
             {
-                var item = emojiMenu.Items.Add(emoji);
-                item.Click += (s, ev) =>
+                Panel cell = new Panel
                 {
-                    txtInput.SelectedText = emoji;
+                    Dock = DockStyle.Fill,
+                    Cursor = Cursors.Hand,
+                    BackColor = Color.White,
+                    Margin = new Padding(1)
                 };
+
+                RichTextBox rtbEmoji = new RichTextBox
+                {
+                    Text = emoji,
+                    Font = new Font("Segoe UI Emoji", 14F),
+                    ReadOnly = true,
+                    BorderStyle = BorderStyle.None,
+                    ScrollBars = RichTextBoxScrollBars.None,
+                    BackColor = Color.White,
+                    Multiline = false,
+                    Cursor = Cursors.Hand,
+                    Dock = DockStyle.Fill
+                };
+
+                // Centering the text inside RichTextBox
+                rtbEmoji.SelectAll();
+                rtbEmoji.SelectionAlignment = HorizontalAlignment.Center;
+                rtbEmoji.DeselectAll();
+                rtbEmoji.Enter += (s, ev) => { emojiPopup.Focus(); };
+
+                Action selectEmoji = async () =>
+                {
+                    emojiPopup.Close();
+                    if (selectedUser == null) return;
+
+                    bool sent = await FirebaseDatabaseService.SendMessageAsync(selectedUser.LocalId, emoji);
+                    if (sent)
+                    {
+                        await LoadMessagesAsync();
+                        UpdateLastMessageInList(selectedUser.LocalId, emoji);
+                    }
+                    txtInput.Focus();
+                };
+
+                cell.Click += (s, ev) => selectEmoji();
+                rtbEmoji.Click += (s, ev) => selectEmoji();
+
+                EventHandler hoverEnter = (s, ev) =>
+                {
+                    cell.BackColor = Color.FromArgb(240, 240, 240);
+                    rtbEmoji.BackColor = Color.FromArgb(240, 240, 240);
+                };
+                EventHandler hoverLeave = (s, ev) =>
+                {
+                    cell.BackColor = Color.White;
+                    rtbEmoji.BackColor = Color.White;
+                };
+
+                cell.MouseEnter += hoverEnter;
+                cell.MouseLeave += hoverLeave;
+                rtbEmoji.MouseEnter += hoverEnter;
+                rtbEmoji.MouseLeave += hoverLeave;
+
+                cell.Controls.Add(rtbEmoji);
+                tlp.Controls.Add(cell);
             }
-            emojiMenu.Show(Cursor.Position);
+
+            emojiPopup.Controls.Add(tlp);
+
+            // Position centered above the Emoji button
+            Point pt = btnEmoji.PointToScreen(Point.Empty);
+            emojiPopup.Location = new Point(pt.X - (emojiPopup.Width - btnEmoji.Width) / 2, pt.Y - emojiPopup.Height - 5);
+            emojiPopup.Show();
+            emojiPopup.Focus();
         }
 
         private async void btnHeaderOptions_Click(object sender, EventArgs e)
         {
             if (selectedUser == null) return;
 
+            // Query block status first
+            bool isBlocked = await FirebaseDatabaseService.IsUserBlockedAsync(selectedUser.LocalId);
+
             ContextMenuStrip optionsMenu = new ContextMenuStrip();
 
-            var blockItem = optionsMenu.Items.Add("🚫 Chặn người dùng");
+            var blockItem = optionsMenu.Items.Add(isBlocked ? "🔓 Gỡ chặn tin nhắn" : "🚫 Chặn người dùng");
             var viewFilesItem = optionsMenu.Items.Add("📂 Xem file/hình ảnh đã gửi");
             var deleteItem = optionsMenu.Items.Add("🗑️ Xóa hội thoại");
 
             blockItem.Click += async (s, ev) =>
             {
-                var dr = MessageBox.Show($"Bạn có chắc chắn muốn chặn {selectedUser.Username}? Hai bên sẽ không thể nhắn tin cho nhau.", "Xác nhận chặn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (dr == DialogResult.Yes)
+                if (isBlocked)
                 {
-                    bool res = await FirebaseDatabaseService.BlockUserAsync(selectedUser.LocalId);
-                    if (res)
+                    var dr = MessageBox.Show($"Bạn có muốn gỡ chặn {selectedUser.Username}? Hai bên sẽ có thể nhắn tin lại cho nhau.", "Xác nhận gỡ chặn", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (dr == DialogResult.Yes)
                     {
-                        MessageBox.Show("Đã chặn người dùng thành công.", "Thông báo");
+                        bool res = await FirebaseDatabaseService.UnblockUserAsync(selectedUser.LocalId);
+                        if (res)
+                        {
+                            MessageBox.Show("Đã gỡ chặn người dùng thành công.", "Thông báo");
+                        }
+                    }
+                }
+                else
+                {
+                    var dr = MessageBox.Show($"Bạn có chắc chắn muốn chặn {selectedUser.Username}? Hai bên sẽ không thể nhắn tin cho nhau.", "Xác nhận chặn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (dr == DialogResult.Yes)
+                    {
+                        bool res = await FirebaseDatabaseService.BlockUserAsync(selectedUser.LocalId);
+                        if (res)
+                        {
+                            MessageBox.Show("Đã chặn người dùng thành công.", "Thông báo");
+                        }
                     }
                 }
             };
@@ -740,21 +1121,248 @@ namespace client_firebase
             viewFilesItem.Click += async (s, ev) =>
             {
                 var messages = await FirebaseDatabaseService.GetMessagesAsync(selectedUser.LocalId);
-                var files = messages.Where(m => m.FileType == "image" || m.FileType == "file").ToList();
-                if (files.Count == 0)
+                var attachments = messages.Where(m => !string.IsNullOrEmpty(m.FileBase64)).ToList();
+                var imageFiles = attachments.Where(m => m.FileType == "image").ToList();
+                var regularFiles = attachments.Where(m => m.FileType == "file").ToList();
+                
+                if (attachments.Count == 0)
                 {
                     MessageBox.Show("Không có tệp đính kèm nào được gửi trong cuộc trò chuyện này.", "Thông báo");
                     return;
                 }
 
-                using (Form listForm = new Form { Text = "Tệp đính kèm đã gửi", Size = new Size(400, 300), StartPosition = FormStartPosition.CenterParent })
+                using (Form listForm = new Form 
+                { 
+                    Text = $"Tệp đính kèm với {selectedUser.Username}", 
+                    Size = new Size(620, 500), 
+                    StartPosition = FormStartPosition.CenterParent,
+                    FormBorderStyle = FormBorderStyle.FixedDialog,
+                    MaximizeBox = false,
+                    MinimizeBox = false,
+                    BackColor = Color.White
+                })
                 {
-                    ListBox lb = new ListBox { Dock = DockStyle.Fill };
-                    foreach (var f in files)
+                    TabControl tabControl = new TabControl { Dock = DockStyle.Fill, Padding = new Point(10, 5) };
+                    TabPage tabImages = new TabPage { Text = "Hình ảnh 📷", BackColor = Color.White };
+                    TabPage tabFiles = new TabPage { Text = "Tệp tin 📁", BackColor = Color.White };
+                    
+                    tabControl.TabPages.Add(tabImages);
+                    tabControl.TabPages.Add(tabFiles);
+                    
+                    // --- Populating Images ---
+                    FlowLayoutPanel flpImages = new FlowLayoutPanel 
+                    { 
+                        Dock = DockStyle.Fill, 
+                        AutoScroll = true,
+                        Padding = new Padding(10)
+                    };
+                    
+                    if (imageFiles.Count == 0)
                     {
-                        lb.Items.Add($"{FormatTime(f.Timestamp)} - {(f.FileType == "image" ? "📷" : "📎")} {f.FileName ?? "File đính kèm"}");
+                        flpImages.Controls.Add(new Label 
+                        { 
+                            Text = "Không có hình ảnh nào.", 
+                            Font = new Font("Segoe UI", 10F, FontStyle.Italic), 
+                            ForeColor = Color.Gray,
+                            AutoSize = true,
+                            Margin = new Padding(10)
+                        });
                     }
-                    listForm.Controls.Add(lb);
+                    else
+                    {
+                        foreach (var imgMsg in imageFiles)
+                        {
+                            Panel imgCard = new Panel
+                            {
+                                Size = new Size(130, 160),
+                                Margin = new Padding(10),
+                                BorderStyle = BorderStyle.None
+                            };
+                            
+                            imgCard.Paint += (senderPaint, pe) =>
+                            {
+                                using (Pen pen = new Pen(Color.FromArgb(230, 230, 230), 1))
+                                {
+                                    pe.Graphics.DrawRectangle(pen, 0, 0, imgCard.Width - 1, imgCard.Height - 1);
+                                }
+                            };
+                            
+                            PictureBox pb = new PictureBox
+                            {
+                                Size = new Size(110, 110),
+                                Location = new Point(10, 10),
+                                SizeMode = PictureBoxSizeMode.Zoom,
+                                Cursor = Cursors.Hand
+                            };
+                            
+                            try
+                            {
+                                byte[] bytes = Convert.FromBase64String(imgMsg.FileBase64);
+                                using (var ms = new MemoryStream(bytes))
+                                {
+                                    pb.Image = Image.FromStream(ms);
+                                    pb.Image = (Image)pb.Image.Clone();
+                                }
+                            }
+                            catch
+                            {
+                                pb.Image = null;
+                            }
+                            
+                            Label lblImgTime = new Label
+                            {
+                                Text = FormatTime(imgMsg.Timestamp),
+                                Font = new Font("Segoe UI", 7.5F, FontStyle.Regular),
+                                ForeColor = Color.Gray,
+                                Location = new Point(5, 125),
+                                Size = new Size(120, 30),
+                                TextAlign = ContentAlignment.TopCenter,
+                                AutoEllipsis = true
+                            };
+                            
+                            Action openImageAction = () =>
+                            {
+                                Form imgForm = new Form
+                                {
+                                    Text = "Xem hình ảnh",
+                                    Size = new Size(600, 500),
+                                    StartPosition = FormStartPosition.CenterScreen
+                                };
+                                PictureBox pbFull = new PictureBox
+                                {
+                                    Image = pb.Image,
+                                    Dock = DockStyle.Fill,
+                                    SizeMode = PictureBoxSizeMode.Zoom
+                                };
+                                imgForm.Controls.Add(pbFull);
+                                imgForm.ShowDialog();
+                            };
+                            
+                            pb.Click += (imgSender, imgEvent) => openImageAction();
+                            
+                            imgCard.Controls.Add(pb);
+                            imgCard.Controls.Add(lblImgTime);
+                            flpImages.Controls.Add(imgCard);
+                        }
+                    }
+                    tabImages.Controls.Add(flpImages);
+                    
+                    // --- Populating Files ---
+                    FlowLayoutPanel flpFiles = new FlowLayoutPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        AutoScroll = true,
+                        FlowDirection = FlowDirection.TopDown,
+                        WrapContents = false,
+                        Padding = new Padding(10)
+                    };
+                    
+                    if (regularFiles.Count == 0)
+                    {
+                        flpFiles.Controls.Add(new Label 
+                        { 
+                            Text = "Không có tệp tin nào.", 
+                            Font = new Font("Segoe UI", 10F, FontStyle.Italic), 
+                            ForeColor = Color.Gray,
+                            AutoSize = true,
+                            Margin = new Padding(10)
+                        });
+                    }
+                    else
+                    {
+                        foreach (var fileMsg in regularFiles)
+                        {
+                            Panel fileRow = new Panel
+                            {
+                                Size = new Size(560, 50),
+                                Margin = new Padding(0, 5, 0, 5),
+                                BackColor = Color.FromArgb(248, 249, 250)
+                            };
+                            
+                            fileRow.Paint += (senderPaint, pe) =>
+                            {
+                                using (Pen pen = new Pen(Color.FromArgb(230, 230, 230), 1))
+                                {
+                                    pe.Graphics.DrawRectangle(pen, 0, 0, fileRow.Width - 1, fileRow.Height - 1);
+                                }
+                            };
+                            
+                            Label lblFileIcon = new Label
+                            {
+                                Text = "📎",
+                                Font = new Font("Segoe UI", 12F),
+                                Location = new Point(10, 15),
+                                Size = new Size(25, 25),
+                                AutoSize = true
+                            };
+                            
+                            Label lblFileName = new Label
+                            {
+                                Text = fileMsg.FileName ?? "document.dat",
+                                Font = new Font("Segoe UI", 9.75F, FontStyle.Bold),
+                                Location = new Point(40, 15),
+                                Size = new Size(240, 20),
+                                AutoEllipsis = true,
+                                Cursor = Cursors.Hand
+                            };
+                            
+                            Label lblFileTime = new Label
+                            {
+                                Text = FormatTime(fileMsg.Timestamp),
+                                Font = new Font("Segoe UI", 8F),
+                                ForeColor = Color.Gray,
+                                Location = new Point(290, 17),
+                                Size = new Size(150, 20)
+                            };
+                            
+                            Button btnDownload = new Button
+                            {
+                                Text = "Tải xuống",
+                                Font = new Font("Segoe UI", 9F, FontStyle.Regular),
+                                Size = new Size(85, 30),
+                                Location = new Point(460, 10),
+                                FlatStyle = FlatStyle.Flat,
+                                BackColor = Color.FromArgb(108, 92, 231),
+                                ForeColor = Color.White,
+                                Cursor = Cursors.Hand
+                            };
+                            btnDownload.FlatAppearance.BorderSize = 0;
+                            
+                            Action downloadAction = () =>
+                            {
+                                using (SaveFileDialog sfd = new SaveFileDialog())
+                                {
+                                    sfd.FileName = fileMsg.FileName ?? "document.dat";
+                                    if (sfd.ShowDialog() == DialogResult.OK)
+                                    {
+                                        try
+                                        {
+                                            byte[] bytes = Convert.FromBase64String(fileMsg.FileBase64);
+                                            File.WriteAllBytes(sfd.FileName, bytes);
+                                            MessageBox.Show("Đã tải tệp tin thành công!", "Tải xuống");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            MessageBox.Show("Lỗi tải tệp tin: " + ex.Message, "Lỗi");
+                                        }
+                                    }
+                                }
+                            };
+                            
+                            lblFileName.Click += (lblSender, lblEvent) => downloadAction();
+                            btnDownload.Click += (btnSender, btnEvent) => downloadAction();
+                            
+                            fileRow.Controls.Add(lblFileIcon);
+                            fileRow.Controls.Add(lblFileName);
+                            fileRow.Controls.Add(lblFileTime);
+                            fileRow.Controls.Add(btnDownload);
+                            
+                            flpFiles.Controls.Add(fileRow);
+                        }
+                    }
+                    tabFiles.Controls.Add(flpFiles);
+                    
+                    listForm.Controls.Add(tabControl);
                     listForm.ShowDialog();
                 }
             };
@@ -769,6 +1377,9 @@ namespace client_firebase
                     {
                         flpMessages.Controls.Clear();
                         MessageBox.Show("Đã xóa hội thoại thành công.", "Thông báo");
+                        selectedUser = null;
+                        ShowChatArea(false);
+                        await LoadContactsAsync();
                     }
                 }
             };

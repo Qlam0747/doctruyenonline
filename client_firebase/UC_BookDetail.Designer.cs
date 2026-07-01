@@ -29,7 +29,6 @@ namespace client_firebase
             this.panelInfoCard = new System.Windows.Forms.Panel();
             this.btnChat = new System.Windows.Forms.Button();
             this.btnRate = new System.Windows.Forms.Button();
-            this.btnBookmark = new System.Windows.Forms.Button();
             this.btnRead = new System.Windows.Forms.Button();
             this.lblRating = new System.Windows.Forms.Label();
             this.lblChaptersCount = new System.Windows.Forms.Label();
@@ -73,7 +72,7 @@ namespace client_firebase
             this.panelCommentsCard.Controls.Add(this.lblCommentsHeader);
             this.panelCommentsCard.Location = new System.Drawing.Point(15, 534);
             this.panelCommentsCard.Name = "panelCommentsCard";
-            this.panelCommentsCard.Size = new System.Drawing.Size(750, 522);
+            this.panelCommentsCard.Size = new System.Drawing.Size(733, 522);
             this.panelCommentsCard.TabIndex = 2;
             // 
             // flpComments
@@ -85,7 +84,7 @@ namespace client_firebase
             this.flpComments.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpComments.Location = new System.Drawing.Point(20, 150);
             this.flpComments.Name = "flpComments";
-            this.flpComments.Size = new System.Drawing.Size(710, 357);
+            this.flpComments.Size = new System.Drawing.Size(693, 357);
             this.flpComments.TabIndex = 3;
             this.flpComments.WrapContents = false;
             // 
@@ -98,7 +97,7 @@ namespace client_firebase
             this.btnPostComment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPostComment.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPostComment.ForeColor = System.Drawing.Color.White;
-            this.btnPostComment.Location = new System.Drawing.Point(580, 105);
+            this.btnPostComment.Location = new System.Drawing.Point(563, 105);
             this.btnPostComment.Name = "btnPostComment";
             this.btnPostComment.Size = new System.Drawing.Size(150, 35);
             this.btnPostComment.TabIndex = 2;
@@ -116,7 +115,7 @@ namespace client_firebase
             this.txtComment.Location = new System.Drawing.Point(20, 45);
             this.txtComment.Multiline = true;
             this.txtComment.Name = "txtComment";
-            this.txtComment.Size = new System.Drawing.Size(710, 50);
+            this.txtComment.Size = new System.Drawing.Size(693, 50);
             this.txtComment.TabIndex = 1;
             this.txtComment.Text = "Viết bình luận của bạn...";
             // 
@@ -140,7 +139,7 @@ namespace client_firebase
             this.panelChaptersCard.Controls.Add(this.lblChaptersHeader);
             this.panelChaptersCard.Location = new System.Drawing.Point(15, 244);
             this.panelChaptersCard.Name = "panelChaptersCard";
-            this.panelChaptersCard.Size = new System.Drawing.Size(750, 284);
+            this.panelChaptersCard.Size = new System.Drawing.Size(733, 284);
             this.panelChaptersCard.TabIndex = 1;
             // 
             // flpChapters
@@ -152,7 +151,7 @@ namespace client_firebase
             this.flpChapters.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpChapters.Location = new System.Drawing.Point(20, 34);
             this.flpChapters.Name = "flpChapters";
-            this.flpChapters.Size = new System.Drawing.Size(710, 235);
+            this.flpChapters.Size = new System.Drawing.Size(693, 235);
             this.flpChapters.TabIndex = 1;
             this.flpChapters.WrapContents = false;
             // 
@@ -174,7 +173,6 @@ namespace client_firebase
             this.panelInfoCard.BackColor = System.Drawing.Color.White;
             this.panelInfoCard.Controls.Add(this.btnChat);
             this.panelInfoCard.Controls.Add(this.btnRate);
-            this.panelInfoCard.Controls.Add(this.btnBookmark);
             this.panelInfoCard.Controls.Add(this.btnRead);
             this.panelInfoCard.Controls.Add(this.lblRating);
             this.panelInfoCard.Controls.Add(this.lblChaptersCount);
@@ -188,7 +186,7 @@ namespace client_firebase
             this.panelInfoCard.Controls.Add(this.pbCover);
             this.panelInfoCard.Location = new System.Drawing.Point(15, 18);
             this.panelInfoCard.Name = "panelInfoCard";
-            this.panelInfoCard.Size = new System.Drawing.Size(750, 220);
+            this.panelInfoCard.Size = new System.Drawing.Size(733, 220);
             this.panelInfoCard.TabIndex = 0;
             // 
             // btnChat
@@ -196,7 +194,7 @@ namespace client_firebase
             this.btnChat.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnChat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnChat.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChat.Location = new System.Drawing.Point(505, 175);
+            this.btnChat.Location = new System.Drawing.Point(401, 175);
             this.btnChat.Name = "btnChat";
             this.btnChat.Size = new System.Drawing.Size(100, 30);
             this.btnChat.TabIndex = 13;
@@ -208,24 +206,12 @@ namespace client_firebase
             this.btnRate.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRate.Location = new System.Drawing.Point(395, 175);
+            this.btnRate.Location = new System.Drawing.Point(288, 175);
             this.btnRate.Name = "btnRate";
             this.btnRate.Size = new System.Drawing.Size(100, 30);
             this.btnRate.TabIndex = 12;
             this.btnRate.Text = "★ Đánh giá";
             this.btnRate.UseVisualStyleBackColor = true;
-            // 
-            // btnBookmark
-            // 
-            this.btnBookmark.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBookmark.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBookmark.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBookmark.Location = new System.Drawing.Point(285, 175);
-            this.btnBookmark.Name = "btnBookmark";
-            this.btnBookmark.Size = new System.Drawing.Size(100, 30);
-            this.btnBookmark.TabIndex = 11;
-            this.btnBookmark.Text = "🔖 Bookmark";
-            this.btnBookmark.UseVisualStyleBackColor = true;
             // 
             // btnRead
             // 
@@ -293,7 +279,7 @@ namespace client_firebase
             this.lblDescription.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescription.Location = new System.Drawing.Point(165, 90);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(565, 45);
+            this.lblDescription.Size = new System.Drawing.Size(548, 45);
             this.lblDescription.TabIndex = 5;
             this.lblDescription.Text = "Mô tả truyện...";
             // 
@@ -383,7 +369,6 @@ namespace client_firebase
         private System.Windows.Forms.Label lblChaptersCount;
         private System.Windows.Forms.Label lblRating;
         private System.Windows.Forms.Button btnRead;
-        private System.Windows.Forms.Button btnBookmark;
         private System.Windows.Forms.Button btnRate;
         private System.Windows.Forms.Button btnChat;
         private System.Windows.Forms.Panel panelChaptersCard;

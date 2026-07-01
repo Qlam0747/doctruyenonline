@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,7 +12,6 @@ namespace client_firebase
     {
         private BookModel currentBook;
         private List<ChapterModel> chaptersList = new List<ChapterModel>();
-        private bool isBookmarked = false;
         private Button btnAddChapter = null;
         private Button btnFavorite = null;
         private Button btnFollowAuthor = null;
@@ -29,7 +29,6 @@ namespace client_firebase
             InitializeButtonsLayout();
 
             btnRead.Click += btnRead_Click;
-            btnBookmark.Click += btnBookmark_Click;
             btnRate.Click += btnRate_Click;
             btnChat.Click += btnChat_Click;
             btnPostComment.Click += btnPostComment_Click;
@@ -44,16 +43,15 @@ namespace client_firebase
                     Location = new Point(160, 172),
                     Size = new Size(panelInfoCard.Width - 175, 36),
                     Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
-                    ColumnCount = 5,
+                    ColumnCount = 4,
                     RowCount = 1,
                     BackColor = Color.Transparent
                 };
 
-                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+                tlpButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
 
                 tlpButtons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
@@ -61,18 +59,12 @@ namespace client_firebase
 
                 // Add existing controls from designer to tlpButtons
                 panelInfoCard.Controls.Remove(btnRead);
-                panelInfoCard.Controls.Remove(btnBookmark);
                 panelInfoCard.Controls.Remove(btnRate);
                 panelInfoCard.Controls.Remove(btnChat);
 
                 btnRead.Dock = DockStyle.Fill;
                 btnRead.Margin = new Padding(3);
                 btnRead.FlatAppearance.BorderSize = 0;
-
-                btnBookmark.Dock = DockStyle.Fill;
-                btnBookmark.Margin = new Padding(3);
-                btnBookmark.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
-                btnBookmark.FlatAppearance.BorderSize = 1;
 
                 btnRate.Dock = DockStyle.Fill;
                 btnRate.Margin = new Padding(3);
@@ -85,11 +77,10 @@ namespace client_firebase
                 btnChat.FlatAppearance.BorderSize = 1;
 
                 tlpButtons.Controls.Add(btnRead, 0, 0);
-                tlpButtons.Controls.Add(btnBookmark, 1, 0);
-                // btnFavorite will be in column 2 (added in SetBook)
-                tlpButtons.Controls.Add(btnRate, 3, 0);
-                // btnChat/btnAddChapter will be in column 4
-                tlpButtons.Controls.Add(btnChat, 4, 0);
+                // btnFavorite will be in column 1 (added in SetBook)
+                tlpButtons.Controls.Add(btnRate, 2, 0);
+                // btnChat/btnAddChapter will be in column 3
+                tlpButtons.Controls.Add(btnChat, 3, 0);
             }
         }
 
@@ -98,33 +89,17 @@ namespace client_firebase
             currentBook = book;
 
             // Load data in parallel to solve slow loading
-            var bookmarkTask = FirebaseDatabaseService.IsBookmarkedAsync(book.Id);
             var favoriteTask = FirebaseDatabaseService.IsFavoriteAsync(book.Id);
             var followAuthorTask = FirebaseDatabaseService.IsFollowingAuthorAsync(book.AuthorId);
             var chaptersTask = FirebaseDatabaseService.GetChaptersAsync(book.Id);
             var commentsTask = FirebaseDatabaseService.GetCommentsAsync(book.Id);
 
-            await Task.WhenAll(bookmarkTask, favoriteTask, followAuthorTask, chaptersTask, commentsTask);
+            await Task.WhenAll(favoriteTask, followAuthorTask, chaptersTask, commentsTask);
 
-            isBookmarked = bookmarkTask.Result;
             isFavorite = favoriteTask.Result;
             isFollowingAuthor = followAuthorTask.Result;
             chaptersList = chaptersTask.Result;
             var commentsList = commentsTask.Result;
-
-            if (isBookmarked)
-            {
-                btnBookmark.BackColor = Color.FromArgb(108, 92, 231);
-                btnBookmark.ForeColor = Color.White;
-                btnBookmark.FlatAppearance.BorderSize = 0;
-            }
-            else
-            {
-                btnBookmark.BackColor = Color.White;
-                btnBookmark.ForeColor = Color.Black;
-                btnBookmark.FlatAppearance.BorderSize = 1;
-                btnBookmark.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
-            }
 
             // Configure Favorite button
             if (btnFavorite == null)
@@ -140,7 +115,7 @@ namespace client_firebase
                 btnFavorite.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
                 btnFavorite.FlatAppearance.BorderSize = 1;
                 btnFavorite.Click += btnFavorite_Click;
-                tlpButtons.Controls.Add(btnFavorite, 2, 0);
+                tlpButtons.Controls.Add(btnFavorite, 1, 0);
             }
             UpdateFavoriteButtonUI();
 
@@ -189,7 +164,7 @@ namespace client_firebase
                     };
                     btnAddChapter.FlatAppearance.BorderSize = 0;
                     btnAddChapter.Click += btnAddChapter_Click;
-                    tlpButtons.Controls.Add(btnAddChapter, 4, 0);
+                    tlpButtons.Controls.Add(btnAddChapter, 3, 0);
                 }
                 btnAddChapter.Visible = true;
                 btnChat.Visible = false;
@@ -204,7 +179,17 @@ namespace client_firebase
             lblTitle.Text = book.Title;
             lblDescription.Text = book.Description;
             lblAuthorName.Text = book.AuthorName ?? "Ẩn danh";
-            lblViewsCount.Text = $"👁 {book.Views} lượt xem";
+
+            // Calculate total views from chapters
+            int totalChapterViews = 0;
+            if (chaptersList != null)
+            {
+                foreach (var ch in chaptersList)
+                {
+                    totalChapterViews += ch.Views;
+                }
+            }
+            lblViewsCount.Text = $"👁 {totalChapterViews} lượt xem";
             lblLikesCount.Text = $"♡ {book.Likes} lượt thích";
             
             // Adjust Rating according to stars
@@ -316,7 +301,7 @@ namespace client_firebase
 
                 Label lblChViews = new Label
                 {
-                    Text = $"👁 {new Random().Next(0, Math.Max(1, currentBook.Views) + 5)}",
+                    Text = $"👁 {ch.Views}",
                     Font = new Font("Segoe UI", 8F),
                     ForeColor = Color.Gray,
                     Location = new Point(row.Width - 100, 15),
@@ -346,7 +331,7 @@ namespace client_firebase
             }
         }
 
-        private void RenderCommentsList(List<CommentModel> comments)
+        private async void RenderCommentsList(List<CommentModel> comments)
         {
             flpComments.Controls.Clear();
             if (currentBook == null) return;
@@ -365,8 +350,29 @@ namespace client_firebase
                 return;
             }
 
+            // Fetch liked status for all comments in parallel
+            var likedStatuses = new Dictionary<string, bool>();
+            try
+            {
+                var tasks = comments.Select(async c =>
+                {
+                    bool isLiked = await FirebaseDatabaseService.IsCommentLikedAsync(currentBook.Id, c.Id);
+                    lock (likedStatuses)
+                    {
+                        likedStatuses[c.Id] = isLiked;
+                    }
+                });
+                await Task.WhenAll(tasks);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error loading comment liked statuses: " + ex.Message);
+            }
+
             foreach (var c in comments)
             {
+                bool isLiked = likedStatuses.ContainsKey(c.Id) && likedStatuses[c.Id];
+
                 Panel row = new Panel
                 {
                     Width = flpComments.Width - 30,
@@ -421,12 +427,13 @@ namespace client_firebase
 
                 Label lblHeart = new Label
                 {
-                    Text = "❤️ Thích",
+                    Text = isLiked ? "❤️ Đã thích" : "♡ Thích",
                     Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
-                    ForeColor = Color.FromArgb(108, 92, 231),
+                    ForeColor = isLiked ? Color.FromArgb(231, 76, 60) : Color.FromArgb(108, 92, 231),
                     Cursor = Cursors.Hand,
                     AutoSize = true,
-                    Location = new Point(55, bubble.Bottom + 2)
+                    Location = new Point(55, bubble.Bottom + 2),
+                    Tag = isLiked
                 };
 
                 Label lblLikes = new Label
@@ -438,12 +445,21 @@ namespace client_firebase
                     Location = new Point(lblHeart.Right + 5, bubble.Bottom + 2)
                 };
 
-                lblHeart.Click += async (s, e) =>
+                lblHeart.Click += async (lblSender, lblEvent) =>
                 {
                     lblHeart.Enabled = false;
-                    int newLikes = await FirebaseDatabaseService.LikeCommentAsync(currentBook.Id, c.Id);
+                    bool curLiked = (bool)lblHeart.Tag;
+
+                    int newLikes = await FirebaseDatabaseService.ToggleCommentLikeAsync(currentBook.Id, c.Id);
                     c.Likes = newLikes;
+
+                    bool nextLiked = !curLiked;
+                    lblHeart.Tag = nextLiked;
+                    lblHeart.Text = nextLiked ? "❤️ Đã thích" : "♡ Thích";
+                    lblHeart.ForeColor = nextLiked ? Color.FromArgb(231, 76, 60) : Color.FromArgb(108, 92, 231);
                     lblLikes.Text = $"|   {newLikes} lượt thích   |   {FormatTime(c.Timestamp)}";
+                    lblLikes.Location = new Point(lblHeart.Right + 5, bubble.Bottom + 2);
+
                     lblHeart.Enabled = true;
                 };
 
@@ -498,30 +514,7 @@ namespace client_firebase
             }
         }
 
-        private async void btnBookmark_Click(object sender, EventArgs e)
-        {
-            if (currentBook == null) return;
-            btnBookmark.Enabled = false;
-            isBookmarked = !isBookmarked;
-            if (isBookmarked)
-            {
-                await FirebaseDatabaseService.AddToBookmarksAsync(currentBook.Id);
-                btnBookmark.BackColor = Color.FromArgb(108, 92, 231);
-                btnBookmark.ForeColor = Color.White;
-                btnBookmark.Text = "🔖 Bookmark";
-                btnBookmark.FlatAppearance.BorderSize = 0;
-            }
-            else
-            {
-                await FirebaseDatabaseService.RemoveFromBookmarksAsync(currentBook.Id);
-                btnBookmark.BackColor = Color.White;
-                btnBookmark.ForeColor = Color.Black;
-                btnBookmark.Text = "🔖 Bookmark";
-                btnBookmark.FlatAppearance.BorderSize = 1;
-                btnBookmark.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
-            }
-            btnBookmark.Enabled = true;
-        }
+
 
         private void UpdateFavoriteButtonUI()
         {

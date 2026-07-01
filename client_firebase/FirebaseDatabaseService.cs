@@ -27,10 +27,12 @@ namespace client_firebase
 
     public class ChapterModel
     {
+        public string Id { get; set; }
         public string ChapterNumber { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public long CreatedAt { get; set; }
+        public int Views { get; set; } = 0;
     }
 
     public class UserModel
@@ -536,7 +538,7 @@ namespace client_firebase
                 Username = username,
                 Text = text,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                Likes = new Random().Next(1, 100)
+                Likes = 0
             };
             try
             {
@@ -670,6 +672,7 @@ namespace client_firebase
                     foreach (var kvp in dict)
                     {
                         var c = kvp.Value;
+                        c.Id = kvp.Key;
                         c.ChapterNumber = c.ChapterNumber ?? "1";
                         list.Add(c);
                     }
@@ -876,6 +879,26 @@ namespace client_firebase
             }
         }
 
+        public static async Task IncrementChapterViewsAsync(string bookId, string chapterId)
+        {
+            if (string.IsNullOrEmpty(bookId) || string.IsNullOrEmpty(chapterId)) return;
+            try
+            {
+                string viewsStr = await GetAsync($"books/{bookId}/chapters/{chapterId}/views.json");
+                int currentViews = 0;
+                if (!string.IsNullOrEmpty(viewsStr) && viewsStr != "null")
+                {
+                    int.TryParse(viewsStr, out currentViews);
+                }
+                currentViews++;
+                await PutAsync($"books/{bookId}/chapters/{chapterId}/views.json", currentViews);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error incrementing chapter views: " + ex.Message);
+            }
+        }
+
         public static async Task<int> ToggleBookLikeAsync(string bookId, bool isAdd)
         {
             if (string.IsNullOrEmpty(bookId)) return 0;
@@ -962,6 +985,62 @@ namespace client_firebase
             catch { return 0; }
         }
 
+        public static async Task<UserModel> GetUserProfileAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId)) return null;
+            string json = await GetAsync($"users/{userId}.json");
+            if (string.IsNullOrEmpty(json) || json == "null") return null;
+            try
+            {
+                var user = JsonConvert.DeserializeObject<UserModel>(json);
+                if (user != null)
+                {
+                    user.LocalId = userId;
+                }
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static async Task<List<string>> GetFollowerIdsAsync(string userId)
+        {
+            var list = new List<string>();
+            if (string.IsNullOrEmpty(userId)) return list;
+            string json = await GetAsync($"author_followers/{userId}.json");
+            if (string.IsNullOrEmpty(json) || json == "null") return list;
+            try
+            {
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, bool>>(json);
+                if (dict != null)
+                {
+                    list.AddRange(dict.Keys);
+                }
+            }
+            catch { }
+            return list;
+        }
+
+        public static async Task<List<string>> GetFollowingIdsAsync(string userId)
+        {
+            var list = new List<string>();
+            if (string.IsNullOrEmpty(userId)) return list;
+            string json = await GetAsync($"user_following/{userId}.json");
+            if (string.IsNullOrEmpty(json) || json == "null") return list;
+            try
+            {
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, bool>>(json);
+                if (dict != null)
+                {
+                    list.AddRange(dict.Keys);
+                }
+            }
+            catch { }
+            return list;
+        }
+
         public static async Task<double> RateBookAsync(string bookId, double ratingValue)
         {
             if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(bookId)) return 5.0;
@@ -1026,6 +1105,17 @@ namespace client_firebase
             try
             {
                 await PutAsync($"blocked_users/{AuthSession.FirebaseLocalId}/{blockedUserId}.json", true);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<bool> UnblockUserAsync(string blockedUserId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(blockedUserId)) return false;
+            try
+            {
+                await DeleteAsync($"blocked_users/{AuthSession.FirebaseLocalId}/{blockedUserId}.json");
                 return true;
             }
             catch { return false; }
@@ -1133,26 +1223,152 @@ namespace client_firebase
             }
         }
 
-        public static async Task<int> LikeCommentAsync(string bookId, string commentId)
+        public static async Task<bool> IsCommentLikedAsync(string bookId, string commentId)
         {
-            if (string.IsNullOrEmpty(bookId) || string.IsNullOrEmpty(commentId)) return 0;
+            if (string.IsNullOrEmpty(bookId) || string.IsNullOrEmpty(commentId) || string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return false;
+            string res = await GetAsync($"comment_likes/{bookId}/{commentId}/{AuthSession.FirebaseLocalId}.json");
+            return !string.IsNullOrEmpty(res) && res != "null";
+        }
+
+        public static async Task<int> ToggleCommentLikeAsync(string bookId, string commentId)
+        {
+            if (string.IsNullOrEmpty(bookId) || string.IsNullOrEmpty(commentId) || string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return 0;
             try
             {
+                bool isLiked = await IsCommentLikedAsync(bookId, commentId);
+
                 string likesStr = await GetAsync($"comments/{bookId}/{commentId}/Likes.json");
                 int currentLikes = 0;
                 if (!string.IsNullOrEmpty(likesStr) && likesStr != "null")
                 {
                     int.TryParse(likesStr, out currentLikes);
                 }
-                currentLikes++;
+
+                if (isLiked)
+                {
+                    currentLikes = Math.Max(0, currentLikes - 1);
+                    await DeleteAsync($"comment_likes/{bookId}/{commentId}/{AuthSession.FirebaseLocalId}.json");
+                }
+                else
+                {
+                    currentLikes++;
+                    await PutAsync($"comment_likes/{bookId}/{commentId}/{AuthSession.FirebaseLocalId}.json", true);
+                }
+
                 await PutAsync($"comments/{bookId}/{commentId}/Likes.json", currentLikes);
                 return currentLikes;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Error liking comment: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("Error toggling comment like: " + ex.Message);
                 return 0;
             }
+        }
+
+        public static async Task<bool> AddLineBookmarkAsync(string bookId, string chapterNumber, int paragraphIndex, string lineText)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(bookId)) return false;
+            try
+            {
+                var bm = new BookmarkModel
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    BookId = bookId,
+                    ChapterNumber = chapterNumber,
+                    ParagraphIndex = paragraphIndex,
+                    LineText = lineText.Length > 60 ? lineText.Substring(0, 60) + "..." : lineText,
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                };
+                await PutAsync($"bookmarks/{AuthSession.FirebaseLocalId}/{bookId}/{bm.Id}.json", bm);
+                await PutAsync($"book_subscribers/{bookId}/{AuthSession.FirebaseLocalId}.json", true);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<List<BookmarkModel>> GetLineBookmarksAsync(string bookId)
+        {
+            var list = new List<BookmarkModel>();
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(bookId)) return list;
+            try
+            {
+                string json = await GetAsync($"bookmarks/{AuthSession.FirebaseLocalId}/{bookId}.json");
+                if (string.IsNullOrEmpty(json) || json == "null") return list;
+                if (json.Trim() == "true") return list;
+
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, BookmarkModel>>(json);
+                if (dict != null)
+                {
+                    list.AddRange(dict.Values);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error parsing line bookmarks: " + ex.Message);
+            }
+            return list;
+        }
+
+        public static async Task<bool> RemoveLineBookmarkAsync(string bookId, string bookmarkId)
+        {
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(bookId) || string.IsNullOrEmpty(bookmarkId)) return false;
+            try
+            {
+                await DeleteAsync($"bookmarks/{AuthSession.FirebaseLocalId}/{bookId}/{bookmarkId}.json");
+                var remaining = await GetLineBookmarksAsync(bookId);
+                if (remaining.Count == 0)
+                {
+                    await DeleteAsync($"bookmarks/{AuthSession.FirebaseLocalId}/{bookId}.json");
+                    await DeleteAsync($"book_subscribers/{bookId}/{AuthSession.FirebaseLocalId}.json");
+                }
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public static async Task<Dictionary<string, List<BookmarkModel>>> GetAllUserBookmarksAsync()
+        {
+            var dictResult = new Dictionary<string, List<BookmarkModel>>();
+            if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return dictResult;
+            try
+            {
+                string json = await GetAsync($"bookmarks/{AuthSession.FirebaseLocalId}.json");
+                if (string.IsNullOrEmpty(json) || json == "null") return dictResult;
+
+                var rawDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                if (rawDict != null)
+                {
+                    foreach (var kvp in rawDict)
+                    {
+                        string bookId = kvp.Key;
+                        string valJson = kvp.Value.ToString();
+                        if (valJson.Trim() == "True" || valJson.Trim() == "true")
+                        {
+                            dictResult[bookId] = new List<BookmarkModel>();
+                        }
+                        else
+                        {
+                            try
+                            {
+                                var bmDict = JsonConvert.DeserializeObject<Dictionary<string, BookmarkModel>>(valJson);
+                                if (bmDict != null)
+                                {
+                                    dictResult[bookId] = bmDict.Values.ToList();
+                                }
+                            }
+                            catch
+                            {
+                                dictResult[bookId] = new List<BookmarkModel>();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error getting all user bookmarks: " + ex.Message);
+            }
+            return dictResult;
         }
     }
 
@@ -1173,5 +1389,15 @@ namespace client_firebase
         public string ChapterName { get; set; }
         public string TimeAgo { get; set; }
         public bool IsRead { get; set; }
+    }
+
+    public class BookmarkModel
+    {
+        public string Id { get; set; }
+        public string BookId { get; set; }
+        public string ChapterNumber { get; set; }
+        public int ParagraphIndex { get; set; }
+        public string LineText { get; set; }
+        public long Timestamp { get; set; }
     }
 }

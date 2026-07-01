@@ -92,7 +92,24 @@ namespace client_firebase
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string msg = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    msg += "\nInner: " + ex.InnerException.Message;
+                    if (ex.InnerException.InnerException != null)
+                    {
+                        msg += "\nInnerInner: " + ex.InnerException.InnerException.Message;
+                    }
+                    if (ex.InnerException is System.Reflection.ReflectionTypeLoadException rtle)
+                    {
+                        msg += "\nTypeLoadErrors: ";
+                        foreach (var le in rtle.LoaderExceptions)
+                        {
+                            if (le != null) msg += le.Message + "; ";
+                        }
+                    }
+                }
+                MessageBox.Show("Lỗi kết nối: " + msg, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -152,7 +169,16 @@ namespace client_firebase
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string msg = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    msg += "\nInner: " + ex.InnerException.Message;
+                    if (ex.InnerException.InnerException != null)
+                    {
+                        msg += "\nInnerInner: " + ex.InnerException.InnerException.Message;
+                    }
+                }
+                MessageBox.Show("Lỗi: " + msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -193,7 +219,12 @@ namespace client_firebase
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi: " + ex.Message);
+                string msg = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    msg += "\nInner: " + ex.InnerException.Message;
+                }
+                MessageBox.Show("Lỗi: " + msg);
             }
             finally
             {

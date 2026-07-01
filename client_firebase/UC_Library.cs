@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -9,19 +10,71 @@ namespace client_firebase
 {
     public partial class UC_Library : UserControl
     {
-        private int activeTab = 0; // 0 = Bookmark, 1 = History, 2 = Favorites
+        private int activeTab = 0; // 0 = Bookmark, 1 = History, 2 = Favorites, 3 = Posted
         private List<BookModel> allBooks = new List<BookModel>();
         private List<string> cachedBookmarks = new List<string>();
+        private Dictionary<string, List<BookmarkModel>> cachedBookmarksMap = new Dictionary<string, List<BookmarkModel>>();
         private List<string> cachedHistory = new List<string>();
         private List<string> cachedFavorites = new List<string>();
+
+        private Button btnTabPosted;
 
         public UC_Library()
         {
             InitializeComponent();
 
+            // Set up dynamic tab button for Posted stories
+            btnTabPosted = new Button
+            {
+                Cursor = Cursors.Hand,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(2),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9.75F, FontStyle.Bold),
+                Text = "✍  Đã đăng",
+                UseVisualStyleBackColor = true
+            };
+            btnTabPosted.FlatAppearance.BorderSize = 0;
+
+            // Set up a responsive TableLayoutPanel for the tab buttons
+            TableLayoutPanel tlpTabs = new TableLayoutPanel
+            {
+                ColumnCount = 4,
+                RowCount = 1,
+                Dock = DockStyle.Fill,
+                Padding = new Padding(0),
+                Margin = new Padding(0),
+                BackColor = Color.Transparent
+            };
+
+            tlpTabs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25.0F));
+            tlpTabs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25.0F));
+            tlpTabs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25.0F));
+            tlpTabs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25.0F));
+            tlpTabs.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            btnTabBookmark.Dock = DockStyle.Fill;
+            btnTabBookmark.Margin = new Padding(2);
+            btnTabHistory.Dock = DockStyle.Fill;
+            btnTabHistory.Margin = new Padding(2);
+            btnTabFavorites.Dock = DockStyle.Fill;
+            btnTabFavorites.Margin = new Padding(2);
+
+            panelTabs.Controls.Remove(btnTabBookmark);
+            panelTabs.Controls.Remove(btnTabHistory);
+            panelTabs.Controls.Remove(btnTabFavorites);
+
+            tlpTabs.Controls.Add(btnTabBookmark, 0, 0);
+            tlpTabs.Controls.Add(btnTabHistory, 1, 0);
+            tlpTabs.Controls.Add(btnTabFavorites, 2, 0);
+            tlpTabs.Controls.Add(btnTabPosted, 3, 0);
+
+            panelTabs.Controls.Add(tlpTabs);
+
             btnTabBookmark.Click += (s, e) => SwitchTab(0);
             btnTabHistory.Click += (s, e) => SwitchTab(1);
             btnTabFavorites.Click += (s, e) => SwitchTab(2);
+            btnTabPosted.Click += (s, e) => SwitchTab(3);
 
             btnEdit.Click += btnEdit_Click;
             btnSettings.Click += btnSettings_Click;
@@ -29,7 +82,23 @@ namespace client_firebase
             pbAvatar.Cursor = Cursors.Hand;
             pbAvatar.Click += pbAvatar_Click;
 
+            // Make followers/following labels clickable
+            lblFollowers.Cursor = Cursors.Hand;
+            lblFollowing.Cursor = Cursors.Hand;
+            lblFollowers.Click += (s, e) => ShowFollowsWindow(0);
+            lblFollowing.Click += (s, e) => ShowFollowsWindow(1);
+
             this.Load += UC_Library_Load;
+        }
+
+        private void ShowFollowsWindow(int tabIndex)
+        {
+            using (var form = new FormFollows(tabIndex))
+            {
+                form.ShowDialog();
+                // Always refresh profile data to update follower/following counts if changed
+                _ = RefreshLibraryData();
+            }
         }
 
         private async void UC_Library_Load(object sender, EventArgs e)
@@ -90,14 +159,15 @@ namespace client_firebase
             try
             {
                 var allBooksTask = FirebaseDatabaseService.GetAllBooksAsync();
-                var bookmarksTask = FirebaseDatabaseService.GetBookmarkedBookIdsAsync();
+                var bookmarksTask = FirebaseDatabaseService.GetAllUserBookmarksAsync();
                 var historyTask = FirebaseDatabaseService.GetHistoryBookIdsAsync();
                 var favoritesTask = FirebaseDatabaseService.GetFavoriteBookIdsAsync();
 
                 await Task.WhenAll(allBooksTask, bookmarksTask, historyTask, favoritesTask);
 
                 allBooks = allBooksTask.Result;
-                cachedBookmarks = bookmarksTask.Result;
+                cachedBookmarksMap = bookmarksTask.Result;
+                cachedBookmarks = new List<string>(cachedBookmarksMap.Keys);
                 cachedHistory = historyTask.Result;
                 cachedFavorites = favoritesTask.Result;
             }
@@ -121,14 +191,17 @@ namespace client_firebase
             btnTabBookmark.BackColor = (tabIndex == 0) ? Color.White : Color.Transparent;
             btnTabHistory.BackColor = (tabIndex == 1) ? Color.White : Color.Transparent;
             btnTabFavorites.BackColor = (tabIndex == 2) ? Color.White : Color.Transparent;
+            btnTabPosted.BackColor = (tabIndex == 3) ? Color.White : Color.Transparent;
 
             // Update headers
             if (tabIndex == 0)
                 lblBodyHeader.Text = "Truyện đã bookmark";
             else if (tabIndex == 1)
                 lblBodyHeader.Text = "Lịch sử đọc";
-            else
+            else if (tabIndex == 2)
                 lblBodyHeader.Text = "Truyện yêu thích";
+            else
+                lblBodyHeader.Text = "Truyện đã đăng";
 
             _ = RenderBooksListAsync();
         }
@@ -147,9 +220,16 @@ namespace client_firebase
             {
                 targetBookIds = cachedHistory;
             }
-            else
+            else if (activeTab == 2)
             {
                 targetBookIds = cachedFavorites;
+            }
+            else
+            {
+                targetBookIds = allBooks
+                    .Where(b => b.AuthorId == AuthSession.FirebaseLocalId)
+                    .Select(b => b.Id)
+                    .ToList();
             }
 
             if (targetBookIds.Count == 0)
@@ -182,18 +262,32 @@ namespace client_firebase
 
             foreach (var b in filteredBooks)
             {
-                BookCard card = CreateBookCard(b);
+                List<BookmarkModel> bookmarksForBook = null;
+                if (activeTab == 0 && cachedBookmarksMap.ContainsKey(b.Id))
+                {
+                    bookmarksForBook = cachedBookmarksMap[b.Id];
+                }
+                BookCard card = CreateBookCard(b, bookmarksForBook);
                 flpBooks.Controls.Add(card);
             }
         }
 
-        private BookCard CreateBookCard(BookModel b)
+        private BookCard CreateBookCard(BookModel b, List<BookmarkModel> bookmarks = null)
         {
             BookCard card = new BookCard();
             card.lblTitle.Text = b.Title;
             card.lblAuthor.Text = b.AuthorName ?? "Ẩn danh";
             card.lblRating.Text = $"★ {b.Rating:F1}";
             card.lblViews.Text = $"{b.Views} xem";
+
+            if (bookmarks != null && bookmarks.Count > 0)
+            {
+                // Find all unique bookmarked chapters
+                var chapters = bookmarks.Select(bm => bm.ChapterNumber).Distinct().OrderBy(c => c).ToList();
+                card.lblAuthor.Text = "Chương bm: " + string.Join(", ", chapters);
+                card.lblAuthor.ForeColor = Color.FromArgb(108, 92, 231);
+                card.lblAuthor.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold);
+            }
 
             if (!string.IsNullOrEmpty(b.CoverBase64))
             {
@@ -212,12 +306,21 @@ namespace client_firebase
                 }
             }
 
-            // Clicking opens book detail view
+            // Clicking opens book detail view, or resumes reading if bookmarks exist
             Action click = () =>
             {
                 if (this.ParentForm is MainForm mf)
                 {
-                    mf.ShowBookDetail(b);
+                    if (bookmarks != null && bookmarks.Count > 0)
+                    {
+                        // Open reading screen directly to the last bookmarked chapter
+                        var latestBm = bookmarks.OrderByDescending(bm => bm.Timestamp).First();
+                        mf.ShowReadingScreen(b, latestBm.ChapterNumber);
+                    }
+                    else
+                    {
+                        mf.ShowBookDetail(b);
+                    }
                 }
             };
 
