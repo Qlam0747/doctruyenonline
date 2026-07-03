@@ -1,4 +1,4 @@
-namespace client_firebase
+﻿namespace client_firebase
 {
     partial class UC_Notification
     {
@@ -27,9 +27,9 @@ namespace client_firebase
             this.panelTabs.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblHeader
-            // 
+            
+            
+            
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHeader.Location = new System.Drawing.Point(20, 15);
@@ -37,9 +37,9 @@ namespace client_firebase
             this.lblHeader.Size = new System.Drawing.Size(134, 25);
             this.lblHeader.TabIndex = 0;
             this.lblHeader.Text = "🔔 Thông báo";
-            // 
-            // panelTabs
-            // 
+            
+            
+            
             this.panelTabs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelTabs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(215)))), ((int)(((byte)(255)))));
@@ -50,9 +50,9 @@ namespace client_firebase
             this.panelTabs.Padding = new System.Windows.Forms.Padding(4);
             this.panelTabs.Size = new System.Drawing.Size(760, 42);
             this.panelTabs.TabIndex = 1;
-            // 
-            // btnTabRead
-            // 
+            
+            
+            
             this.btnTabRead.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTabRead.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnTabRead.FlatAppearance.BorderSize = 0;
@@ -64,9 +64,9 @@ namespace client_firebase
             this.btnTabRead.TabIndex = 1;
             this.btnTabRead.Text = "Đã đọc";
             this.btnTabRead.UseVisualStyleBackColor = true;
-            // 
-            // btnTabUnread
-            // 
+            
+            
+            
             this.btnTabUnread.BackColor = System.Drawing.Color.White;
             this.btnTabUnread.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTabUnread.Dock = System.Windows.Forms.DockStyle.Left;
@@ -79,9 +79,9 @@ namespace client_firebase
             this.btnTabUnread.TabIndex = 0;
             this.btnTabUnread.Text = "Chưa đọc";
             this.btnTabUnread.UseVisualStyleBackColor = false;
-            // 
-            // flpNotifications
-            // 
+            
+            
+            
             this.flpNotifications.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -92,18 +92,18 @@ namespace client_firebase
             this.flpNotifications.Size = new System.Drawing.Size(760, 410);
             this.flpNotifications.TabIndex = 2;
             this.flpNotifications.WrapContents = false;
-            // 
-            // panelBottom
-            // 
+            
+            
+            
             this.panelBottom.Controls.Add(this.btnMarkAll);
             this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panelBottom.Location = new System.Drawing.Point(0, 530);
             this.panelBottom.Name = "panelBottom";
             this.panelBottom.Size = new System.Drawing.Size(800, 70);
             this.panelBottom.TabIndex = 3;
-            // 
-            // btnMarkAll
-            // 
+            
+            
+            
             this.btnMarkAll.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnMarkAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.btnMarkAll.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -117,9 +117,9 @@ namespace client_firebase
             this.btnMarkAll.TabIndex = 0;
             this.btnMarkAll.Text = "Đánh dấu tất cả là đã đọc";
             this.btnMarkAll.UseVisualStyleBackColor = false;
-            // 
-            // UC_Notification
-            // 
+            
+            
+            
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;

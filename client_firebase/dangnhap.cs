@@ -1,4 +1,4 @@
-using Firebase.Auth;
+﻿using Firebase.Auth;
 using Google.Apis.Auth.OAuth2;
 using System;
 using System.Drawing;
@@ -15,7 +15,7 @@ namespace client_firebase
         {
             InitializeComponent();
             
-            // Wire up events manually if needed or ensure they match designer
+            
             btnSignIn.Click += btnSignIn_Click;
             btnGoogle.Click += btnGoogle_Click;
             btnFacebook.Click += btnFacebook_Click;
@@ -87,7 +87,7 @@ namespace client_firebase
                 else
                 {
                     string errorMessage = result.Split('|')[1];
-                    MessageBox.Show("Đăng nhập thất bại: " + errorMessage, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Đăng nhập thất bại: Tài khoản email hoặc mật khẩu chưa đúng! Xin thử lại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)

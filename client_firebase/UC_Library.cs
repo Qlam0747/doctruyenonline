@@ -10,7 +10,7 @@ namespace client_firebase
 {
     public partial class UC_Library : UserControl
     {
-        private int activeTab = 0; // 0 = Bookmark, 1 = History, 2 = Favorites, 3 = Posted
+        private int activeTab = 0; 
         private List<BookModel> allBooks = new List<BookModel>();
         private List<string> cachedBookmarks = new List<string>();
         private Dictionary<string, List<BookmarkModel>> cachedBookmarksMap = new Dictionary<string, List<BookmarkModel>>();
@@ -23,7 +23,7 @@ namespace client_firebase
         {
             InitializeComponent();
 
-            // Set up dynamic tab button for Posted stories
+            
             btnTabPosted = new Button
             {
                 Cursor = Cursors.Hand,
@@ -36,7 +36,7 @@ namespace client_firebase
             };
             btnTabPosted.FlatAppearance.BorderSize = 0;
 
-            // Set up a responsive TableLayoutPanel for the tab buttons
+            
             TableLayoutPanel tlpTabs = new TableLayoutPanel
             {
                 ColumnCount = 4,
@@ -82,7 +82,7 @@ namespace client_firebase
             pbAvatar.Cursor = Cursors.Hand;
             pbAvatar.Click += pbAvatar_Click;
 
-            // Make followers/following labels clickable
+            
             lblFollowers.Cursor = Cursors.Hand;
             lblFollowing.Cursor = Cursors.Hand;
             lblFollowers.Click += (s, e) => ShowFollowsWindow(0);
@@ -96,7 +96,7 @@ namespace client_firebase
             using (var form = new FormFollows(tabIndex))
             {
                 form.ShowDialog();
-                // Always refresh profile data to update follower/following counts if changed
+                
                 _ = RefreshLibraryData();
             }
         }
@@ -162,14 +162,28 @@ namespace client_firebase
                 var bookmarksTask = FirebaseDatabaseService.GetAllUserBookmarksAsync();
                 var historyTask = FirebaseDatabaseService.GetHistoryBookIdsAsync();
                 var favoritesTask = FirebaseDatabaseService.GetFavoriteBookIdsAsync();
+                var usersTask = FirebaseDatabaseService.GetAllUsersAsync();
 
-                await Task.WhenAll(allBooksTask, bookmarksTask, historyTask, favoritesTask);
+                await Task.WhenAll(allBooksTask, bookmarksTask, historyTask, favoritesTask, usersTask);
 
                 allBooks = allBooksTask.Result;
                 cachedBookmarksMap = bookmarksTask.Result;
                 cachedBookmarks = new List<string>(cachedBookmarksMap.Keys);
                 cachedHistory = historyTask.Result;
                 cachedFavorites = favoritesTask.Result;
+
+                var users = usersTask.Result;
+                if (allBooks != null && users != null)
+                {
+                    foreach (var b in allBooks)
+                    {
+                        var author = users.FirstOrDefault(u => u.LocalId == b.AuthorId);
+                        if (author != null)
+                        {
+                            b.AuthorName = author.Username;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -187,13 +201,13 @@ namespace client_firebase
         {
             activeTab = tabIndex;
 
-            // Reset tab colors
+            
             btnTabBookmark.BackColor = (tabIndex == 0) ? Color.White : Color.Transparent;
             btnTabHistory.BackColor = (tabIndex == 1) ? Color.White : Color.Transparent;
             btnTabFavorites.BackColor = (tabIndex == 2) ? Color.White : Color.Transparent;
             btnTabPosted.BackColor = (tabIndex == 3) ? Color.White : Color.Transparent;
 
-            // Update headers
+            
             if (tabIndex == 0)
                 lblBodyHeader.Text = "Truyện đã bookmark";
             else if (tabIndex == 1)
@@ -246,7 +260,7 @@ namespace client_firebase
                 return;
             }
 
-            // Map target IDs to BookModels
+            
             var filteredBooks = new List<BookModel>();
             foreach (var id in targetBookIds)
             {
@@ -282,7 +296,7 @@ namespace client_firebase
 
             if (bookmarks != null && bookmarks.Count > 0)
             {
-                // Find all unique bookmarked chapters
+                
                 var chapters = bookmarks.Select(bm => bm.ChapterNumber).Distinct().OrderBy(c => c).ToList();
                 card.lblAuthor.Text = "Chương bm: " + string.Join(", ", chapters);
                 card.lblAuthor.ForeColor = Color.FromArgb(108, 92, 231);
@@ -306,14 +320,14 @@ namespace client_firebase
                 }
             }
 
-            // Clicking opens book detail view, or resumes reading if bookmarks exist
+            
             Action click = () =>
             {
                 if (this.ParentForm is MainForm mf)
                 {
                     if (bookmarks != null && bookmarks.Count > 0)
                     {
-                        // Open reading screen directly to the last bookmarked chapter
+                        
                         var latestBm = bookmarks.OrderByDescending(bm => bm.Timestamp).First();
                         mf.ShowReadingScreen(b, latestBm.ChapterNumber);
                     }
@@ -336,7 +350,7 @@ namespace client_firebase
 
         private async void btnEdit_Click(object sender, EventArgs e)
         {
-            // Trigger VisualBasic input box to edit bio tagline
+            
             string currentBio = lblBio.Text;
             string newBio = Microsoft.VisualBasic.Interaction.InputBox(
                 "Nhập tiểu sử (bio) mới của bạn:", 
@@ -413,7 +427,7 @@ namespace client_firebase
                         pb.Image = Image.FromStream(ms);
                         pb.Image = (Image)pb.Image.Clone();
                     }
-                    return; // Bypass dynamic Paint avatar
+                    return; 
                 }
                 catch (Exception ex)
                 {

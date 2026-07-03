@@ -50,7 +50,7 @@ namespace client_firebase
         public string ReceiverId { get; set; }
         public string Text { get; set; }
         public long Timestamp { get; set; }
-        public string FileType { get; set; } = "text"; // "text", "image", "file"
+        public string FileType { get; set; } = "text"; 
         public string FileBase64 { get; set; }
         public string FileName { get; set; }
     }
@@ -148,7 +148,7 @@ namespace client_firebase
                 {
                     foreach (var kvp in dict)
                     {
-                        if (kvp.Key == AuthSession.FirebaseLocalId) continue; // Skip self
+                        if (kvp.Key == AuthSession.FirebaseLocalId) continue; 
                         var u = kvp.Value;
                         u.LocalId = kvp.Key;
                         if (string.IsNullOrEmpty(u.Username)) u.Username = u.Email ?? "Người dùng";
@@ -277,7 +277,7 @@ namespace client_firebase
                     UpdatedAt = now
                 };
 
-                // Add first chapter
+                
                 var chapter = new ChapterModel
                 {
                     ChapterNumber = chapterNum,
@@ -299,11 +299,11 @@ namespace client_firebase
                     return "Error|Failed to parse book ID from response";
                 }
 
-                // Update book ID and upload the chapter
+                
                 await PutAsync($"books/{generatedId}/id.json", generatedId);
                 await PostAsync($"books/{generatedId}/chapters.json", chapter);
 
-                // Send notification to author's followers about the new book!
+                
                 string followersJson = await GetAsync($"author_followers/{AuthSession.FirebaseLocalId}.json");
                 if (!string.IsNullOrEmpty(followersJson) && followersJson != "null")
                 {
@@ -348,10 +348,10 @@ namespace client_firebase
                     CreatedAt = now
                 };
 
-                // 1. Post the new chapter
+                
                 await PostAsync($"books/{bookId}/chapters.json", chapter);
 
-                // Update book's UpdatedAt timestamp
+                
                 await PutAsync($"books/{bookId}/updatedAt.json", now);
 
                 if (!string.IsNullOrEmpty(status))
@@ -359,7 +359,7 @@ namespace client_firebase
                     await PutAsync($"books/{bookId}/status.json", status);
                 }
 
-                // 2. Query the book title to construct a notification
+                
                 string bookJson = await GetAsync($"books/{bookId}.json");
                 if (!string.IsNullOrEmpty(bookJson) && bookJson != "null")
                 {
@@ -368,7 +368,7 @@ namespace client_firebase
                     {
                         var recipients = new HashSet<string>();
 
-                        // 3. Send notifications to all readers who bookmarked this book
+                        
                         string subsJson = await GetAsync($"book_subscribers/{bookId}.json");
                         if (!string.IsNullOrEmpty(subsJson) && subsJson != "null")
                         {
@@ -379,7 +379,7 @@ namespace client_firebase
                             }
                         }
 
-                        // 4. Send notifications to all followers of the author
+                        
                         if (!string.IsNullOrEmpty(book.AuthorId))
                         {
                             string followersJson = await GetAsync($"author_followers/{book.AuthorId}.json");
@@ -393,10 +393,10 @@ namespace client_firebase
                             }
                         }
 
-                        // Send notifications
+                        
                         foreach (var recipientId in recipients)
                         {
-                            // Avoid self-notification if author is recipient
+                            
                             if (recipientId == AuthSession.FirebaseLocalId) continue;
 
                             var noti = new NotificationModel
@@ -528,14 +528,22 @@ namespace client_firebase
         public static async Task<bool> PostCommentAsync(string bookId, string text)
         {
             string username = "Ẩn danh";
+            string userId = AuthSession.FirebaseLocalId;
+            string avatar = null;
             var profile = await GetCurrentUserProfileAsync();
-            if (profile != null && !string.IsNullOrEmpty(profile.Username))
+            if (profile != null)
             {
-                username = profile.Username;
+                if (!string.IsNullOrEmpty(profile.Username))
+                {
+                    username = profile.Username;
+                }
+                avatar = profile.Avatar;
             }
             var comment = new CommentModel
             {
+                UserId = userId,
                 Username = username,
+                Avatar = avatar,
                 Text = text,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                 Likes = 0
@@ -557,7 +565,7 @@ namespace client_firebase
             if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId)) return list;
             string json = await GetAsync($"notifications/{AuthSession.FirebaseLocalId}.json");
             
-            // Check if null or empty, seed dummy notifications if so
+            
             if (string.IsNullOrEmpty(json) || json == "null")
             {
                 var dummy1 = new NotificationModel
@@ -758,7 +766,7 @@ namespace client_firebase
                 if (dict != null)
                 {
                     var items = new List<KeyValuePair<string, long>>(dict);
-                    items.Sort((x, y) => y.Value.CompareTo(x.Value)); // Sort by timestamp descending
+                    items.Sort((x, y) => y.Value.CompareTo(x.Value)); 
                     foreach (var kvp in items)
                     {
                         list.Add(kvp.Key);
@@ -1046,10 +1054,10 @@ namespace client_firebase
             if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(bookId)) return 5.0;
             try
             {
-                // Save user's rating
+                
                 await PutAsync($"book_ratings/{bookId}/{AuthSession.FirebaseLocalId}.json", ratingValue);
 
-                // Fetch all ratings for this book
+                
                 string allRatingsJson = await GetAsync($"book_ratings/{bookId}.json");
                 if (!string.IsNullOrEmpty(allRatingsJson) && allRatingsJson != "null")
                 {
@@ -1063,7 +1071,7 @@ namespace client_firebase
                         }
                         double avg = sum / ratings.Count;
                         avg = Math.Round(avg, 1);
-                        // Save average rating to the book
+                        
                         await PutAsync($"books/{bookId}/rating.json", avg);
                         return avg;
                     }
@@ -1131,10 +1139,10 @@ namespace client_firebase
         public static async Task<bool> IsBlockedByEitherAsync(string partnerId)
         {
             if (string.IsNullOrEmpty(AuthSession.FirebaseLocalId) || string.IsNullOrEmpty(partnerId)) return false;
-            // Check if we blocked them
+            
             string res1 = await GetAsync($"blocked_users/{AuthSession.FirebaseLocalId}/{partnerId}.json");
             if (!string.IsNullOrEmpty(res1) && res1 != "null") return true;
-            // Check if they blocked us
+            
             string res2 = await GetAsync($"blocked_users/{partnerId}/{AuthSession.FirebaseLocalId}.json");
             if (!string.IsNullOrEmpty(res2) && res2 != "null") return true;
             return false;
@@ -1375,7 +1383,9 @@ namespace client_firebase
     public class CommentModel
     {
         public string Id { get; set; }
+        public string UserId { get; set; }
         public string Username { get; set; }
+        public string Avatar { get; set; }
         public string Text { get; set; }
         public long Timestamp { get; set; }
         public int Likes { get; set; }

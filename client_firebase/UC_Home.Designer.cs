@@ -1,4 +1,4 @@
-namespace client_firebase
+﻿namespace client_firebase
 {
     partial class UC_Home
     {
@@ -22,9 +22,9 @@ namespace client_firebase
             this.label3 = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
-            // 
-            // label2
-            // 
+            
+            
+            
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
@@ -33,18 +33,18 @@ namespace client_firebase
             this.label2.Size = new System.Drawing.Size(128, 25);
             this.label2.TabIndex = 2;
             this.label2.Text = "Mới cập nhật";
-            // 
-            // flowLayoutPanel1
-            // 
+            
+            
+            
             this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.Location = new System.Drawing.Point(20, 55);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(767, 268);
             this.flowLayoutPanel1.TabIndex = 3;
-            // 
-            // label3
-            // 
+            
+            
+            
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
@@ -54,9 +54,9 @@ namespace client_firebase
             this.label3.TabIndex = 4;
             this.label3.Text = "Xu hướng";
             this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // flowLayoutPanel2
-            // 
+            
+            
+            
             this.flowLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -64,9 +64,9 @@ namespace client_firebase
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(767, 284);
             this.flowLayoutPanel2.TabIndex = 5;
-            // 
-            // UC_Home
-            // 
+            
+            
+            
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;

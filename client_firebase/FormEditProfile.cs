@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,12 +34,12 @@ namespace client_firebase
             this.BackColor = Color.FromArgb(248, 249, 250);
             this.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular);
 
-            // Header Panel
+            
             panelHeader = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 60,
-                BackColor = Color.FromArgb(108, 92, 231) // Theme Purple
+                BackColor = Color.FromArgb(108, 92, 231) 
             };
 
             lblTitle = new Label
@@ -52,7 +52,7 @@ namespace client_firebase
             };
             panelHeader.Controls.Add(lblTitle);
 
-            // Email Label
+            
             lblEmail = new Label
             {
                 Text = "Địa chỉ Email (Không thể thay đổi)",
@@ -61,7 +61,7 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(120, 120, 120)
             };
 
-            // Email Textbox
+            
             txtEmail = new TextBox
             {
                 Location = new Point(20, 105),
@@ -71,7 +71,7 @@ namespace client_firebase
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            // Username Label
+            
             lblUsername = new Label
             {
                 Text = "Tên hiển thị / Biệt danh",
@@ -80,7 +80,7 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(45, 52, 54)
             };
 
-            // Username Textbox
+            
             txtUsername = new TextBox
             {
                 Location = new Point(20, 175),
@@ -88,7 +88,7 @@ namespace client_firebase
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            // Birthdate Label
+            
             lblBirthdate = new Label
             {
                 Text = "Ngày sinh",
@@ -97,7 +97,7 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(45, 52, 54)
             };
 
-            // Birthdate DateTimePicker
+            
             dtpBirth = new DateTimePicker
             {
                 Location = new Point(20, 245),
@@ -106,7 +106,7 @@ namespace client_firebase
                 CustomFormat = "dd/MM/yyyy"
             };
 
-            // Save Button
+            
             btnSave = new Button
             {
                 Text = "Lưu thay đổi",
@@ -121,7 +121,7 @@ namespace client_firebase
             btnSave.FlatAppearance.BorderSize = 0;
             btnSave.Click += btnSave_Click;
 
-            // Cancel Button
+            
             btnCancel = new Button
             {
                 Text = "Hủy bỏ",

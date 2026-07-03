@@ -39,9 +39,9 @@
             this.panelLeft.SuspendLayout();
             this.panelRight.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelLeft
-            // 
+            
+            
+            
             this.panelLeft.BackColor = System.Drawing.Color.White;
             this.panelLeft.Controls.Add(this.lblTagline);
             this.panelLeft.Controls.Add(this.labelLogo);
@@ -50,9 +50,9 @@
             this.panelLeft.Name = "panelLeft";
             this.panelLeft.Size = new System.Drawing.Size(280, 450);
             this.panelLeft.TabIndex = 0;
-            // 
-            // lblTagline
-            // 
+            
+            
+            
             this.lblTagline.AutoSize = true;
             this.lblTagline.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTagline.ForeColor = System.Drawing.Color.Gray;
@@ -61,9 +61,9 @@
             this.lblTagline.Size = new System.Drawing.Size(177, 15);
             this.lblTagline.TabIndex = 1;
             this.lblTagline.Text = "Khám phá thế giới truyện online";
-            // 
-            // labelLogo
-            // 
+            
+            
+            
             this.labelLogo.AutoSize = true;
             this.labelLogo.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelLogo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
@@ -72,9 +72,9 @@
             this.labelLogo.Size = new System.Drawing.Size(218, 45);
             this.labelLogo.TabIndex = 0;
             this.labelLogo.Text = "📖 StoryHub";
-            // 
-            // panelRight
-            // 
+            
+            
+            
             this.panelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.panelRight.Controls.Add(this.btnShowPassword);
             this.panelRight.Controls.Add(this.btnFacebook);
@@ -96,9 +96,9 @@
             this.panelRight.Name = "panelRight";
             this.panelRight.Size = new System.Drawing.Size(420, 450);
             this.panelRight.TabIndex = 1;
-            // 
-            // btnShowPassword
-            // 
+            
+            
+            
             this.btnShowPassword.BackColor = System.Drawing.Color.White;
             this.btnShowPassword.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnShowPassword.FlatAppearance.BorderSize = 0;
@@ -110,9 +110,9 @@
             this.btnShowPassword.TabIndex = 13;
             this.btnShowPassword.Text = "👁";
             this.btnShowPassword.UseVisualStyleBackColor = false;
-            // 
-            // btnFacebook
-            // 
+            
+            
+            
             this.btnFacebook.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(119)))), ((int)(((byte)(242)))));
             this.btnFacebook.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnFacebook.FlatAppearance.BorderSize = 0;
@@ -125,9 +125,9 @@
             this.btnFacebook.TabIndex = 12;
             this.btnFacebook.Text = "Facebook";
             this.btnFacebook.UseVisualStyleBackColor = false;
-            // 
-            // btnGoogle
-            // 
+            
+            
+            
             this.btnGoogle.BackColor = System.Drawing.Color.White;
             this.btnGoogle.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGoogle.FlatAppearance.BorderSize = 0;
@@ -140,9 +140,9 @@
             this.btnGoogle.TabIndex = 11;
             this.btnGoogle.Text = "Google";
             this.btnGoogle.UseVisualStyleBackColor = false;
-            // 
-            // label7
-            // 
+            
+            
+            
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(195)))), ((int)(((byte)(255)))));
@@ -151,9 +151,9 @@
             this.label7.Size = new System.Drawing.Size(62, 13);
             this.label7.TabIndex = 10;
             this.label7.Text = "Login with";
-            // 
-            // lblSignUp
-            // 
+            
+            
+            
             this.lblSignUp.AutoSize = true;
             this.lblSignUp.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblSignUp.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
@@ -163,9 +163,9 @@
             this.lblSignUp.Size = new System.Drawing.Size(48, 15);
             this.lblSignUp.TabIndex = 9;
             this.lblSignUp.Text = "Sign up";
-            // 
-            // label6
-            // 
+            
+            
+            
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(195)))), ((int)(((byte)(255)))));
@@ -174,9 +174,9 @@
             this.label6.Size = new System.Drawing.Size(150, 15);
             this.label6.TabIndex = 8;
             this.label6.Text = "Don\'t have an account yet?";
-            // 
-            // btnSignIn
-            // 
+            
+            
+            
             this.btnSignIn.BackColor = System.Drawing.Color.White;
             this.btnSignIn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSignIn.FlatAppearance.BorderSize = 0;
@@ -189,9 +189,9 @@
             this.btnSignIn.TabIndex = 7;
             this.btnSignIn.Text = "Sign in";
             this.btnSignIn.UseVisualStyleBackColor = false;
-            // 
-            // lblForgetPassword
-            // 
+            
+            
+            
             this.lblForgetPassword.AutoSize = true;
             this.lblForgetPassword.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblForgetPassword.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic);
@@ -201,9 +201,9 @@
             this.lblForgetPassword.Size = new System.Drawing.Size(84, 13);
             this.lblForgetPassword.TabIndex = 6;
             this.lblForgetPassword.Text = "Forget Password";
-            // 
-            // txtPassword
-            // 
+            
+            
+            
             this.txtPassword.BackColor = System.Drawing.Color.White;
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 12F);
@@ -213,9 +213,9 @@
             this.txtPassword.PasswordChar = '●';
             this.txtPassword.Size = new System.Drawing.Size(300, 30);
             this.txtPassword.TabIndex = 5;
-            // 
-            // label3
-            // 
+            
+            
+            
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.White;
@@ -224,9 +224,9 @@
             this.label3.Size = new System.Drawing.Size(59, 15);
             this.label3.TabIndex = 4;
             this.label3.Text = "Password";
-            // 
-            // txtEmail
-            // 
+            
+            
+            
             this.txtEmail.BackColor = System.Drawing.Color.White;
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 12F);
@@ -235,9 +235,9 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(300, 30);
             this.txtEmail.TabIndex = 3;
-            // 
-            // label2
-            // 
+            
+            
+            
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.White;
@@ -246,9 +246,9 @@
             this.label2.Size = new System.Drawing.Size(36, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "Email";
-            // 
-            // label1
-            // 
+            
+            
+            
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.White;
@@ -257,9 +257,9 @@
             this.label1.Size = new System.Drawing.Size(123, 45);
             this.label1.TabIndex = 1;
             this.label1.Text = "Sign in";
-            // 
-            // labelEmailError
-            // 
+            
+            
+            
             this.labelEmailError.AutoSize = true;
             this.labelEmailError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
             this.labelEmailError.Location = new System.Drawing.Point(60, 148);
@@ -267,9 +267,9 @@
             this.labelEmailError.Size = new System.Drawing.Size(0, 13);
             this.labelEmailError.TabIndex = 15;
             this.labelEmailError.Visible = false;
-            // 
-            // labelPasswordError
-            // 
+            
+            
+            
             this.labelPasswordError.AutoSize = true;
             this.labelPasswordError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
             this.labelPasswordError.Location = new System.Drawing.Point(60, 218);
@@ -277,9 +277,9 @@
             this.labelPasswordError.Size = new System.Drawing.Size(0, 13);
             this.labelPasswordError.TabIndex = 14;
             this.labelPasswordError.Visible = false;
-            // 
-            // dangnhap
-            // 
+            
+            
+            
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 450);

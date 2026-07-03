@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace client_firebase
         private List<ChapterModel> chaptersList = new List<ChapterModel>();
         private int currentChapterIndex = -1;
         private float[] fontSizes = { 10f, 11.25f, 13f, 15f, 17f };
-        private int currentFontSizeIndex = 1; // Default to index 1 (11.25f)
+        private int currentFontSizeIndex = 1; 
 
         private FlowLayoutPanel flpContent;
         private Button btnBookmarksList;
@@ -23,7 +23,7 @@ namespace client_firebase
         {
             InitializeComponent();
 
-            // Set up scrollable flow layout for paragraphs below the header and divider
+            
             flpContent = new FlowLayoutPanel
             {
                 Location = new Point(20, 90),
@@ -36,9 +36,9 @@ namespace client_firebase
                 Padding = new Padding(20)
             };
             panelCard.Controls.Add(flpContent);
-            txtContent.Visible = false; // Hide the standard TextBox
+            txtContent.Visible = false; 
 
-            // Update paragraph panel widths dynamically when flpContent resizes
+            
             flpContent.SizeChanged += (s, e) =>
             {
                 int targetWidth = flpContent.Width - 40;
@@ -62,7 +62,7 @@ namespace client_firebase
                 flpContent.ResumeLayout();
             };
 
-            // Set up dynamic bookmark button next to font settings
+            
             btnBookmarksList = new Button
             {
                 Text = "🔖",
@@ -76,7 +76,7 @@ namespace client_firebase
             btnBookmarksList.Click += btnBookmarksList_Click;
             panelHeader.Controls.Add(btnBookmarksList);
 
-            // Position controls relative to the right side of the control dynamically to prevent WinForms anchoring layout bugs
+            
             int currentWidth = this.Width;
             btnSettings.Location = new Point(currentWidth - 55, 12);
             btnBookmarksList.Location = new Point(currentWidth - 100, 12);
@@ -98,15 +98,15 @@ namespace client_firebase
             lblHeaderBookTitle.Text = book.Title;
             lblAuthor.Text = book.AuthorName ?? "Ẩn danh";
 
-            // Log to reading history
+            
             await FirebaseDatabaseService.AddToHistoryAsync(book.Id);
 
             this.Cursor = Cursors.WaitCursor;
             chaptersList = await FirebaseDatabaseService.GetChaptersAsync(book.Id);
             this.Cursor = Cursors.Default;
 
-            // Bind to combobox
-            cbChapters.SelectedIndexChanged -= cbChapters_SelectedIndexChanged; // Temporarily unbind
+            
+            cbChapters.SelectedIndexChanged -= cbChapters_SelectedIndexChanged; 
             cbChapters.Items.Clear();
 
             int targetIndex = 0;
@@ -149,17 +149,17 @@ namespace client_firebase
 
             var ch = chaptersList[index];
 
-            // Increment views for this chapter and the book in background
+            
             ch.Views++;
             await FirebaseDatabaseService.IncrementChapterViewsAsync(currentBook.Id, ch.Id);
             await FirebaseDatabaseService.IncrementBookViewsAsync(currentBook.Id);
 
-            // Update details
+            
             string titleText = $"Chương {ch.ChapterNumber}: {ch.Title}";
             lblHeaderChapName.Text = titleText;
             lblChapTitle.Text = titleText;
 
-            // Build paragraph layout
+            
             flpContent.Controls.Clear();
             paragraphControls.Clear();
 
@@ -231,11 +231,11 @@ namespace client_firebase
                 flpContent.Controls.Add(pPanel);
             }
 
-            // Enable/disable buttons
+            
             btnPrev.Enabled = (index > 0);
             btnNext.Enabled = (index < chaptersList.Count - 1);
 
-            // Scroll to target paragraph if any
+            
             if (targetScrollParagraphIndex != -1)
             {
                 ScrollToParagraph(targetScrollParagraphIndex);
@@ -248,8 +248,8 @@ namespace client_firebase
             {
                 var targetCtrl = paragraphControls[index];
                 flpContent.ScrollControlIntoView(targetCtrl);
-                // Highlight
-                targetCtrl.BackColor = Color.FromArgb(254, 239, 179); // Pastel yellow highlight
+                
+                targetCtrl.BackColor = Color.FromArgb(254, 239, 179); 
                 Timer t = new Timer { Interval = 1500 };
                 t.Tick += (s, e) =>
                 {
@@ -359,7 +359,7 @@ namespace client_firebase
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            // Cycle through font sizes
+            
             currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.Length;
             float newSize = fontSizes[currentFontSizeIndex];
             

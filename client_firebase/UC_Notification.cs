@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -134,7 +134,7 @@ namespace client_firebase
                     }
                 };
 
-                // Book Icon
+                
                 Label lblIcon = new Label
                 {
                     Text = "📘",
@@ -143,7 +143,7 @@ namespace client_firebase
                     Size = new Size(35, 45)
                 };
 
-                // Title
+                
                 Label lblTitle = new Label
                 {
                     Text = n.Title,
@@ -153,7 +153,7 @@ namespace client_firebase
                     AutoEllipsis = true
                 };
 
-                // Link / LinkLabel
+                
                 LinkLabel lnkChapter = new LinkLabel
                 {
                     Text = n.ChapterName,
@@ -165,7 +165,7 @@ namespace client_firebase
                     AutoEllipsis = true
                 };
 
-                // Time ago
+                
                 Label lblTime = new Label
                 {
                     Text = n.TimeAgo,
@@ -175,7 +175,7 @@ namespace client_firebase
                     Size = new Size(150, 15)
                 };
 
-                // Trash Delete Button
+                
                 Button btnDelete = new Button
                 {
                     Text = "🗑",
@@ -205,15 +205,15 @@ namespace client_firebase
 
                 lnkChapter.LinkClicked += async (s, e) =>
                 {
-                    // Handle jumping to book
+                    
                     if (n.BookId.Contains("dummy"))
                     {
-                        // Mock alert for dummy items
+                        
                         MessageBox.Show($"Bạn đang xem thông báo về: {n.ChapterName}", "Màn hình đọc thử");
                     }
                     else
                     {
-                        // Load book detail
+                        
                         this.Cursor = Cursors.WaitCursor;
                         var books = await FirebaseDatabaseService.GetAllBooksAsync();
                         BookModel targetBook = null;
@@ -229,9 +229,9 @@ namespace client_firebase
 
                         if (targetBook != null && this.ParentForm is MainForm mf)
                         {
-                            // Mark single notification as read when clicking it
+                            
                             await FirebaseDatabaseService.MarkNotificationAsReadAsync(n.Id);
-                            // Navigate to book detail
+                            
                             mf.ShowBookDetail(targetBook);
                         }
                         else

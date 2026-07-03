@@ -1,4 +1,4 @@
-namespace client_firebase
+﻿namespace client_firebase
 {
     partial class UC_Reading
     {
@@ -64,7 +64,7 @@ namespace client_firebase
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(35, 35);
             this.btnSettings.TabIndex = 5;
-            this.btnSettings.Text = "🔍";
+            this.btnSettings.Text = "🔍︎";
             this.btnSettings.UseVisualStyleBackColor = true;
             // 
             // cbChapters

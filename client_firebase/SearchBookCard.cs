@@ -15,19 +15,19 @@ namespace client_firebase
 
         private BookModel _book;
 
-        // ==========================================
-        // 1. SỬA ĐỔI: Thêm Constructor mặc định KHÔNG tham số cho Designer
-        // ==========================================
+        
+        
+        
         public SearchBookCard()
         {
             InitializeComponent();
-            SetupClickEvents(); // Tách phần xử lý logic sự kiện ra ngoài
+            SetupClickEvents(); 
         }
 
-        // ==========================================
-        // 2. GIỮ NGUYÊN: Constructor truyền data dùng khi chạy ứng dụng
-        // ==========================================
-        public SearchBookCard(BookModel book) : this() // Gọi lại constructor mặc định ở trên trước
+        
+        
+        
+        public SearchBookCard(BookModel book) : this() 
         {
             _book = book;
             BindData();
@@ -38,9 +38,9 @@ namespace client_firebase
             this.Size = new Size(160, 240);
             this.BackColor = Color.White;
             this.Cursor = Cursors.Hand;
-            this.Padding = new Padding(1); // Border padding
+            this.Padding = new Padding(1); 
 
-            // Cover Image
+            
             picCover = new PictureBox
             {
                 Location = new Point(8, 8),
@@ -49,7 +49,7 @@ namespace client_firebase
                 BackColor = Color.FromArgb(245, 245, 245),
             };
 
-            // Title
+            
             lblTitle = new Label
             {
                 Location = new Point(8, 162),
@@ -58,10 +58,10 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(33, 37, 41),
                 AutoEllipsis = true,
                 TextAlign = ContentAlignment.MiddleLeft,
-                Text = "Tên sách mẫu" // Gán text mặc định để Designer hiển thị trực quan
+                Text = "Tên sách mẫu" 
             };
 
-            // Author
+            
             lblAuthor = new Label
             {
                 Location = new Point(8, 182),
@@ -73,17 +73,17 @@ namespace client_firebase
                 Text = "Tác giả"
             };
 
-            // Book Icon
+            
             picBookIcon = new PictureBox
             {
                 Location = new Point(8, 204),
                 Size = new Size(16, 16),
                 SizeMode = PictureBoxSizeMode.Zoom,
-                // Thêm kiểm tra tránh lỗi nếu file Resource chưa được build hoặc thiếu
+                
                 Image = global::client_firebase.Properties.Resources.book__1_,
             };
 
-            // Chapters Count Label
+            
             lblChapters = new Label
             {
                 Location = new Point(28, 203),
@@ -94,13 +94,13 @@ namespace client_firebase
                 Text = "0"
             };
 
-            // Status Label
+            
             lblStatus = new Label
             {
                 Location = new Point(72, 203),
                 Size = new Size(80, 18),
                 Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(46, 204, 113), // Green status
+                ForeColor = Color.FromArgb(46, 204, 113), 
                 TextAlign = ContentAlignment.MiddleRight,
                 Text = "Hoàn thành"
             };
@@ -113,17 +113,17 @@ namespace client_firebase
             this.Controls.Add(lblStatus);
         }
 
-        // ==========================================
-        // 3. SỬA ĐỔI: Tách hàm gán sự kiện Click & Check Null an toàn
-        // ==========================================
+        
+        
+        
         private void SetupClickEvents()
         {
             Action clickAction = () =>
             {
-                // KHÔNG chạy logic này nếu đang ở chế độ Design kéo thả của Visual Studio
+                
                 if (this.DesignMode) return;
 
-                // Kiểm tra an toàn xem _book có dữ liệu thực tế chưa
+                
                 if (_book != null && this.ParentForm is MainForm mf)
                 {
                     mf.ShowBookDetail(_book);
@@ -147,21 +147,34 @@ namespace client_firebase
             int chapterCount = _book.Chapters != null ? _book.Chapters.Count : 0;
             lblChapters.Text = chapterCount.ToString();
 
-            // Dynamic status based on chapter count
-            if (chapterCount == 0)
+            
+            string displayStatus = _book.Status;
+            if (string.IsNullOrEmpty(displayStatus))
+            {
+                if (chapterCount == 0) displayStatus = "Đang soạn";
+                else if (chapterCount < 5) displayStatus = "Đang ra";
+                else displayStatus = "Hoàn thành";
+            }
+
+            if (displayStatus == "Đã hoàn thành" || displayStatus == "Hoàn thành")
+            {
+                lblStatus.Text = "Hoàn thành";
+                lblStatus.ForeColor = Color.FromArgb(46, 204, 113); 
+            }
+            else if (displayStatus == "Đang tiến hành" || displayStatus == "Đang ra")
+            {
+                lblStatus.Text = "Đang ra";
+                lblStatus.ForeColor = Color.FromArgb(241, 196, 15); 
+            }
+            else if (displayStatus == "Đang soạn")
             {
                 lblStatus.Text = "Đang soạn";
                 lblStatus.ForeColor = Color.Gray;
             }
-            else if (chapterCount < 5)
-            {
-                lblStatus.Text = "Đang ra";
-                lblStatus.ForeColor = Color.FromArgb(241, 196, 15); // Yellow/Orange
-            }
             else
             {
-                lblStatus.Text = "Hoàn thành";
-                lblStatus.ForeColor = Color.FromArgb(46, 204, 113); // Green
+                lblStatus.Text = displayStatus;
+                lblStatus.ForeColor = Color.FromArgb(108, 92, 231); 
             }
 
             if (!string.IsNullOrEmpty(_book.CoverBase64))
@@ -186,7 +199,7 @@ namespace client_firebase
         {
             base.OnPaint(e);
 
-            // Draw border
+            
             using (var pen = new Pen(Color.FromArgb(220, 220, 220), 1))
             {
                 e.Graphics.DrawRectangle(pen, 0, 0, this.Width - 1, this.Height - 1);

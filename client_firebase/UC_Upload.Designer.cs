@@ -1,4 +1,4 @@
-namespace client_firebase
+﻿namespace client_firebase
 {
     partial class UC_Upload
     {
@@ -53,9 +53,9 @@ namespace client_firebase
             this.panelStep2.SuspendLayout();
             this.panelNavigation.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelStepIndicator
-            // 
+            
+            
+            
             this.panelStepIndicator.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panelStepIndicator.Controls.Add(this.lblArrow);
             this.panelStepIndicator.Controls.Add(this.lblStep2Text);
@@ -66,9 +66,9 @@ namespace client_firebase
             this.panelStepIndicator.Name = "panelStepIndicator";
             this.panelStepIndicator.Size = new System.Drawing.Size(440, 45);
             this.panelStepIndicator.TabIndex = 0;
-            // 
-            // lblArrow
-            // 
+            
+            
+            
             this.lblArrow.AutoSize = true;
             this.lblArrow.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblArrow.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
@@ -77,9 +77,9 @@ namespace client_firebase
             this.lblArrow.Size = new System.Drawing.Size(31, 30);
             this.lblArrow.TabIndex = 4;
             this.lblArrow.Text = "→";
-            // 
-            // lblStep2Text
-            // 
+            
+            
+            
             this.lblStep2Text.AutoSize = true;
             this.lblStep2Text.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStep2Text.ForeColor = System.Drawing.Color.Gray;
@@ -88,9 +88,9 @@ namespace client_firebase
             this.lblStep2Text.Size = new System.Drawing.Size(94, 17);
             this.lblStep2Text.TabIndex = 3;
             this.lblStep2Text.Text = "Thêm chương";
-            // 
-            // lblStep2Circle
-            // 
+            
+            
+            
             this.lblStep2Circle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
             this.lblStep2Circle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStep2Circle.ForeColor = System.Drawing.Color.White;
@@ -100,9 +100,9 @@ namespace client_firebase
             this.lblStep2Circle.TabIndex = 2;
             this.lblStep2Circle.Text = "2";
             this.lblStep2Circle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblStep1Text
-            // 
+            
+            
+            
             this.lblStep1Text.AutoSize = true;
             this.lblStep1Text.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStep1Text.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
@@ -111,9 +111,9 @@ namespace client_firebase
             this.lblStep1Text.Size = new System.Drawing.Size(113, 17);
             this.lblStep1Text.TabIndex = 1;
             this.lblStep1Text.Text = "Thông tin truyện";
-            // 
-            // lblStep1Circle
-            // 
+            
+            
+            
             this.lblStep1Circle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.lblStep1Circle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStep1Circle.ForeColor = System.Drawing.Color.White;
@@ -123,9 +123,9 @@ namespace client_firebase
             this.lblStep1Circle.TabIndex = 0;
             this.lblStep1Circle.Text = "1";
             this.lblStep1Circle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // panelCard
-            // 
+            
+            
+            
             this.panelCard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -137,9 +137,9 @@ namespace client_firebase
             this.panelCard.Padding = new System.Windows.Forms.Padding(15);
             this.panelCard.Size = new System.Drawing.Size(760, 470);
             this.panelCard.TabIndex = 1;
-            // 
-            // panelStep1
-            // 
+            
+            
+            
             this.panelStep1.AutoScroll = true;
             this.panelStep1.Controls.Add(this.flpGenres);
             this.panelStep1.Controls.Add(this.lblGenre);
@@ -155,18 +155,18 @@ namespace client_firebase
             this.panelStep1.Name = "panelStep1";
             this.panelStep1.Size = new System.Drawing.Size(730, 440);
             this.panelStep1.TabIndex = 0;
-            // 
-            // flpGenres
-            // 
+            
+            
+            
             this.flpGenres.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flpGenres.Location = new System.Drawing.Point(10, 380);
             this.flpGenres.Name = "flpGenres";
             this.flpGenres.Size = new System.Drawing.Size(710, 50);
             this.flpGenres.TabIndex = 8;
-            // 
-            // lblGenre
-            // 
+            
+            
+            
             this.lblGenre.AutoSize = true;
             this.lblGenre.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGenre.Location = new System.Drawing.Point(10, 360);
@@ -174,9 +174,9 @@ namespace client_firebase
             this.lblGenre.Size = new System.Drawing.Size(66, 15);
             this.lblGenre.TabIndex = 7;
             this.lblGenre.Text = "Thể loại (*)";
-            // 
-            // txtDescription
-            // 
+            
+            
+            
             this.txtDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDescription.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -186,9 +186,9 @@ namespace client_firebase
             this.txtDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtDescription.Size = new System.Drawing.Size(485, 225);
             this.txtDescription.TabIndex = 6;
-            // 
-            // lblDesc
-            // 
+            
+            
+            
             this.lblDesc.AutoSize = true;
             this.lblDesc.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDesc.Location = new System.Drawing.Point(235, 105);
@@ -196,9 +196,9 @@ namespace client_firebase
             this.lblDesc.Size = new System.Drawing.Size(55, 15);
             this.lblDesc.TabIndex = 5;
             this.lblDesc.Text = "Mô tả (*)";
-            // 
-            // txtTitle
-            // 
+            
+            
+            
             this.txtTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTitle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -206,9 +206,9 @@ namespace client_firebase
             this.txtTitle.Name = "txtTitle";
             this.txtTitle.Size = new System.Drawing.Size(485, 25);
             this.txtTitle.TabIndex = 4;
-            // 
-            // lblTitle
-            // 
+            
+            
+            
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(235, 45);
@@ -216,9 +216,9 @@ namespace client_firebase
             this.lblTitle.Size = new System.Drawing.Size(83, 15);
             this.lblTitle.TabIndex = 3;
             this.lblTitle.Text = "Tên truyện (*)";
-            // 
-            // lblCover
-            // 
+            
+            
+            
             this.lblCover.AutoSize = true;
             this.lblCover.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCover.Location = new System.Drawing.Point(10, 45);
@@ -226,9 +226,9 @@ namespace client_firebase
             this.lblCover.Size = new System.Drawing.Size(64, 15);
             this.lblCover.TabIndex = 2;
             this.lblCover.Text = "Ảnh bìa (*)";
-            // 
-            // pbCover
-            // 
+            
+            
+            
             this.pbCover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.pbCover.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
@@ -239,9 +239,9 @@ namespace client_firebase
             this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbCover.TabIndex = 1;
             this.pbCover.TabStop = false;
-            // 
-            // lblStep1Title
-            // 
+            
+            
+            
             this.lblStep1Title.AutoSize = true;
             this.lblStep1Title.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStep1Title.Location = new System.Drawing.Point(5, 5);
@@ -249,9 +249,9 @@ namespace client_firebase
             this.lblStep1Title.Size = new System.Drawing.Size(138, 21);
             this.lblStep1Title.TabIndex = 0;
             this.lblStep1Title.Text = "Thông tin truyện";
-            // 
-            // panelStep2
-            // 
+            
+            
+            
             this.panelStep2.AutoScroll = true;
             this.panelStep2.Controls.Add(this.txtChapterContent);
             this.panelStep2.Controls.Add(this.lblChapterContent);
@@ -266,9 +266,9 @@ namespace client_firebase
             this.panelStep2.Size = new System.Drawing.Size(730, 440);
             this.panelStep2.TabIndex = 1;
             this.panelStep2.Visible = false;
-            // 
-            // txtChapterContent
-            // 
+            
+            
+            
             this.txtChapterContent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtChapterContent.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -278,9 +278,9 @@ namespace client_firebase
             this.txtChapterContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtChapterContent.Size = new System.Drawing.Size(710, 245);
             this.txtChapterContent.TabIndex = 6;
-            // 
-            // lblChapterContent
-            // 
+            
+            
+            
             this.lblChapterContent.AutoSize = true;
             this.lblChapterContent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblChapterContent.Location = new System.Drawing.Point(10, 165);
@@ -288,9 +288,9 @@ namespace client_firebase
             this.lblChapterContent.Size = new System.Drawing.Size(73, 15);
             this.lblChapterContent.TabIndex = 5;
             this.lblChapterContent.Text = "Nội dung (*)";
-            // 
-            // txtChapterTitle
-            // 
+            
+            
+            
             this.txtChapterTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtChapterTitle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -298,9 +298,9 @@ namespace client_firebase
             this.txtChapterTitle.Name = "txtChapterTitle";
             this.txtChapterTitle.Size = new System.Drawing.Size(710, 25);
             this.txtChapterTitle.TabIndex = 4;
-            // 
-            // lblChapterTitle
-            // 
+            
+            
+            
             this.lblChapterTitle.AutoSize = true;
             this.lblChapterTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblChapterTitle.Location = new System.Drawing.Point(10, 105);
@@ -308,9 +308,9 @@ namespace client_firebase
             this.lblChapterTitle.Size = new System.Drawing.Size(111, 15);
             this.lblChapterTitle.TabIndex = 3;
             this.lblChapterTitle.Text = "Tiêu đề chương (*)";
-            // 
-            // txtChapterNum
-            // 
+            
+            
+            
             this.txtChapterNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtChapterNum.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -319,9 +319,9 @@ namespace client_firebase
             this.txtChapterNum.Size = new System.Drawing.Size(710, 25);
             this.txtChapterNum.TabIndex = 2;
             this.txtChapterNum.Text = "1";
-            // 
-            // lblChapterNum
-            // 
+            
+            
+            
             this.lblChapterNum.AutoSize = true;
             this.lblChapterNum.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblChapterNum.Location = new System.Drawing.Point(10, 45);
@@ -329,9 +329,9 @@ namespace client_firebase
             this.lblChapterNum.Size = new System.Drawing.Size(83, 15);
             this.lblChapterNum.TabIndex = 1;
             this.lblChapterNum.Text = "Số chương (*)";
-            // 
-            // lblStep2Title
-            // 
+            
+            
+            
             this.lblStep2Title.AutoSize = true;
             this.lblStep2Title.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStep2Title.Location = new System.Drawing.Point(5, 5);
@@ -339,9 +339,9 @@ namespace client_firebase
             this.lblStep2Title.Size = new System.Drawing.Size(116, 21);
             this.lblStep2Title.TabIndex = 0;
             this.lblStep2Title.Text = "Thêm chương";
-            // 
-            // panelNavigation
-            // 
+            
+            
+            
             this.panelNavigation.Controls.Add(this.btnBack);
             this.panelNavigation.Controls.Add(this.btnNext);
             this.panelNavigation.Controls.Add(this.btnSubmit);
@@ -350,9 +350,9 @@ namespace client_firebase
             this.panelNavigation.Name = "panelNavigation";
             this.panelNavigation.Size = new System.Drawing.Size(800, 60);
             this.panelNavigation.TabIndex = 2;
-            // 
-            // btnBack
-            // 
+            
+            
+            
             this.btnBack.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnBack.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.btnBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -365,9 +365,9 @@ namespace client_firebase
             this.btnBack.Text = "Quay lại";
             this.btnBack.UseVisualStyleBackColor = true;
             this.btnBack.Visible = false;
-            // 
-            // btnNext
-            // 
+            
+            
+            
             this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnNext.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.btnNext.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -381,9 +381,9 @@ namespace client_firebase
             this.btnNext.TabIndex = 1;
             this.btnNext.Text = "Tiếp theo";
             this.btnNext.UseVisualStyleBackColor = false;
-            // 
-            // btnSubmit
-            // 
+            
+            
+            
             this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSubmit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.btnSubmit.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -398,9 +398,9 @@ namespace client_firebase
             this.btnSubmit.Text = "↑  Đăng truyện";
             this.btnSubmit.UseVisualStyleBackColor = false;
             this.btnSubmit.Visible = false;
-            // 
-            // UC_Upload
-            // 
+            
+            
+            
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));

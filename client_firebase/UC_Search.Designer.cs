@@ -1,4 +1,4 @@
-namespace client_firebase
+﻿namespace client_firebase
 {
     partial class UC_Search
     {
@@ -30,9 +30,9 @@ namespace client_firebase
             this.panelSearchInput.SuspendLayout();
             this.panelFilters.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelSearchInput
-            // 
+            
+            
+            
             this.panelSearchInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelSearchInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(242)))), ((int)(((byte)(246)))));
@@ -42,9 +42,9 @@ namespace client_firebase
             this.panelSearchInput.Name = "panelSearchInput";
             this.panelSearchInput.Size = new System.Drawing.Size(635, 40);
             this.panelSearchInput.TabIndex = 0;
-            // 
-            // lblSearchIcon
-            // 
+            
+            
+            
             this.lblSearchIcon.AutoSize = true;
             this.lblSearchIcon.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.lblSearchIcon.ForeColor = System.Drawing.Color.Gray;
@@ -53,9 +53,9 @@ namespace client_firebase
             this.lblSearchIcon.Size = new System.Drawing.Size(26, 21);
             this.lblSearchIcon.TabIndex = 0;
             this.lblSearchIcon.Text = "🔍";
-            // 
-            // txtSearch
-            // 
+            
+            
+            
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(242)))), ((int)(((byte)(246)))));
@@ -66,9 +66,9 @@ namespace client_firebase
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(585, 20);
             this.txtSearch.TabIndex = 1;
-            // 
-            // btnFilter
-            // 
+            
+            
+            
             this.btnFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.btnFilter.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -82,9 +82,9 @@ namespace client_firebase
             this.btnFilter.TabIndex = 1;
             this.btnFilter.Text = "⛛  Bộ lọc";
             this.btnFilter.UseVisualStyleBackColor = false;
-            // 
-            // panelFilters
-            // 
+            
+            
+            
             this.panelFilters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelFilters.Controls.Add(this.lblGenreTitle);
@@ -95,9 +95,9 @@ namespace client_firebase
             this.panelFilters.Name = "panelFilters";
             this.panelFilters.Size = new System.Drawing.Size(760, 160);
             this.panelFilters.TabIndex = 2;
-            // 
-            // lblGenreTitle
-            // 
+            
+            
+            
             this.lblGenreTitle.AutoSize = true;
             this.lblGenreTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGenreTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(52)))), ((int)(((byte)(54)))));
@@ -106,18 +106,18 @@ namespace client_firebase
             this.lblGenreTitle.Size = new System.Drawing.Size(64, 20);
             this.lblGenreTitle.TabIndex = 0;
             this.lblGenreTitle.Text = "Thể loại";
-            // 
-            // flpGenres
-            // 
+            
+            
+            
             this.flpGenres.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flpGenres.Location = new System.Drawing.Point(0, 25);
             this.flpGenres.Name = "flpGenres";
             this.flpGenres.Size = new System.Drawing.Size(760, 65);
             this.flpGenres.TabIndex = 1;
-            // 
-            // lblSortTitle
-            // 
+            
+            
+            
             this.lblSortTitle.AutoSize = true;
             this.lblSortTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSortTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(52)))), ((int)(((byte)(54)))));
@@ -126,18 +126,18 @@ namespace client_firebase
             this.lblSortTitle.Size = new System.Drawing.Size(95, 20);
             this.lblSortTitle.TabIndex = 2;
             this.lblSortTitle.Text = "Sắp xếp theo";
-            // 
-            // flpSort
-            // 
+            
+            
+            
             this.flpSort.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flpSort.Location = new System.Drawing.Point(0, 120);
             this.flpSort.Name = "flpSort";
             this.flpSort.Size = new System.Drawing.Size(760, 35);
             this.flpSort.TabIndex = 3;
-            // 
-            // lblResultsTitle
-            // 
+            
+            
+            
             this.lblResultsTitle.AutoSize = true;
             this.lblResultsTitle.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblResultsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(52)))), ((int)(((byte)(54)))));
@@ -146,9 +146,9 @@ namespace client_firebase
             this.lblResultsTitle.Size = new System.Drawing.Size(161, 25);
             this.lblResultsTitle.TabIndex = 3;
             this.lblResultsTitle.Text = "Kết quả tìm được";
-            // 
-            // flpResults
-            // 
+            
+            
+            
             this.flpResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -157,9 +157,9 @@ namespace client_firebase
             this.flpResults.Name = "flpResults";
             this.flpResults.Size = new System.Drawing.Size(760, 305);
             this.flpResults.TabIndex = 4;
-            // 
-            // UC_Search
-            // 
+            
+            
+            
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;

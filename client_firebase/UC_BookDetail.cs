@@ -18,6 +18,8 @@ namespace client_firebase
         private bool isFavorite = false;
         private bool isFollowingAuthor = false;
         private TableLayoutPanel tlpButtons = null;
+        private Button btnBookmarkDetail = null;
+        private bool isBookmarked = false;
 
         public UC_BookDetail()
         {
@@ -57,7 +59,7 @@ namespace client_firebase
 
                 panelInfoCard.Controls.Add(tlpButtons);
 
-                // Add existing controls from designer to tlpButtons
+                
                 panelInfoCard.Controls.Remove(btnRead);
                 panelInfoCard.Controls.Remove(btnRate);
                 panelInfoCard.Controls.Remove(btnChat);
@@ -77,9 +79,9 @@ namespace client_firebase
                 btnChat.FlatAppearance.BorderSize = 1;
 
                 tlpButtons.Controls.Add(btnRead, 0, 0);
-                // btnFavorite will be in column 1 (added in SetBook)
+                
                 tlpButtons.Controls.Add(btnRate, 2, 0);
-                // btnChat/btnAddChapter will be in column 3
+                
                 tlpButtons.Controls.Add(btnChat, 3, 0);
             }
         }
@@ -87,21 +89,24 @@ namespace client_firebase
         public async void SetBook(BookModel book)
         {
             currentBook = book;
+            LoadAuthorDetails(book.AuthorId, book.AuthorName);
 
-            // Load data in parallel to solve slow loading
+            
             var favoriteTask = FirebaseDatabaseService.IsFavoriteAsync(book.Id);
             var followAuthorTask = FirebaseDatabaseService.IsFollowingAuthorAsync(book.AuthorId);
+            var bookmarkTask = FirebaseDatabaseService.IsBookmarkedAsync(book.Id);
             var chaptersTask = FirebaseDatabaseService.GetChaptersAsync(book.Id);
             var commentsTask = FirebaseDatabaseService.GetCommentsAsync(book.Id);
 
-            await Task.WhenAll(favoriteTask, followAuthorTask, chaptersTask, commentsTask);
+            await Task.WhenAll(favoriteTask, followAuthorTask, bookmarkTask, chaptersTask, commentsTask);
 
             isFavorite = favoriteTask.Result;
             isFollowingAuthor = followAuthorTask.Result;
+            isBookmarked = bookmarkTask.Result;
             chaptersList = chaptersTask.Result;
             var commentsList = commentsTask.Result;
 
-            // Configure Favorite button
+            
             if (btnFavorite == null)
             {
                 btnFavorite = new Button
@@ -119,7 +124,7 @@ namespace client_firebase
             }
             UpdateFavoriteButtonUI();
 
-            // Configure Follow Author button
+            
             if (btnFollowAuthor == null)
             {
                 btnFollowAuthor = new Button
@@ -146,7 +151,25 @@ namespace client_firebase
                 UpdateFollowAuthorButtonUI();
             }
 
-            // Configure Chat or Add Chapter button
+            
+            if (btnBookmarkDetail == null)
+            {
+                btnBookmarkDetail = new Button
+                {
+                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                    Size = new Size(115, 30),
+                    Location = new Point(490, 45),
+                    FlatStyle = FlatStyle.Flat,
+                    Cursor = Cursors.Hand,
+                };
+                btnBookmarkDetail.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+                btnBookmarkDetail.FlatAppearance.BorderSize = 1;
+                btnBookmarkDetail.Click += btnBookmarkDetail_Click;
+                panelInfoCard.Controls.Add(btnBookmarkDetail);
+            }
+            UpdateBookmarkButtonUI();
+
+            
             if (book.AuthorId == AuthSession.FirebaseLocalId)
             {
                 if (btnAddChapter == null)
@@ -157,7 +180,7 @@ namespace client_firebase
                         Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                         FlatStyle = FlatStyle.Flat,
                         Cursor = Cursors.Hand,
-                        BackColor = Color.FromArgb(46, 204, 113), // Emerald Green
+                        BackColor = Color.FromArgb(46, 204, 113), 
                         ForeColor = Color.White,
                         Dock = DockStyle.Fill,
                         Margin = new Padding(3)
@@ -175,12 +198,11 @@ namespace client_firebase
                 btnChat.Visible = true;
             }
 
-            // Bind values
+            
             lblTitle.Text = book.Title;
             lblDescription.Text = book.Description;
-            lblAuthorName.Text = book.AuthorName ?? "Ẩn danh";
 
-            // Calculate total views from chapters
+            
             int totalChapterViews = 0;
             if (chaptersList != null)
             {
@@ -192,11 +214,11 @@ namespace client_firebase
             lblViewsCount.Text = $"👁 {totalChapterViews} lượt xem";
             lblLikesCount.Text = $"♡ {book.Likes} lượt thích";
             
-            // Adjust Rating according to stars
+            
             int roundedStars = (int)Math.Round(book.Rating);
             lblRating.Text = $"⭐ {book.Rating:F1} (" + new string('★', roundedStars) + new string('☆', 5 - roundedStars) + ")";
 
-            // Display completion status next to views/rating
+            
             Label lblStatus = panelInfoCard.Controls["lblStatus"] as Label;
             if (lblStatus == null)
             {
@@ -211,11 +233,12 @@ namespace client_firebase
                 };
                 panelInfoCard.Controls.Add(lblStatus);
             }
-            lblStatus.Text = $"({book.Status ?? "Đang tiến hành"})";
+            
+            
+            
+            
 
-            DrawAvatar(pbAuthor, book.AuthorName ?? "Ẩn danh");
-
-            // Set cover image
+            
             if (!string.IsNullOrEmpty(book.CoverBase64))
             {
                 try
@@ -237,7 +260,7 @@ namespace client_firebase
                 pbCover.Image = null;
             }
 
-            // Render chapters & comments from loaded data
+            
             lblChaptersCount.Text = $"📖 {chaptersList.Count} chương";
             RenderChaptersList();
             RenderCommentsList(commentsList);
@@ -313,7 +336,7 @@ namespace client_firebase
                 row.Controls.Add(lblDate);
                 row.Controls.Add(lblChViews);
 
-                // Click event
+                
                 Action click = () =>
                 {
                     if (this.ParentForm is MainForm mf)
@@ -350,7 +373,7 @@ namespace client_firebase
                 return;
             }
 
-            // Fetch liked status for all comments in parallel
+            
             var likedStatuses = new Dictionary<string, bool>();
             try
             {
@@ -369,9 +392,25 @@ namespace client_firebase
                 System.Diagnostics.Debug.WriteLine("Error loading comment liked statuses: " + ex.Message);
             }
 
+            // Fetch all users to dynamically resolve name and avatar
+            var usersList = new List<UserModel>();
+            try
+            {
+                usersList = await FirebaseDatabaseService.GetAllUsersAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error fetching all users for comments: " + ex.Message);
+            }
+
             foreach (var c in comments)
             {
                 bool isLiked = likedStatuses.ContainsKey(c.Id) && likedStatuses[c.Id];
+
+                // Find the latest user details
+                var commenter = usersList?.FirstOrDefault(u => u.LocalId == c.UserId);
+                string displayUsername = commenter?.Username ?? c.Username ?? "Ẩn danh";
+                string avatarBase64 = commenter?.Avatar ?? c.Avatar;
 
                 Panel row = new Panel
                 {
@@ -386,7 +425,7 @@ namespace client_firebase
                     Location = new Point(10, 5),
                     SizeMode = PictureBoxSizeMode.Zoom
                 };
-                DrawAvatar(pb, c.Username);
+                DrawAvatar(pb, displayUsername, avatarBase64);
 
                 Panel bubble = new Panel
                 {
@@ -397,7 +436,7 @@ namespace client_firebase
 
                 Label lblUser = new Label
                 {
-                    Text = c.Username,
+                    Text = displayUsername,
                     Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                     Location = new Point(10, 8),
                     AutoSize = true
@@ -412,7 +451,7 @@ namespace client_firebase
                     AutoSize = true
                 };
 
-                // Measure size to fit content
+                
                 Size commentSize;
                 using (Graphics g = flpComments.CreateGraphics())
                 {
@@ -420,7 +459,7 @@ namespace client_firebase
                     commentSize = new Size((int)Math.Ceiling(sf.Width) + 5, (int)Math.Ceiling(sf.Height) + 5);
                 }
                 lblText.Size = commentSize;
-                bubble.Size = new Size(bubble.Width, commentSize.Height + 35); // dynamic height based on text
+                bubble.Size = new Size(bubble.Width, commentSize.Height + 35); 
 
                 bubble.Controls.Add(lblUser);
                 bubble.Controls.Add(lblText);
@@ -468,7 +507,7 @@ namespace client_firebase
                 row.Controls.Add(lblHeart);
                 row.Controls.Add(lblLikes);
 
-                // Compute row height
+                
                 row.Height = bubble.Bottom + 25;
 
                 flpComments.Controls.Add(row);
@@ -486,13 +525,13 @@ namespace client_firebase
 
             btnPostComment.Enabled = false;
             
-            // Fire comment post in background
+            
             bool res = await FirebaseDatabaseService.PostCommentAsync(currentBook.Id, text);
             btnPostComment.Enabled = true;
 
             if (res)
             {
-                // Reload real comments from Firebase
+                
                 var updatedComments = await FirebaseDatabaseService.GetCommentsAsync(currentBook.Id);
                 RenderCommentsList(updatedComments);
             }
@@ -521,7 +560,7 @@ namespace client_firebase
             if (isFavorite)
             {
                 btnFavorite.Text = "❤️ Yêu thích";
-                btnFavorite.BackColor = Color.FromArgb(231, 76, 60); // Red
+                btnFavorite.BackColor = Color.FromArgb(231, 76, 60); 
                 btnFavorite.ForeColor = Color.White;
                 btnFavorite.FlatAppearance.BorderSize = 0;
             }
@@ -540,7 +579,7 @@ namespace client_firebase
             if (isFollowingAuthor)
             {
                 btnFollowAuthor.Text = "👥 Followed";
-                btnFollowAuthor.BackColor = Color.FromArgb(52, 152, 219); // Blue
+                btnFollowAuthor.BackColor = Color.FromArgb(52, 152, 219); 
                 btnFollowAuthor.ForeColor = Color.White;
                 btnFollowAuthor.FlatAppearance.BorderSize = 0;
             }
@@ -596,11 +635,52 @@ namespace client_firebase
             btnFollowAuthor.Enabled = true;
         }
 
+        private void UpdateBookmarkButtonUI()
+        {
+            if (btnBookmarkDetail != null)
+            {
+                if (isBookmarked)
+                {
+                    btnBookmarkDetail.Text = "🔖 Đã Bookmark";
+                    btnBookmarkDetail.BackColor = Color.FromArgb(108, 92, 231);
+                    btnBookmarkDetail.ForeColor = Color.White;
+                    btnBookmarkDetail.FlatAppearance.BorderSize = 0;
+                }
+                else
+                {
+                    btnBookmarkDetail.Text = "🔖 Bookmark";
+                    btnBookmarkDetail.BackColor = Color.White;
+                    btnBookmarkDetail.ForeColor = Color.Black;
+                    btnBookmarkDetail.FlatAppearance.BorderSize = 1;
+                    btnBookmarkDetail.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+                }
+            }
+        }
+
+        private async void btnBookmarkDetail_Click(object sender, EventArgs e)
+        {
+            if (currentBook == null) return;
+            btnBookmarkDetail.Enabled = false;
+            isBookmarked = !isBookmarked;
+            if (isBookmarked)
+            {
+                await FirebaseDatabaseService.AddToBookmarksAsync(currentBook.Id);
+                MessageBox.Show("Đã đánh dấu bookmark truyện và đăng ký nhận thông báo chương mới thành công!", "Bookmark");
+            }
+            else
+            {
+                await FirebaseDatabaseService.RemoveFromBookmarksAsync(currentBook.Id);
+                MessageBox.Show("Đã bỏ bookmark truyện và hủy đăng ký nhận thông báo chương mới.", "Bookmark");
+            }
+            UpdateBookmarkButtonUI();
+            btnBookmarkDetail.Enabled = true;
+        }
+
         private async void btnRate_Click(object sender, EventArgs e)
         {
             if (currentBook == null) return;
 
-            // Show a simple dynamic form for 1-5 stars selection
+            
             using (Form rateForm = new Form())
             {
                 rateForm.Text = "Đánh giá truyện";
@@ -614,7 +694,7 @@ namespace client_firebase
                 
                 ComboBox cbStars = new ComboBox() { Left = 20, Top = 45, Width = 240, DropDownStyle = ComboBoxStyle.DropDownList };
                 cbStars.Items.AddRange(new object[] { "★ (1 sao)", "★★ (2 sao)", "★★★ (3 sao)", "★★★★ (4 sao)", "★★★★★ (5 sao)" });
-                cbStars.SelectedIndex = 4; // default to 5 stars
+                cbStars.SelectedIndex = 4; 
 
                 Button btnSubmit = new Button() { Text = "Gửi", Left = 60, Top = 80, Width = 80, DialogResult = DialogResult.OK };
                 Button btnCancel = new Button() { Text = "Hủy", Left = 160, Top = 80, Width = 80, DialogResult = DialogResult.Cancel };
@@ -657,12 +737,53 @@ namespace client_firebase
             }
         }
 
-        private void DrawAvatar(PictureBox pb, string name)
+        private void DrawAvatar(PictureBox pb, string name, string avatarBase64 = null)
         {
             pb.Paint -= pb_PaintAvatar;
+            if (!string.IsNullOrEmpty(avatarBase64))
+            {
+                try
+                {
+                    byte[] bytes = Convert.FromBase64String(avatarBase64);
+                    using (var ms = new MemoryStream(bytes))
+                    {
+                        pb.Image = Image.FromStream(ms);
+                    }
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error parsing user avatar: " + ex.Message);
+                }
+            }
+
+            pb.Image = null;
             pb.Tag = name;
             pb.Paint += pb_PaintAvatar;
             pb.Invalidate();
+        }
+
+        private async void LoadAuthorDetails(string authorId, string defaultName)
+        {
+            lblAuthorName.Text = defaultName ?? "Ẩn danh";
+            DrawAvatar(pbAuthor, defaultName ?? "Ẩn danh");
+
+            if (string.IsNullOrEmpty(authorId)) return;
+
+            var authorProfile = await FirebaseDatabaseService.GetUserProfileAsync(authorId);
+            if (authorProfile != null)
+            {
+                lblAuthorName.Text = authorProfile.Username ?? "Ẩn danh";
+                DrawAvatar(pbAuthor, authorProfile.Username, authorProfile.Avatar);
+            }
+        }
+
+        public void RefreshBookDetail()
+        {
+            if (currentBook != null)
+            {
+                SetBook(currentBook);
+            }
         }
 
         private void pb_PaintAvatar(object sender, PaintEventArgs pe)
@@ -711,7 +832,7 @@ namespace client_firebase
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    // Reload book details to refresh status
+                    
                     var updatedBook = await FirebaseDatabaseService.GetBookByIdAsync(currentBook.Id);
                     if (updatedBook != null)
                     {

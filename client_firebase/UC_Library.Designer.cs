@@ -1,4 +1,4 @@
-namespace client_firebase
+﻿namespace client_firebase
 {
     partial class UC_Library
     {
@@ -36,9 +36,9 @@ namespace client_firebase
             ((System.ComponentModel.ISupportInitialize)(this.pbAvatar)).BeginInit();
             this.panelTabs.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelProfile
-            // 
+            
+            
+            
             this.panelProfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelProfile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(195)))), ((int)(((byte)(255)))));
@@ -54,9 +54,9 @@ namespace client_firebase
             this.panelProfile.Name = "panelProfile";
             this.panelProfile.Size = new System.Drawing.Size(770, 140);
             this.panelProfile.TabIndex = 0;
-            // 
-            // btnSettings
-            // 
+            
+            
+            
             this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSettings.FlatAppearance.BorderSize = 0;
@@ -68,9 +68,9 @@ namespace client_firebase
             this.btnSettings.TabIndex = 7;
             this.btnSettings.Text = "⚙";
             this.btnSettings.UseVisualStyleBackColor = true;
-            // 
-            // btnEdit
-            // 
+            
+            
+            
             this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnEdit.FlatAppearance.BorderSize = 0;
@@ -82,9 +82,9 @@ namespace client_firebase
             this.btnEdit.TabIndex = 6;
             this.btnEdit.Text = "📝";
             this.btnEdit.UseVisualStyleBackColor = true;
-            // 
-            // lblFollowing
-            // 
+            
+            
+            
             this.lblFollowing.AutoSize = true;
             this.lblFollowing.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFollowing.Location = new System.Drawing.Point(380, 95);
@@ -92,9 +92,9 @@ namespace client_firebase
             this.lblFollowing.Size = new System.Drawing.Size(95, 15);
             this.lblFollowing.TabIndex = 5;
             this.lblFollowing.Text = "100 Đang theo dõi";
-            // 
-            // lblFollowers
-            // 
+            
+            
+            
             this.lblFollowers.AutoSize = true;
             this.lblFollowers.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFollowers.Location = new System.Drawing.Point(260, 95);
@@ -102,9 +102,9 @@ namespace client_firebase
             this.lblFollowers.Size = new System.Drawing.Size(100, 15);
             this.lblFollowers.TabIndex = 4;
             this.lblFollowers.Text = "100 Người theo dõi";
-            // 
-            // lblPostedCount
-            // 
+            
+            
+            
             this.lblPostedCount.AutoSize = true;
             this.lblPostedCount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPostedCount.Location = new System.Drawing.Point(145, 95);
@@ -112,9 +112,9 @@ namespace client_firebase
             this.lblPostedCount.Size = new System.Drawing.Size(95, 15);
             this.lblPostedCount.TabIndex = 3;
             this.lblPostedCount.Text = "10 Truyện đã đăng";
-            // 
-            // lblBio
-            // 
+            
+            
+            
             this.lblBio.AutoSize = true;
             this.lblBio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
@@ -123,9 +123,9 @@ namespace client_firebase
             this.lblBio.Size = new System.Drawing.Size(188, 17);
             this.lblBio.TabIndex = 2;
             this.lblBio.Text = "Yêu thích đọc và sáng tác truyện";
-            // 
-            // lblUsername
-            // 
+            
+            
+            
             this.lblUsername.AutoSize = true;
             this.lblUsername.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsername.Location = new System.Drawing.Point(142, 20);
@@ -133,18 +133,18 @@ namespace client_firebase
             this.lblUsername.Size = new System.Drawing.Size(135, 25);
             this.lblUsername.TabIndex = 1;
             this.lblUsername.Text = "Nguyễn Văn A";
-            // 
-            // pbAvatar
-            // 
+            
+            
+            
             this.pbAvatar.Location = new System.Drawing.Point(25, 20);
             this.pbAvatar.Name = "pbAvatar";
             this.pbAvatar.Size = new System.Drawing.Size(100, 100);
             this.pbAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbAvatar.TabIndex = 0;
             this.pbAvatar.TabStop = false;
-            // 
-            // panelTabs
-            // 
+            
+            
+            
             this.panelTabs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelTabs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(215)))), ((int)(((byte)(255)))));
@@ -156,9 +156,9 @@ namespace client_firebase
             this.panelTabs.Padding = new System.Windows.Forms.Padding(4);
             this.panelTabs.Size = new System.Drawing.Size(770, 42);
             this.panelTabs.TabIndex = 1;
-            // 
-            // btnTabFavorites
-            // 
+            
+            
+            
             this.btnTabFavorites.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTabFavorites.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnTabFavorites.FlatAppearance.BorderSize = 0;
@@ -170,9 +170,9 @@ namespace client_firebase
             this.btnTabFavorites.TabIndex = 2;
             this.btnTabFavorites.Text = "♡  Yêu thích";
             this.btnTabFavorites.UseVisualStyleBackColor = true;
-            // 
-            // btnTabHistory
-            // 
+            
+            
+            
             this.btnTabHistory.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTabHistory.FlatAppearance.BorderSize = 0;
             this.btnTabHistory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -183,9 +183,9 @@ namespace client_firebase
             this.btnTabHistory.TabIndex = 1;
             this.btnTabHistory.Text = "🕒  Lịch sử";
             this.btnTabHistory.UseVisualStyleBackColor = true;
-            // 
-            // btnTabBookmark
-            // 
+            
+            
+            
             this.btnTabBookmark.BackColor = System.Drawing.Color.White;
             this.btnTabBookmark.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTabBookmark.Dock = System.Windows.Forms.DockStyle.Left;
@@ -198,9 +198,9 @@ namespace client_firebase
             this.btnTabBookmark.TabIndex = 0;
             this.btnTabBookmark.Text = "🔖  Bookmark";
             this.btnTabBookmark.UseVisualStyleBackColor = false;
-            // 
-            // lblBodyHeader
-            // 
+            
+            
+            
             this.lblBodyHeader.AutoSize = true;
             this.lblBodyHeader.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBodyHeader.Location = new System.Drawing.Point(15, 230);
@@ -208,9 +208,9 @@ namespace client_firebase
             this.lblBodyHeader.Size = new System.Drawing.Size(161, 21);
             this.lblBodyHeader.TabIndex = 2;
             this.lblBodyHeader.Text = "Truyện đã bookmark";
-            // 
-            // flpBooks
-            // 
+            
+            
+            
             this.flpBooks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -219,9 +219,9 @@ namespace client_firebase
             this.flpBooks.Name = "flpBooks";
             this.flpBooks.Size = new System.Drawing.Size(770, 325);
             this.flpBooks.TabIndex = 3;
-            // 
-            // UC_Library
-            // 
+            
+            
+            
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;

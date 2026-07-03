@@ -11,7 +11,7 @@ namespace client_firebase
     {
         private List<BookModel> _allBooks = new List<BookModel>();
         private List<string> _selectedGenres = new List<string>();
-        private string _activeSort = "Lượt xem"; // Default sorting option
+        private string _activeSort = "Lượt xem"; 
         private Button btnAISearch;
 
         private readonly string[] GenresList = new string[]
@@ -30,7 +30,7 @@ namespace client_firebase
         {
             InitializeComponent();
 
-            // Adjust width programmatically for AI search button
+            
             panelSearchInput.Width = 510;
             txtSearch.Width = 460;
 
@@ -42,14 +42,14 @@ namespace client_firebase
                 Location = new Point(540, 20),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand,
-                BackColor = Color.FromArgb(162, 155, 254), // AI soft indigo
+                BackColor = Color.FromArgb(162, 155, 254), 
                 ForeColor = Color.White
             };
             btnAISearch.FlatAppearance.BorderSize = 0;
             btnAISearch.Click += btnAISearch_Click;
             this.Controls.Add(btnAISearch);
             
-            // Set up initial event handlers
+            
             this.Load += UC_Search_Load;
             this.VisibleChanged += UC_Search_VisibleChanged;
             btnFilter.Click += btnFilter_Click;
@@ -84,7 +84,7 @@ namespace client_firebase
             foreach (var sortOption in SortList)
             {
                 Button btn = CreateTagButton(sortOption, isGenre: false);
-                // Highlight the default sorting option
+                
                 if (sortOption == _activeSort)
                 {
                     HighlightButton(btn, active: true);
@@ -128,7 +128,7 @@ namespace client_firebase
                 }
                 else
                 {
-                    // For sort options, only one is active
+                    
                     _activeSort = text;
                     foreach (Control ctrl in flpSort.Controls)
                     {
@@ -149,7 +149,7 @@ namespace client_firebase
         {
             if (active)
             {
-                btn.BackColor = Color.FromArgb(108, 92, 231); // Purple active background
+                btn.BackColor = Color.FromArgb(108, 92, 231); 
                 btn.ForeColor = Color.White;
                 btn.FlatAppearance.BorderColor = Color.FromArgb(108, 92, 231);
                 btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(90, 75, 200);
@@ -189,13 +189,25 @@ namespace client_firebase
             UpdateLayoutPositions();
         }
 
-        private async Task LoadBooksAsync()
+        public async Task LoadBooksAsync()
         {
             try
             {
                 var books = await FirebaseDatabaseService.GetAllBooksAsync();
+                var users = await FirebaseDatabaseService.GetAllUsersAsync();
                 if (books != null)
                 {
+                    if (users != null)
+                    {
+                        foreach (var b in books)
+                        {
+                            var author = users.FirstOrDefault(u => u.LocalId == b.AuthorId);
+                            if (author != null)
+                            {
+                                b.AuthorName = author.Username;
+                            }
+                        }
+                    }
                     _allBooks = books;
                     PerformSearch();
                 }
@@ -219,7 +231,7 @@ namespace client_firebase
 
             string query = txtSearch.Text.Trim().ToLower();
 
-            // 1. Filter books
+            
             var filtered = _allBooks.Where(b =>
             {
                 bool matchesQuery = string.IsNullOrEmpty(query) || 
@@ -232,7 +244,7 @@ namespace client_firebase
                 return matchesQuery && matchesGenres;
             }).ToList();
 
-            // 2. Sort books
+            
             if (_activeSort == "Lượt xem")
             {
                 filtered.Sort((x, y) => y.Views.CompareTo(x.Views));
@@ -250,7 +262,7 @@ namespace client_firebase
                 filtered.Sort((x, y) => y.UpdatedAt.CompareTo(x.UpdatedAt));
             }
 
-            // 3. Render results
+            
             if (filtered.Count == 0)
             {
                 Label lblNoResults = new Label

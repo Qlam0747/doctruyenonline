@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -12,7 +13,7 @@ namespace client_firebase
         {
             InitializeComponent();
 
-            // Configure FlowLayoutPanels for auto-sizing and layout
+            
             flowLayoutPanel1.AutoSize = true;
             flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flowLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
@@ -36,26 +37,26 @@ namespace client_firebase
             int scrollX = this.AutoScrollPosition.X;
             int scrollY = this.AutoScrollPosition.Y;
 
-            // Width of the panels (excluding margins/padding)
+            
             int contentWidth = Math.Max(100, this.ClientSize.Width - 40);
 
-            // Compute unscrolled Y coordinates sequentially
+            
             int currentY = 20;
 
-            // 1. label2
+            
             label2.Location = new Point(20 + scrollX, currentY + scrollY);
             currentY += label2.Height + 10;
 
-            // 2. flowLayoutPanel1
+            
             flowLayoutPanel1.Width = contentWidth;
             flowLayoutPanel1.Location = new Point(20 + scrollX, currentY + scrollY);
             currentY += flowLayoutPanel1.Height + 20;
 
-            // 3. label3
+            
             label3.Location = new Point(20 + scrollX, currentY + scrollY);
             currentY += label3.Height + 10;
 
-            // 4. flowLayoutPanel2
+            
             flowLayoutPanel2.Width = contentWidth;
             flowLayoutPanel2.Location = new Point(20 + scrollX, currentY + scrollY);
         }
@@ -72,16 +73,30 @@ namespace client_firebase
             try
             {
                 var books = await FirebaseDatabaseService.GetAllBooksAsync();
+                var users = await FirebaseDatabaseService.GetAllUsersAsync();
+                
                 flowLayoutPanel1.Controls.Clear();
                 flowLayoutPanel2.Controls.Clear();
 
                 if (books == null || books.Count == 0) return;
 
-                // Sort books by UpdatedAt timestamp for "New Updates"
+                if (users != null)
+                {
+                    foreach (var b in books)
+                    {
+                        var author = users.FirstOrDefault(u => u.LocalId == b.AuthorId);
+                        if (author != null)
+                        {
+                            b.AuthorName = author.Username;
+                        }
+                    }
+                }
+
+                
                 var newUpdates = new List<BookModel>(books);
                 newUpdates.Sort((x, y) => y.UpdatedAt.CompareTo(x.UpdatedAt));
 
-                // Sort by composite trend score (views * rating)
+                
                 var trends = new List<BookModel>(books);
                 trends.Sort((x, y) => {
                     double scoreX = x.Views * x.Rating;
@@ -121,11 +136,11 @@ namespace client_firebase
                 try
                 {
                     byte[] bytes = Convert.FromBase64String(b.CoverBase64);
-                    // Use a clone or copy so MemoryStream disposal doesn't break the image drawing
+                    
                     using (var ms = new System.IO.MemoryStream(bytes))
                     {
                         card.pictureBox1.Image = Image.FromStream(ms);
-                        // Cloning image prevents WinForms drawing errors when MS is closed
+                        
                         card.pictureBox1.Image = (Image)card.pictureBox1.Image.Clone();
                     }
                 }
@@ -135,7 +150,7 @@ namespace client_firebase
                 }
             }
 
-            // Click handlers to open book details
+            
             Action clickAction = () =>
             {
                 if (this.ParentForm is MainForm mf)

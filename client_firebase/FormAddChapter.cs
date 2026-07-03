@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -50,12 +50,12 @@ namespace client_firebase
             this.BackColor = Color.FromArgb(248, 249, 250);
             this.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular);
 
-            // Header Panel
+            
             panelHeader = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 60,
-                BackColor = Color.FromArgb(108, 92, 231) // Purple Theme
+                BackColor = Color.FromArgb(108, 92, 231) 
             };
 
             lblTitle = new Label
@@ -68,7 +68,7 @@ namespace client_firebase
             };
             panelHeader.Controls.Add(lblTitle);
 
-            // Chapter Number Label
+            
             lblChapterNum = new Label
             {
                 Text = "Số chương",
@@ -78,7 +78,7 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(45, 52, 54)
             };
 
-            // Chapter Number Textbox
+            
             txtChapterNum = new TextBox
             {
                 Location = new Point(20, 100),
@@ -88,7 +88,7 @@ namespace client_firebase
                 TextAlign = HorizontalAlignment.Center
             };
 
-            // Chapter Title Label
+            
             lblChapterTitle = new Label
             {
                 Text = "Tiêu đề chương",
@@ -98,7 +98,7 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(45, 52, 54)
             };
 
-            // Chapter Title Textbox
+            
             txtChapterTitle = new TextBox
             {
                 Location = new Point(140, 100),
@@ -106,7 +106,7 @@ namespace client_firebase
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            // Status Label
+            
             lblStatus = new Label
             {
                 Text = "Trạng thái truyện",
@@ -116,7 +116,7 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(45, 52, 54)
             };
 
-            // Status ComboBox
+            
             cbStatus = new ComboBox
             {
                 Location = new Point(485, 100),
@@ -127,7 +127,7 @@ namespace client_firebase
             cbStatus.Items.AddRange(new object[] { "Đang tiến hành", "Đã hoàn thành" });
             cbStatus.SelectedIndex = _currentStatus == "Đã hoàn thành" ? 1 : 0;
 
-            // Chapter Content Label
+            
             lblChapterContent = new Label
             {
                 Text = "Nội dung chương truyện",
@@ -137,13 +137,13 @@ namespace client_firebase
                 ForeColor = Color.FromArgb(45, 52, 54)
             };
 
-            // AI Writing Assistant Button
+            
             btnAIAssist = new Button
             {
                 Text = "🤖 Trợ lý viết AI",
                 Location = new Point(480, 140),
                 Size = new Size(135, 30),
-                BackColor = Color.FromArgb(162, 155, 254), // Soft Indigo for AI
+                BackColor = Color.FromArgb(162, 155, 254), 
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand,
@@ -152,7 +152,7 @@ namespace client_firebase
             btnAIAssist.FlatAppearance.BorderSize = 0;
             btnAIAssist.Click += btnAIAssist_Click;
 
-            // Chapter Content Textbox
+            
             txtChapterContent = new TextBox
             {
                 Location = new Point(20, 175),
@@ -160,10 +160,10 @@ namespace client_firebase
                 Multiline = true,
                 ScrollBars = ScrollBars.Vertical,
                 BorderStyle = BorderStyle.FixedSingle,
-                MaxLength = 500000 // Extended limit (approx. 100k+ words)
+                MaxLength = 500000 
             };
 
-            // Import File Button
+            
             Button btnImportFile = new Button
             {
                 Text = "📁 Nhập từ file .txt",
@@ -195,13 +195,13 @@ namespace client_firebase
                 }
             };
 
-            // Submit Button
+            
             btnSubmit = new Button
             {
                 Text = "Đăng chương mới",
                 Location = new Point(160, 505),
                 Size = new Size(150, 38),
-                BackColor = Color.FromArgb(46, 204, 113), // Emerald Green
+                BackColor = Color.FromArgb(46, 204, 113), 
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand,
@@ -210,7 +210,7 @@ namespace client_firebase
             btnSubmit.FlatAppearance.BorderSize = 0;
             btnSubmit.Click += btnSubmit_Click;
 
-            // Cancel Button
+            
             btnCancel = new Button
             {
                 Text = "Hủy bỏ",
@@ -224,7 +224,7 @@ namespace client_firebase
             btnCancel.FlatAppearance.BorderSize = 0;
             btnCancel.Click += (s, e) => { this.DialogResult = DialogResult.Cancel; this.Close(); };
 
-            // Register controls
+            
             this.Controls.Add(panelHeader);
             this.Controls.Add(lblChapterNum);
             this.Controls.Add(txtChapterNum);
@@ -272,14 +272,14 @@ namespace client_firebase
                 return;
             }
 
-            // Show writing feedback
+            
             this.Cursor = Cursors.WaitCursor;
             btnAIAssist.Enabled = false;
             btnAIAssist.Text = "🤖 AI đang nghĩ...";
 
             string contextText = txtChapterContent.Text.Trim();
             
-            // If uploader wants ideas, we let them type custom guidelines or use empty
+            
             if (actionType == "ideas" && string.IsNullOrEmpty(contextText))
             {
                 contextText = "Không có hướng dẫn thêm";

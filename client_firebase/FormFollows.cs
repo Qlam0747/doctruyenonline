@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -97,14 +97,14 @@ namespace client_firebase
             {
                 string myId = AuthSession.FirebaseLocalId;
                 
-                // Fetch followings first so we can check relationship in followers tab
+                
                 myFollowingIds = await FirebaseDatabaseService.GetFollowingIdsAsync(myId);
                 var followerIds = await FirebaseDatabaseService.GetFollowerIdsAsync(myId);
 
                 flpFollowers.Controls.Clear();
                 flpFollowing.Controls.Clear();
 
-                // 1. Render Followers
+                
                 if (followerIds.Count == 0)
                 {
                     flpFollowers.Controls.Add(new Label
@@ -129,7 +129,7 @@ namespace client_firebase
                     }
                 }
 
-                // 2. Render Following
+                
                 if (myFollowingIds.Count == 0)
                 {
                     flpFollowing.Controls.Add(new Label
@@ -170,7 +170,7 @@ namespace client_firebase
                 Margin = new Padding(0, 5, 0, 5)
             };
 
-            // Avatar
+            
             PictureBox pbAvatar = new PictureBox
             {
                 Size = new Size(40, 40),
@@ -180,7 +180,7 @@ namespace client_firebase
             DrawAvatar(pbAvatar, user.Username, user.Avatar);
             panel.Controls.Add(pbAvatar);
 
-            // Username
+            
             Label lblUser = new Label
             {
                 Text = user.Username,
@@ -192,7 +192,7 @@ namespace client_firebase
             };
             panel.Controls.Add(lblUser);
 
-            // Message Button
+            
             Button btnMsg = new Button
             {
                 Text = "💬 Nhắn",
@@ -207,10 +207,10 @@ namespace client_firebase
             btnMsg.FlatAppearance.BorderSize = 0;
             btnMsg.Click += (s, e) =>
             {
-                this.DialogResult = DialogResult.OK; // Signals calling form to handle redirect
+                this.DialogResult = DialogResult.OK; 
                 this.Close();
 
-                // Open conversation in MainForm
+                
                 var mainForm = Application.OpenForms.OfType<MainForm>().FirstOrDefault();
                 if (mainForm != null)
                 {
@@ -219,7 +219,7 @@ namespace client_firebase
             };
             panel.Controls.Add(btnMsg);
 
-            // Follow Action Button
+            
             Button btnFollowAction = new Button
             {
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
@@ -259,7 +259,7 @@ namespace client_firebase
                     btnFollowAction.Enabled = false;
                     if (isFollowingBack)
                     {
-                        // Unfollow
+                        
                         bool success = await FirebaseDatabaseService.UnfollowAuthorAsync(user.LocalId);
                         if (success)
                         {
@@ -270,7 +270,7 @@ namespace client_firebase
                     }
                     else
                     {
-                        // Follow
+                        
                         bool success = await FirebaseDatabaseService.FollowAuthorAsync(user.LocalId);
                         if (success)
                         {
@@ -284,7 +284,7 @@ namespace client_firebase
             }
             else
             {
-                // Following tab: "Hủy theo dõi" button
+                
                 bool isFollowing = true;
 
                 Action updateFollowingUI = () =>
@@ -313,7 +313,7 @@ namespace client_firebase
                     btnFollowAction.Enabled = false;
                     if (isFollowing)
                     {
-                        // Unfollow
+                        
                         bool success = await FirebaseDatabaseService.UnfollowAuthorAsync(user.LocalId);
                         if (success)
                         {
@@ -323,7 +323,7 @@ namespace client_firebase
                     }
                     else
                     {
-                        // Re-follow
+                        
                         bool success = await FirebaseDatabaseService.FollowAuthorAsync(user.LocalId);
                         if (success)
                         {
@@ -353,7 +353,7 @@ namespace client_firebase
                         pb.Image = Image.FromStream(ms);
                         pb.Image = (Image)pb.Image.Clone();
                     }
-                    return; // Bypass dynamic Paint avatar
+                    return; 
                 }
                 catch (Exception ex)
                 {

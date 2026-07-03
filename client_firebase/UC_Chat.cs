@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -19,7 +19,7 @@ namespace client_firebase
         {
             InitializeComponent();
 
-            // Set up search textbox events
+            
             txtSearchContacts.GotFocus += (s, e) => { if (txtSearchContacts.Text == "Tìm kiếm tin nhắn...") { txtSearchContacts.Text = ""; txtSearchContacts.ForeColor = Color.Black; } };
             txtSearchContacts.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(txtSearchContacts.Text)) { txtSearchContacts.Text = "Tìm kiếm tin nhắn..."; txtSearchContacts.ForeColor = Color.Gray; } };
             txtSearchContacts.TextChanged += txtSearchContacts_TextChanged;
@@ -27,10 +27,10 @@ namespace client_firebase
             btnSend.Click += btnSend_Click;
             txtInput.KeyDown += txtInput_KeyDown;
 
-            // Register Options dropdown click
+            
             btnHeaderOptions.Click += btnHeaderOptions_Click;
 
-            // Shift input bar to fit attachment and emoji buttons
+            
             txtInput.Location = new Point(125, 12);
             txtInput.Width = 355;
 
@@ -80,14 +80,14 @@ namespace client_firebase
             panelInput.Controls.Add(btnAttachImage);
             panelInput.Controls.Add(btnEmoji);
 
-            // Set up polling timer for new messages (every 3 seconds)
+            
             pollTimer = new Timer();
             pollTimer.Interval = 3000;
             pollTimer.Tick += PollTimer_Tick;
 
             this.Load += UC_Chat_Load;
             
-            // Set right panel initial state (disabled/invisible chat details if no partner selected)
+            
             ShowChatArea(false);
         }
 
@@ -107,10 +107,10 @@ namespace client_firebase
         private bool IsOnlyEmojis(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
-            // Emojis, surrogate pairs, zero width joiners, skin tones, etc.
-            // \p{So} matches other symbols (which covers emojis)
-            // \p{Cs} matches surrogate pairs (common in emojis)
-            // \p{Cf} matches format characters like Zero Width Joiner (ZWJ)
+            
+            
+            
+            
             return System.Text.RegularExpressions.Regex.IsMatch(text, @"^[\s\p{So}\p{Cs}\p{Cf}]+$");
         }
 
@@ -127,18 +127,18 @@ namespace client_firebase
                 return path;
             }
 
-            // top left arc  
+            
             path.AddArc(arc, 180, 90);
 
-            // top right arc  
+            
             arc.X = bounds.Right - diameter;
             path.AddArc(arc, 270, 90);
 
-            // bottom right arc  
+            
             arc.Y = bounds.Bottom - diameter;
             path.AddArc(arc, 0, 90);
 
-            // bottom left arc 
+            
             arc.X = bounds.Left;
             path.AddArc(arc, 90, 90);
 
@@ -176,14 +176,14 @@ namespace client_firebase
                     }
                 }
 
-                // Add minor padding to prevent cut-offs in RichTextBox
+                
                 return new Size(Math.Min(maxW, maxWidth) + 5, totalH + 4);
             }
         }
 
         private Panel CreateContactCard(UserModel user)
         {
-            // Create contact item card
+            
             Panel card = new Panel
             {
                 Width = flpContacts.Width - 25,
@@ -194,7 +194,7 @@ namespace client_firebase
                 Tag = user
             };
 
-            // Rounded/border style
+            
             card.Paint += (s, pe) =>
             {
                 using (Pen pen = new Pen(Color.FromArgb(230, 230, 230), 1))
@@ -230,12 +230,12 @@ namespace client_firebase
                 AutoEllipsis = true
             };
 
-            // Add to card
+            
             card.Controls.Add(pbAvatar);
             card.Controls.Add(lblName);
             card.Controls.Add(lblLastMsg);
 
-            // Add click handlers for card and all its children
+            
             Action clickAction = async () =>
             {
                 await SelectContact(user, card);
@@ -245,7 +245,7 @@ namespace client_firebase
             lblName.Click += (s, e) => clickAction();
             lblLastMsg.Click += (s, e) => clickAction();
 
-            // Load last message asynchronously for each user
+            
             LoadLastMessageForContact(user, lblLastMsg);
 
             return card;
@@ -274,7 +274,7 @@ namespace client_firebase
                 return;
             }
 
-            // Gather all users, then filter them by checking if there's any message
+            
             var userLastMsgs = new Dictionary<string, MessageModel>();
             var tasks = allUsers.Select(async u =>
             {
@@ -289,10 +289,10 @@ namespace client_firebase
             });
             await Task.WhenAll(tasks);
 
-            // Filter allUsers to only active users (those who have messages)
+            
             var activeUsers = allUsers.Where(u => userLastMsgs.ContainsKey(u.LocalId)).ToList();
 
-            // Sort activeUsers by last message timestamp descending (latest message first)
+            
             activeUsers = activeUsers.OrderByDescending(u => userLastMsgs[u.LocalId].Timestamp).ToList();
 
             if (activeUsers.Count == 0)
@@ -341,7 +341,7 @@ namespace client_firebase
                 return;
             }
 
-            // Check if this user card already exists in flpContacts
+            
             Panel existingCard = null;
             foreach (Control ctrl in flpContacts.Controls)
             {
@@ -358,7 +358,7 @@ namespace client_firebase
             }
             else
             {
-                // Remove the "Không có cuộc trò chuyện nào" or "Không có người dùng nào khác" labels if present
+                
                 var labelsToRemove = flpContacts.Controls.OfType<Label>().ToList();
                 foreach (var lbl in labelsToRemove)
                 {
@@ -366,10 +366,10 @@ namespace client_firebase
                     lbl.Dispose();
                 }
 
-                // Create a temporary/placeholder card for this user in the contact list
+                
                 Panel newCard = CreateContactCard(targetUser);
                 flpContacts.Controls.Add(newCard);
-                // Set child index to 0 so it appears at the top
+                
                 flpContacts.Controls.SetChildIndex(newCard, 0);
                 await SelectContact(targetUser, newCard);
             }
@@ -377,13 +377,13 @@ namespace client_firebase
 
         private async Task SelectContact(UserModel user, Panel card)
         {
-            // Before changing selectedUser, check if the old selectedUser has no messages
+            
             if (selectedUser != null && selectedUser.LocalId != user.LocalId)
             {
                 var oldMsgs = await FirebaseDatabaseService.GetMessagesAsync(selectedUser.LocalId);
                 if (oldMsgs.Count == 0)
                 {
-                    // Find and remove the old card from flpContacts
+                    
                     Panel oldCard = null;
                     foreach (Control ctrl in flpContacts.Controls)
                     {
@@ -403,10 +403,10 @@ namespace client_firebase
 
             selectedUser = user;
 
-            // Clear unread flag for this chat
+            
             await FirebaseDatabaseService.SetChatUnreadAsync(user.LocalId, false);
 
-            // Highlight chosen card
+            
             foreach (Control ctrl in flpContacts.Controls)
             {
                 if (ctrl is Panel p)
@@ -414,9 +414,9 @@ namespace client_firebase
                     p.BackColor = Color.White;
                 }
             }
-            card.BackColor = Color.FromArgb(235, 233, 255); // Pale violet matching selected
+            card.BackColor = Color.FromArgb(235, 233, 255); 
 
-            // Determine role: anyone who uploaded a book is an Author, else Reader
+            
             bool isAuthor = false;
             try
             {
@@ -425,7 +425,7 @@ namespace client_firebase
             }
             catch {}
 
-            // Update header info
+            
             lblHeaderName.Text = user.Username;
             lblHeaderRole.Text = isAuthor ? "Tác giả" : "Độc giả";
             DrawAvatar(pbHeaderAvatar, user.Username);
@@ -460,7 +460,7 @@ namespace client_firebase
             bool isMe = msg.SenderId == AuthSession.FirebaseLocalId;
             int maxBubbleWidth = (int)((flpMessages.Width - 50) * 0.7);
 
-            // Calculate if we need to show time (if diff between last msg timestamp is < 5 mins, skip)
+            
             long prevTimestamp = 0;
             if (flpMessages.Controls.Count > 0)
             {
@@ -475,13 +475,13 @@ namespace client_firebase
             if (prevTimestamp > 0)
             {
                 long diffMs = Math.Abs(msg.Timestamp - prevTimestamp);
-                if (diffMs < 5 * 60 * 1000) // 5 minutes in milliseconds
+                if (diffMs < 5 * 60 * 1000) 
                 {
                     showTime = false;
                 }
             }
 
-            // Message container panel
+            
             Panel rowPanel = new Panel
             {
                 Width = flpMessages.Width - 35,
@@ -490,7 +490,7 @@ namespace client_firebase
                 Tag = msg.Timestamp
             };
 
-            // Timestamp Label
+            
             Label lblTime = new Label
             {
                 Text = FormatTime(msg.Timestamp),
@@ -499,7 +499,7 @@ namespace client_firebase
                 AutoSize = true
             };
 
-            // Bubble Panel
+            
             Panel bubble = new Panel
             {
                 BackColor = isMe ? Color.FromArgb(108, 92, 231) : Color.FromArgb(230, 230, 230),
@@ -530,7 +530,7 @@ namespace client_firebase
                 }
                 pbMsg.Click += (s, e) =>
                 {
-                    // Show full-size image in a temporary popup Form
+                    
                     Form imgForm = new Form
                     {
                         Text = "Xem hình ảnh",
@@ -546,7 +546,7 @@ namespace client_firebase
                     imgForm.Controls.Add(pbFull);
                     imgForm.ShowDialog();
                 };
-                bubble.BackColor = Color.FromArgb(250, 250, 250); // Same as flpMessages BackColor
+                bubble.BackColor = Color.FromArgb(250, 250, 250); 
                 bubble.Padding = new Padding(0);
                 bubble.Width = 180;
                 bubble.Height = 120;
@@ -574,7 +574,7 @@ namespace client_firebase
                 };
                 lblFileName.Click += (s, e) =>
                 {
-                    // Save file dialog to download
+                    
                     using (SaveFileDialog sfd = new SaveFileDialog())
                     {
                         sfd.FileName = msg.FileName ?? "document.dat";
@@ -603,7 +603,7 @@ namespace client_firebase
                 bool isOnlyEmoji = !string.IsNullOrEmpty(msg.Text) && IsOnlyEmojis(msg.Text);
                 if (isOnlyEmoji)
                 {
-                    // No bubble background, color emojis with larger size
+                    
                     RichTextBox rtb = new RichTextBox
                     {
                         Text = msg.Text,
@@ -611,14 +611,14 @@ namespace client_firebase
                         ReadOnly = true,
                         BorderStyle = BorderStyle.None,
                         ScrollBars = RichTextBoxScrollBars.None,
-                        BackColor = Color.FromArgb(250, 250, 250), // Matches flpMessages BackColor
+                        BackColor = Color.FromArgb(250, 250, 250), 
                         Multiline = true,
                         WordWrap = true,
                         Location = new Point(0, 0)
                     };
                     rtb.Enter += (s, e) => { flpMessages.Focus(); };
 
-                    // Measure text size
+                    
                     Size emojiSize;
                     using (Graphics g = flpMessages.CreateGraphics())
                     {
@@ -627,14 +627,14 @@ namespace client_firebase
                     }
                     rtb.Size = emojiSize;
 
-                    bubble.BackColor = Color.FromArgb(250, 250, 250); // Matches flpMessages
+                    bubble.BackColor = Color.FromArgb(250, 250, 250); 
                     bubble.Size = emojiSize;
                     bubble.Padding = new Padding(0);
                     bubble.Controls.Add(rtb);
                 }
                 else
                 {
-                    // Regular text message. But to support color emojis in text as well, use RichTextBox too!
+                    
                     RichTextBox rtb = new RichTextBox
                     {
                         Text = msg.Text,
@@ -659,7 +659,7 @@ namespace client_firebase
                 }
             }
 
-            // Apply rounded corners (bo cong) to non-transparent bubble panels
+            
             if (bubble.BackColor != Color.FromArgb(250, 250, 250))
             {
                 using (var path = GetRoundedRectanglePath(new Rectangle(0, 0, bubble.Width, bubble.Height), 12))
@@ -668,7 +668,7 @@ namespace client_firebase
                 }
             }
 
-            // Layout row Panel
+            
             if (showTime)
             {
                 rowPanel.Controls.Add(lblTime);
@@ -782,7 +782,7 @@ namespace client_firebase
         {
             if (e.KeyCode == Keys.Enter && !e.Shift)
             {
-                e.SuppressKeyPress = true; // Prevent beep sound and newline
+                e.SuppressKeyPress = true; 
                 await SendCurrentMessage();
             }
         }
@@ -799,10 +799,10 @@ namespace client_firebase
             bool sent = await FirebaseDatabaseService.SendMessageAsync(selectedUser.LocalId, text);
             if (sent)
             {
-                // Reload messages immediately
+                
                 await LoadMessagesAsync();
                 
-                // Update contact last message in list
+                
                 UpdateLastMessageInList(selectedUser.LocalId, text);
             }
         }
@@ -815,7 +815,7 @@ namespace client_firebase
                 {
                     foreach (Control child in card.Controls)
                     {
-                        if (child is Label lbl && lbl.ForeColor == Color.Gray) // Last message label
+                        if (child is Label lbl && lbl.ForeColor == Color.Gray) 
                         {
                             lbl.Text = text;
                             break;
@@ -1025,7 +1025,7 @@ namespace client_firebase
                     Dock = DockStyle.Fill
                 };
 
-                // Centering the text inside RichTextBox
+                
                 rtbEmoji.SelectAll();
                 rtbEmoji.SelectionAlignment = HorizontalAlignment.Center;
                 rtbEmoji.DeselectAll();
@@ -1070,7 +1070,7 @@ namespace client_firebase
 
             emojiPopup.Controls.Add(tlp);
 
-            // Position centered above the Emoji button
+            
             Point pt = btnEmoji.PointToScreen(Point.Empty);
             emojiPopup.Location = new Point(pt.X - (emojiPopup.Width - btnEmoji.Width) / 2, pt.Y - emojiPopup.Height - 5);
             emojiPopup.Show();
@@ -1081,7 +1081,7 @@ namespace client_firebase
         {
             if (selectedUser == null) return;
 
-            // Query block status first
+            
             bool isBlocked = await FirebaseDatabaseService.IsUserBlockedAsync(selectedUser.LocalId);
 
             ContextMenuStrip optionsMenu = new ContextMenuStrip();
@@ -1149,7 +1149,7 @@ namespace client_firebase
                     tabControl.TabPages.Add(tabImages);
                     tabControl.TabPages.Add(tabFiles);
                     
-                    // --- Populating Images ---
+                    
                     FlowLayoutPanel flpImages = new FlowLayoutPanel 
                     { 
                         Dock = DockStyle.Fill, 
@@ -1247,7 +1247,7 @@ namespace client_firebase
                     }
                     tabImages.Controls.Add(flpImages);
                     
-                    // --- Populating Files ---
+                    
                     FlowLayoutPanel flpFiles = new FlowLayoutPanel
                     {
                         Dock = DockStyle.Fill,

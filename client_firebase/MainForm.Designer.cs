@@ -1,16 +1,16 @@
-namespace client_firebase
+﻿namespace client_firebase
 {
     partial class MainForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        
+        
+        
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        
+        
+        
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@ namespace client_firebase
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        
+        
+        
+        
         private void InitializeComponent()
         {
             this.panelTop = new System.Windows.Forms.Panel();
@@ -51,9 +51,9 @@ namespace client_firebase
             ((System.ComponentModel.ISupportInitialize)(this.btnHome)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
-            // 
-            // panelTop
-            // 
+            
+            
+            
             this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(92)))), ((int)(((byte)(231)))));
             this.panelTop.Controls.Add(this.btnProfile);
             this.panelTop.Controls.Add(this.btnNotification);
@@ -65,9 +65,9 @@ namespace client_firebase
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(900, 60);
             this.panelTop.TabIndex = 1;
-            // 
-            // btnProfile
-            // 
+            
+            
+            
             this.btnProfile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnProfile.BackColor = System.Drawing.Color.Transparent;
             this.btnProfile.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -78,9 +78,9 @@ namespace client_firebase
             this.btnProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnProfile.TabIndex = 9;
             this.btnProfile.TabStop = false;
-            // 
-            // btnNotification
-            // 
+            
+            
+            
             this.btnNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnNotification.BackColor = System.Drawing.Color.Transparent;
             this.btnNotification.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -91,9 +91,9 @@ namespace client_firebase
             this.btnNotification.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnNotification.TabIndex = 8;
             this.btnNotification.TabStop = false;
-            // 
-            // panelNav
-            // 
+            
+            
+            
             this.panelNav.BackColor = System.Drawing.Color.Transparent;
             this.panelNav.Controls.Add(this.btnChat);
             this.panelNav.Controls.Add(this.btnUpload);
@@ -104,9 +104,9 @@ namespace client_firebase
             this.panelNav.Name = "panelNav";
             this.panelNav.Size = new System.Drawing.Size(340, 60);
             this.panelNav.TabIndex = 10;
-            // 
-            // btnChat
-            // 
+            
+            
+            
             this.btnChat.BackColor = System.Drawing.Color.Transparent;
             this.btnChat.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnChat.Image = global::client_firebase.Properties.Resources.chat;
@@ -117,9 +117,9 @@ namespace client_firebase
             this.btnChat.TabIndex = 7;
             this.btnChat.TabStop = false;
             this.btnChat.Click += new System.EventHandler(this.btnChat_Click);
-            // 
-            // btnUpload
-            // 
+            
+            
+            
             this.btnUpload.BackColor = System.Drawing.Color.Transparent;
             this.btnUpload.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnUpload.Image = global::client_firebase.Properties.Resources.up_loading;
@@ -130,9 +130,9 @@ namespace client_firebase
             this.btnUpload.TabIndex = 6;
             this.btnUpload.TabStop = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
-            // 
-            // btnLibrary
-            // 
+            
+            
+            
             this.btnLibrary.BackColor = System.Drawing.Color.Transparent;
             this.btnLibrary.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLibrary.Image = global::client_firebase.Properties.Resources.book__1_;
@@ -143,9 +143,9 @@ namespace client_firebase
             this.btnLibrary.TabIndex = 5;
             this.btnLibrary.TabStop = false;
             this.btnLibrary.Click += new System.EventHandler(this.btnLibrary_Click);
-            // 
-            // btnSearch
-            // 
+            
+            
+            
             this.btnSearch.BackColor = System.Drawing.Color.Transparent;
             this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.Image = global::client_firebase.Properties.Resources.search;
@@ -156,9 +156,9 @@ namespace client_firebase
             this.btnSearch.TabIndex = 4;
             this.btnSearch.TabStop = false;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
-            // 
-            // btnHome
-            // 
+            
+            
+            
             this.btnHome.BackColor = System.Drawing.Color.Transparent;
             this.btnHome.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnHome.Image = global::client_firebase.Properties.Resources.home;
@@ -169,9 +169,9 @@ namespace client_firebase
             this.btnHome.TabIndex = 3;
             this.btnHome.TabStop = false;
             this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
-            // 
-            // lblLogo
-            // 
+            
+            
+            
             this.lblLogo.AutoSize = true;
             this.lblLogo.BackColor = System.Drawing.Color.Transparent;
             this.lblLogo.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -181,9 +181,9 @@ namespace client_firebase
             this.lblLogo.Size = new System.Drawing.Size(107, 30);
             this.lblLogo.TabIndex = 2;
             this.lblLogo.Text = "StoryHub";
-            // 
-            // picLogo
-            // 
+            
+            
+            
             this.picLogo.BackColor = System.Drawing.Color.Transparent;
             this.picLogo.Image = global::client_firebase.Properties.Resources.book;
             this.picLogo.Location = new System.Drawing.Point(14, 15);
@@ -192,9 +192,9 @@ namespace client_firebase
             this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picLogo.TabIndex = 2;
             this.picLogo.TabStop = false;
-            // 
-            // panelContent
-            // 
+            
+            
+            
             this.panelContent.AutoScroll = true;
             this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -202,9 +202,9 @@ namespace client_firebase
             this.panelContent.Name = "panelContent";
             this.panelContent.Size = new System.Drawing.Size(900, 540);
             this.panelContent.TabIndex = 2;
-            // 
-            // MainForm
-            // 
+            
+            
+            
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;

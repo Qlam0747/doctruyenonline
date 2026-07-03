@@ -10,7 +10,7 @@ namespace client_firebase
 {
     public static class GeminiService
     {
-        private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+        private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
 
         public static async Task<string> GenerateTextAsync(string prompt)
         {
@@ -62,6 +62,10 @@ namespace client_firebase
                     return $"Lỗi API (Mã lỗi {response.StatusCode}): " + responseString;
                 }
             }
+            catch (TaskCanceledException)
+            {
+                return "Lỗi: Yêu cầu AI bị hết thời gian chờ (timeout). Vui lòng thử lại.";
+            }
             catch (Exception ex)
             {
                 return "Lỗi kết nối AI: " + ex.Message;
@@ -74,13 +78,13 @@ namespace client_firebase
 
             string clean = rawJson.Trim();
 
-            // Extract content from markdown code fences if present
+            
             if (clean.StartsWith("```"))
             {
                 int firstNewLine = clean.IndexOf('\n');
                 if (firstNewLine != -1)
                 {
-                    // Skip the language tag (e.g. ```json)
+                    
                     clean = clean.Substring(firstNewLine).Trim();
                 }
                 if (clean.EndsWith("```"))
@@ -89,7 +93,7 @@ namespace client_firebase
                 }
             }
 
-            // Fallback: search for first '[' and last ']' to isolate the JSON array
+            
             int firstBracket = clean.IndexOf('[');
             int lastBracket = clean.LastIndexOf(']');
             if (firstBracket != -1 && lastBracket != -1 && lastBracket > firstBracket)
@@ -108,7 +112,7 @@ namespace client_firebase
                 return matchedIds;
             }
 
-            // Build metadata list of stories for Gemini
+            
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Dưới đây là danh sách các cuốn truyện hiện có trong hệ thống:");
             foreach (var b in books)
