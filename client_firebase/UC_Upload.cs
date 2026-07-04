@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -15,7 +15,7 @@ namespace client_firebase
         {
             InitializeComponent();
             
-            
+            // Register events
             pbCover.Click += pbCover_Click;
             pbCover.Paint += pbCover_Paint;
             btnNext.Click += btnNext_Click;
@@ -24,23 +24,23 @@ namespace client_firebase
 
 
 
-            
-            txtDescription.Height = 160; 
-            lblGenre.Location = new Point(10, 295); 
+            // Adjust txtDescription and flpGenres height to fit more genres
+            txtDescription.Height = 160; // Reduce height from 225 to 160
+            lblGenre.Location = new Point(10, 295); // Move up
             flpGenres.Location = new Point(10, 315);
             flpGenres.Height = 110;
             flpGenres.AutoScroll = true;
 
-            
+            // Set txtChapterContent MaxLength to 500,000 characters
             txtChapterContent.MaxLength = 500000;
 
-            
+            // Create btnImportFile dynamically in Step 2
             Button btnImportFile = new Button
             {
                 Text = "📁 Nhập từ file .txt",
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 Size = new Size(130, 25),
-                Location = new Point(590, 155), 
+                Location = new Point(590, 155), // Right aligned, above txtChapterContent
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand,
@@ -68,7 +68,7 @@ namespace client_firebase
             };
             panelStep2.Controls.Add(btnImportFile);
 
-            
+            // Load genres
             InitializeGenreButtons();
         }
 
@@ -143,14 +143,14 @@ namespace client_firebase
         {
             if (pbCover.Image == null)
             {
-                
+                // Draw dotted border
                 using (Pen pen = new Pen(Color.Gray, 2))
                 {
                     pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                     e.Graphics.DrawRectangle(pen, 1, 1, pbCover.Width - 3, pbCover.Height - 3);
                 }
 
-                
+                // Draw icon & text
                 using (Font font = new Font("Segoe UI", 9F, FontStyle.Regular))
                 using (Brush brush = new SolidBrush(Color.Gray))
                 {
@@ -170,7 +170,7 @@ namespace client_firebase
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            
+            // Validate Step 1
             if (string.IsNullOrWhiteSpace(txtTitle.Text))
             {
                 MessageBox.Show("Vui lòng nhập tên truyện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -197,22 +197,21 @@ namespace client_firebase
                 return;
             }
 
-            
+            // Switch to Step 2
             panelStep1.Visible = false;
             panelStep2.Visible = true;
-
             btnBack.Visible = true;
             btnNext.Visible = false;
             btnSubmit.Visible = true;
 
-            
+            // Update indicators
             lblStep2Circle.BackColor = Color.FromArgb(108, 92, 231);
             lblStep2Text.ForeColor = Color.FromArgb(108, 92, 231);
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            
+            // Switch to Step 1
             panelStep2.Visible = false;
             panelStep1.Visible = true;
 
@@ -220,14 +219,14 @@ namespace client_firebase
             btnNext.Visible = true;
             btnSubmit.Visible = false;
 
-            
+            // Reset indicators
             lblStep2Circle.BackColor = Color.FromArgb(200, 200, 200);
             lblStep2Text.ForeColor = Color.Gray;
         }
 
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
-            
+            // Validate Step 2
             if (string.IsNullOrWhiteSpace(txtChapterNum.Text))
             {
                 MessageBox.Show("Vui lòng nhập số chương.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -272,7 +271,7 @@ namespace client_firebase
                 MessageBox.Show("Đăng truyện thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClearForm();
                 
-                
+                // Return to home page
                 if (this.ParentForm is MainForm mf)
                 {
                     mf.GoToHome();
@@ -297,7 +296,7 @@ namespace client_firebase
             selectedGenres.Clear();
             InitializeGenreButtons();
 
-            
+            // Reset navigation panel
             panelStep2.Visible = false;
             panelStep1.Visible = true;
             btnBack.Visible = false;

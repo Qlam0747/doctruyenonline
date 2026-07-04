@@ -13,7 +13,6 @@ namespace client_firebase
         public dangky()
         {
             InitializeComponent();
-            
             btnSignUp.Click += btnSignUp_Click;
             lblSignIn.Click += lblSignIn_Click;
         }
